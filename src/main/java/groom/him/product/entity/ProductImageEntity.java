@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PRODUCT_IMAGE")
+@Table(name = "PRODUCT_IMG")
 public class ProductImageEntity {
 
   @Id
@@ -25,10 +25,4 @@ public class ProductImageEntity {
 
   @Column(name = "IMG_URL")
   private String imgUrl;
-
-  @Column(name = "REG_DT")
-  private LocalDateTime regDt;
-
-  @Column(name = "UDT_DT")
-  private LocalDateTime udtDt;
 }

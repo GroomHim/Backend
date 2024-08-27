@@ -1,13 +1,13 @@
-package groom.him.category.entity;
+package groom.him.product.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import groom.him.product.entity.constant.CategoryType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,8 +19,9 @@ public class CategoryEntity {
   @Column(name = "CATEGORY_ID")
   private Long categoryId;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "CATEGORY_TYPE")
-  private String categoryType;
+  private CategoryType categoryType;
 
   @Column(name = "DEPTH")
   private int depth;
@@ -30,13 +31,4 @@ public class CategoryEntity {
 
   @Column(name = "IS_LEAF")
   private Boolean isLeaf;
-
-  @Column(name = "REG_DT")
-  private LocalDateTime regDt;
-
-  @Column(name = "UDT_DT")
-  private LocalDateTime udtDt;
-
-  @OneToMany(mappedBy = "category")
-  private List<ProductCategoryLinkEntity> productCategoryLinks;
 }
