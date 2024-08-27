@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CATEGORYs")
+@Table(name = "CATEGORY")
 public class CategoryEntity {
 
     @Id
@@ -19,8 +19,8 @@ public class CategoryEntity {
     @Column(name = "CATEGORY_ID")
     private Long categoryId;
 
-    @Column(name = "CATEGORY_NM", unique = true)
-    private String categoryNm;
+    @Column(name = "CATEGORY_NO", unique = true)
+    private String categoryNo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "CATEGORY_TYPE")
