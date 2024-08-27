@@ -17,7 +17,7 @@ public class CategoryEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "CATEGORY_ID")
-  private Long categoryId;
+  private String categoryId;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "CATEGORY_TYPE")
@@ -25,6 +25,9 @@ public class CategoryEntity {
 
   @Column(name = "DEPTH")
   private int depth;
+
+  @Column(name = "UPPER_CATEGORY_ID")
+  private String upperCategoryId;
 
   @Column(name = "CATEGORY_NM")
   private String categoryName;
