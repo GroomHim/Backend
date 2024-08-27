@@ -1,6 +1,5 @@
 package groom.him.product.entity;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,15 +13,15 @@ import javax.persistence.Table;
 @Table(name = "PRODUCT_IMG")
 public class ProductImageEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "PRODUCT_IMG_ID")
-  private Long productImgId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PRODUCT_IMG_ID")
+    private Long productImgId;
 
-  @ManyToOne
-  @JoinColumn(name = "PRODUCT_ID")
-  private ProductEntity productEntity;
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID")
+    private ProductEntity productEntity;
 
-  @Column(name = "IMG_URL")
-  private String imgUrl;
+    @Column(name = "IMG_URL")
+    private String imgUrl;
 }

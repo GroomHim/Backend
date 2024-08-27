@@ -11,27 +11,30 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CATEGORY")
+@Table(name = "CATEGORYs")
 public class CategoryEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "CATEGORY_ID")
-  private String categoryId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CATEGORY_ID")
+    private Long categoryId;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "CATEGORY_TYPE")
-  private CategoryType categoryType;
+    @Column(name = "CATEGORY_NM", unique = true)
+    private String categoryNm;
 
-  @Column(name = "DEPTH")
-  private int depth;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CATEGORY_TYPE")
+    private CategoryType categoryType;
 
-  @Column(name = "UPPER_CATEGORY_ID")
-  private String upperCategoryId;
+    @Column(name = "DEPTH")
+    private Integer depth;
 
-  @Column(name = "CATEGORY_NM")
-  private String categoryName;
+    @Column(name = "UPPER_CATEGORY_ID")
+    private String upperCategoryId;
 
-  @Column(name = "IS_LEAF")
-  private Boolean isLeaf;
+    @Column(name = "CATEGORY_NM")
+    private String categoryName;
+
+    @Column(name = "IS_LEAF")
+    private Boolean isLeaf;
 }

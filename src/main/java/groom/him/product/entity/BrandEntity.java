@@ -11,14 +11,14 @@ import javax.persistence.Table;
 @Table(name = "BRAND")
 public class BrandEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "BRAND_ID")
-  private Long brandId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "BRAND_ID")
+    private Long brandId;
 
-  @Column(name = "BRAND_NM")
-  private String brandNm;
+    @Column(name = "BRAND_NM")
+    private String brandNm;
 
-  @Column(name = "BRAND_EN_NM")
-  private String brandEnNm;
+    @Column(name = "BRAND_EN_NM")
+    private String brandEnNm;
 }

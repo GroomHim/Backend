@@ -14,31 +14,31 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PRODUCT")
+@Table(name = "PRODUCTS")
 public class ProductEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "PRODUCT_ID")
-  private Long productId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PRODUCT_ID")
+    private Long productId;
 
-  @Column(name = "PRODUCT_NAME")
-  private String productName;
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
 
-  @Column(name = "PRICE")
-  private BigDecimal price;
+    @Column(name = "PRICE")
+    private BigDecimal price;
 
-  @Column(name = "DISCOUNT_RATE")
-  private Double discountRate;
+    @Column(name = "DISCOUNT_RATE")
+    private Double discountRate;
 
-  @Column(name = "DISCOUNTED_PRICE")
-  private BigDecimal discountedPrice;
+    @Column(name = "DISCOUNTED_PRICE")
+    private BigDecimal discountedPrice;
 
-  @ManyToOne
-  @JoinColumn(name = "BRAND_ID")
-  private BrandEntity brandEntity;
+    @ManyToOne
+    @JoinColumn(name = "BRAND_ID")
+    private BrandEntity brandEntity;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "SKIN_TYPE")
-  private SkinType skinType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SKIN_TYPE")
+    private SkinType skinType;
 }
