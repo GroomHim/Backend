@@ -1,5 +1,6 @@
 package groom.him.product.entity;
 
+import groom.him.core.entity.AuditingFields;
 import groom.him.product.entity.constant.CategoryType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CATEGORY")
-public class CategoryEntity {
+public class CategoryEntity extends AuditingFields {
 
     @Id
     @Column(name = "CATEGORY_ID")
