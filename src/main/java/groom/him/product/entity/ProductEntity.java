@@ -1,5 +1,6 @@
 package groom.him.product.entity;
 
+import groom.him.core.entity.AuditingFields;
 import groom.him.core.entity.constant.SkinType;
 import java.math.BigDecimal;
 import javax.persistence.Column;
@@ -14,8 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PRODUCTS")
-public class ProductEntity {
+@Table(name = "PRODUCT")
+public class ProductEntity extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

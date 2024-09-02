@@ -1,5 +1,6 @@
 package groom.him.product.entity;
 
+import groom.him.core.entity.AuditingFields;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCT_IMG")
-public class ProductImageEntity {
+public class ProductImageEntity extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
