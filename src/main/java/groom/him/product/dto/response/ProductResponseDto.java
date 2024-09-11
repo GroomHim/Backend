@@ -4,7 +4,7 @@ import groom.him.core.entity.constant.SkinType;
 import groom.him.product.entity.ProductEntity;
 import java.math.BigDecimal;
 
-public record ProductResponse(
+public record ProductResponseDto(
     Long productId,
     String productName,
     BigDecimal price,
@@ -13,8 +13,8 @@ public record ProductResponse(
     SkinType skinTye
 ) {
 
-    public static ProductResponse of(ProductEntity entity) {
-        return new ProductResponse(
+    public static ProductResponseDto of(ProductEntity entity) {
+        return new ProductResponseDto(
             entity.getProductId(),
             entity.getProductName(),
             entity.getPrice(),

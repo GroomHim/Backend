@@ -1,7 +1,7 @@
 package groom.him.product.controller;
 
 import groom.him.core.entity.constant.SkinType;
-import groom.him.product.dto.response.ProductResponse;
+import groom.him.product.dto.response.ProductResponseDto;
 import groom.him.product.service.ProductService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class ProductController {
     }
 
     @GetMapping("/member/skinType/list")
-    public ResponseEntity<List<ProductResponse>> findProductListBySkinType() {
+    public ResponseEntity<List<ProductResponseDto>> findProductListBySkinType() {
         var memberSkinType = SkinType.DRY_TYPE_1;
         var response = productService.findProductListBySkinType(memberSkinType);
         return ResponseEntity.ok(response);
