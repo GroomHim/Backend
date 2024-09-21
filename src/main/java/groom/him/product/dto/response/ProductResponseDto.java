@@ -10,7 +10,7 @@ public record ProductResponseDto(
     BigDecimal price,
     Double discountRate,
     BigDecimal discountedPrice,
-    SkinType skinTye
+    SkinType skinType
 ) {
 
     public static ProductResponseDto of(ProductEntity entity) {
