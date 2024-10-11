@@ -1,5 +1,6 @@
 package groom.him.product.entity;
 
+import groom.him.core.entity.AuditingFields;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "BRAND")
-public class BrandEntity {
+public class BrandEntity extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

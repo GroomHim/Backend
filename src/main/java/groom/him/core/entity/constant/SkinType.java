@@ -16,6 +16,6 @@ public enum SkinType {
     COMBINATION_OILY_TYPE_3("수부지", "수분 부족 지성 피부", 3),
     COMBINATION_OILY_TYPE_4("수부지", "수분 부족 지성 피부", 4);
 
-    SkinType(String 지성, String s, int i) {
+    SkinType(String type, String description, int level) {
     }
 }
