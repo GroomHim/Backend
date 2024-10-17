@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +32,7 @@ public class SecurityConfig {
 //    TODO: jwt token provider, auth service 작성
 //    private final JwtTokenProvider jwtTokenProvider;
 //    private final AuthService authService;
-
+    private final String ORIGIN = "http://localhost:3000";
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -70,12 +69,11 @@ public class SecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000")); // ⭐️ 허용할 origin
+            config.setAllowedOriginPatterns(Collections.singletonList(ORIGIN)); // ⭐️ 허용할 origin
             config.setAllowCredentials(true);
             return config;
         };
     }
-
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
