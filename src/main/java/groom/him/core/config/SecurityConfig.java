@@ -1,13 +1,10 @@
 package groom.him.core.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import groom.him.core.auth.util.handler.AuthAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,12 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.io.IOException;
 import java.util.Collections;
 
 @Configuration
@@ -33,6 +27,11 @@ public class SecurityConfig {
 //    private final JwtTokenProvider jwtTokenProvider;
 //    private final AuthService authService;
     private final String ORIGIN = "http://localhost:3000";
+    private final String[] FRONT_SRC_URLS = new String[]{"/webjars/**", "/configuration/ui", "/configuration/security"};
+    private final String[] DOCS_SRC_URLS = new String[]{"/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v1/api-docs", "/swagger/**","/groomhim/v1/health-check"};
+    private final String[] AUTH_URLS = new String[] {"/groomhim/auth/sign-in", "/groomhim/auth/refresh-token"};
+    private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -43,13 +42,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll() // TODO : 운영 서버에서는 authenticated()로 변경 요함
                 )
                 .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(ex-> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(new AccessDeniedHandler() {
-                    @Override
-                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                        // Custom access denied handler logic
-                        throw new java.nio.file.AccessDeniedException("접근 권한이 없습니다.");
-                    }
-                }));
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(accessDeniedCustomHandler));
 
         // TODO: Add JWT authentication filter
         // http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class);
@@ -60,16 +53,17 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers("/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v1/api-docs", "/swagger/**", "/webjars/**", "/configuration/ui", "/configuration/security")
-                .requestMatchers("/groomhim/auth/sign-in", "/groomhim/auth/refresh-token", "/groomhim/v1/health-check");
+                .requestMatchers(FRONT_SRC_URLS)
+                .requestMatchers(DOCS_SRC_URLS)
+                .requestMatchers(AUTH_URLS);
     }
 
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList(ORIGIN)); // ⭐️ 허용할 origin
+            config.setAllowedOriginPatterns(Collections.singletonList(ORIGIN));
             config.setAllowCredentials(true);
             return config;
         };
