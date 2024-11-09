@@ -20,10 +20,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ErrorResponse makeErrorResponse(HttpErrorCode errorCode) {
-        return ErrorResponse.builder()
-            .statusCode(errorCode.getHttpStatus().value())
-            .error(errorCode.getCode())
-            .message(errorCode.getMessage())
-            .build();
+        return new ErrorResponse(errorCode.getHttpStatus().value(), errorCode.getCode(), errorCode.getMessage());
     }
 }
