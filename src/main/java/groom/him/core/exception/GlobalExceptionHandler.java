@@ -10,11 +10,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.OK).body(makeErrorResponse(e.getHttpErrorCode()));
     }
 
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<ErrorResponse> handleCommonException(CommonException e) {
+        e.printStackTrace();
         return ResponseEntity.status(e.getHttpErrorCode().getHttpStatus())
             .body(makeErrorResponse(e.getHttpErrorCode()));
     }
