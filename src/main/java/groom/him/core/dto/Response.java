@@ -10,7 +10,6 @@ public record Response<T>(
     Meta meta,
     T data
 ) {
-
     private static final int SUCCESS_HTTP_STATUS = 200;
 
     public Response(Integer statusCode, T data) {
@@ -37,6 +36,5 @@ public record Response<T>(
         boolean last,
         boolean sorted
     ) {
-
     }
 }
