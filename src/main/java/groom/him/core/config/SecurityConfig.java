@@ -1,7 +1,11 @@
 package groom.him.core.config;
 
+import groom.him.core.auth.service.AuthService;
+import groom.him.core.auth.util.JwtTokenProvider;
+import groom.him.core.auth.util.filter.JwtAuthenticationFilter;
 import groom.him.core.auth.util.handler.AuthAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -16,16 +20,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Collections;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 //    TODO: jwt token provider, auth service 작성
-//    private final JwtTokenProvider jwtTokenProvider;
-//    private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
     private final String ORIGIN = "http://localhost:3000";
     private final String[] FRONT_SRC_URLS = new String[]{"/webjars/**", "/configuration/ui", "/configuration/security"};
     private final String[] DOCS_SRC_URLS = new String[]{"/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v1/api-docs", "/swagger/**","/groomhim/v1/health-check"};
@@ -45,7 +51,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(accessDeniedCustomHandler));
 
         // TODO: Add JWT authentication filter
-        // http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class);
+         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
