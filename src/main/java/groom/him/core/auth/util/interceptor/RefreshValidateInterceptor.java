@@ -1,6 +1,7 @@
 package groom.him.core.auth.util.interceptor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import groom.him.core.auth.service.AuthService;
 import groom.him.core.auth.util.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -25,8 +26,6 @@ import java.security.InvalidParameterException;
 public class RefreshValidateInterceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
-
-//    private final RedisService redisService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
