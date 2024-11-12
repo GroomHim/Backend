@@ -1,4 +1,4 @@
-package groom.him.core.model.user.exception;
+package groom.him.core.model.member.exception;
 
 import groom.him.core.exception.HttpErrorCode;
 import lombok.Getter;

@@ -1,22 +1,22 @@
-package groom.him.core.model.user.entity;
+package groom.him.core.model.member.entity;
 
 import groom.him.core.model.product.entity.SkinType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -25,12 +25,13 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@RequiredArgsConstructor
 public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memberId;
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private SkinType skinTypeId;
     @Column(length = 15)
     private String loginId;
@@ -81,7 +82,7 @@ public class Member implements UserDetails {
         USER, ADMIN
     }
 
-    enum Gender {
+    public enum Gender {
          M, W
     }
 }

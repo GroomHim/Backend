@@ -1,7 +1,6 @@
-package groom.him.core.model.user.repository;
+package groom.him.core.model.member.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
-import groom.him.core.model.user.entity.Member;
+import groom.him.core.model.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
