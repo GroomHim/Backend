@@ -6,7 +6,6 @@ import jakarta.persistence.Converter;
 
 @Converter
 public class IsPublicConverter implements AttributeConverter<IsPublic, Boolean> {
-
     @Override
     public Boolean convertToDatabaseColumn(IsPublic attribute) {
         if(attribute == null) return null;
