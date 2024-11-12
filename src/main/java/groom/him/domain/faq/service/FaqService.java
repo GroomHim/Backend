@@ -1,7 +1,7 @@
-package groom.him.core.domain.faq.service;
+package groom.him.domain.faq.service;
 
-import groom.him.core.domain.faq.models.dto.FaqResponse;
-import groom.him.core.domain.faq.repository.FaqRepository;
+import groom.him.domain.faq.models.dto.FaqResponse;
+import groom.him.domain.faq.repository.FaqRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 

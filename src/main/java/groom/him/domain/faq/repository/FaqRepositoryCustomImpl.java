@@ -1,9 +1,9 @@
-package groom.him.core.domain.faq.repository;
+package groom.him.domain.faq.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.core.common.enums.IsPublic;
-import groom.him.core.domain.faq.models.dto.FaqResponse;
+import groom.him.domain.faq.models.dto.FaqResponse;
 import groom.him.core.domain.faq.models.entity.QFaqCategoryEntity;
 import groom.him.core.domain.faq.models.entity.QFaqEntity;
 import java.util.List;

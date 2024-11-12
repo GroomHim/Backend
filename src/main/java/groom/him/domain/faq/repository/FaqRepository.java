@@ -1,6 +1,6 @@
-package groom.him.core.domain.faq.repository;
+package groom.him.domain.faq.repository;
 
-import groom.him.core.domain.faq.models.entity.FaqEntity;
+import groom.him.domain.faq.models.entity.FaqEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
