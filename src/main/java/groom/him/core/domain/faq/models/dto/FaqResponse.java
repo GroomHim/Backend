@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public record FaqResponse(
     Long faqId,
-    Long facCategoryId,
+    String category,
     String question,
     String answer,
     String prio,
