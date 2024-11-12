@@ -1,4 +1,4 @@
-package groom.him.core.entity.constant;
+package groom.him.common.models.constant;
 
 public enum SkinType {
     OILY_TYPE_1("지성", "완전 기름진 피부", 1),
