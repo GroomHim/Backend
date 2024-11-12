@@ -1,4 +1,4 @@
-package groom.him.core.domain.notice.models.entities;
+package groom.him.domain.notice.models.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

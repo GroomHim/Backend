@@ -1,7 +1,7 @@
-package groom.him.core.domain.notice.controller;
+package groom.him.domain.notice.controller;
 
-import groom.him.core.domain.notice.models.dto.NoticeResponse;
-import groom.him.core.domain.notice.service.NoticeService;
+import groom.him.domain.notice.service.NoticeService;
+import groom.him.domain.notice.models.dto.response.NoticeResponse;
 import groom.him.core.dto.Response;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
