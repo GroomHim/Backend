@@ -1,4 +1,4 @@
-package groom.him.domain.faq.models.dto;
+package groom.him.domain.faq.models.dto.response;
 
 import groom.him.core.common.enums.IsPublic;
 import java.time.LocalDateTime;
