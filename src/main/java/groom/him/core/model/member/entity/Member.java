@@ -31,39 +31,56 @@ public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer memberId;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "skintype_id")
     private SkinType skinTypeId;
-    @Column(length = 15)
+
+    @Column(length = 15, name = "login_id")
     private String loginId;
-    @Column(length = 64)
+
+    @Column(length = 64, name = "password")
     private String password;
-    @Column(length = 30)
+
+    @Column(length = 30, name = "name")
     private String name;
-    @Column(length = 11)
+
+    @Column(length = 11, name = "phone_number")
     private String phoneNumber;
-    @Enumerated @Column(length = 1)
+
+    @Enumerated @Column(length = 1, name = "gender")
     private Gender gender;
-    @Column(length = 20)
+
+    @Column(length = 20, name = "nickname")
     private String nickname;
-    @Column(length = 8)
+
+    @Column(length = 8, name = "birth")
     private String birth;
-    @Column
+
+    @Column(name = "ci")
     private String ci;
-    @Column(length = 10)
+
+    @Column(length = 10, name = "provider")
     private String provider;
-    @Column(length = 200)
+
+    @Column(length = 200, name = "refresh_token")
     private String refreshToken;
-    @Column
+
+    @Column(name = "reg_dt")
     @CreatedDate
     private LocalDateTime regDt;
-    @Column
+
+    @Column(name = "udt_dt")
     @LastModifiedDate
     private LocalDateTime udtDt;
-    @Column
+
+    @Column(name = "is_cancel")
     private Boolean isCancel;
-    @Enumerated @Column
+
+    @Enumerated @Column(name = "role")
     private Role role;
-    @Column(length = 32)
+
+    @Column(length = 32, name = "salt")
     private String salt;
 
     @Override
