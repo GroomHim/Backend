@@ -9,9 +9,12 @@ import groom.him.core.common.enums.IsPublic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -27,8 +30,9 @@ public class FaqEntity {
     @Column(name = "faq_id")
     private Long faqId;
 
-    @Column(name = "faq_category_id")
-    private Long faqCategoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "faq_category_id")
+    private FaqCategoryEntity faqCategory;
 
     @Column(name = "question", length = 50)
     private String question;
