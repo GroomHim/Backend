@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public abstract class CreatedDateFields {
+public abstract class RegisterDateFields {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
     @Column(name = "reg_dt", nullable = false, updatable = false)
