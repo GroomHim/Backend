@@ -40,15 +40,15 @@ public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "role";
     private static final String CI_HEADER_NAME = "CI-TOKEN";
 
-    public String createToken(Long userId, Authentication authentication, String ci) {
+    public String createToken(Integer userId, Authentication authentication, String ci) {
         return generateToken(userId, authentication, tokenValidTime, ci);
     }
 
-    public String createRefreshToken(Long userId, Authentication authentication, String ci){
+    public String createRefreshToken(Integer userId, Authentication authentication, String ci){
         return generateToken(userId, authentication, refreshTokenValidTime, ci);
     }
 
-    public String generateToken(Long userId, Authentication authentication, long expireTime, String ci){
+    public String generateToken(Integer userId, Authentication authentication, long expireTime, String ci){
 //        System.out.println(authentication.getCredentials());
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
