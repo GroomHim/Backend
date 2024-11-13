@@ -1,6 +1,6 @@
-package groom.him.core.entity.constant;
+package groom.him.common.models.constant;
 
-public enum SkinTypeCategory {
+public enum SkinType {
     OILY_TYPE_1("지성", "완전 기름진 피부", 1),
     OILY_TYPE_2("지성", "덜 기름진 피부", 2),
     OILY_TYPE_3("지성", "꽤 기름진 피부", 3),
@@ -16,6 +16,6 @@ public enum SkinTypeCategory {
     COMBINATION_OILY_TYPE_3("수부지", "수분 부족 지성 피부", 3),
     COMBINATION_OILY_TYPE_4("수부지", "수분 부족 지성 피부", 4);
 
-    SkinTypeCategory(String type, String description, int level) {
+    SkinType(String type, String description, int level) {
     }
 }
