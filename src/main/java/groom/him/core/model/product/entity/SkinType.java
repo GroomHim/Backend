@@ -1,6 +1,5 @@
 package groom.him.core.model.product.entity;
 
-import groom.him.core.entity.constant.SkinTypeCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

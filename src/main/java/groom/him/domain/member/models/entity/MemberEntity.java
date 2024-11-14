@@ -17,18 +17,26 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MEMBER")
 @Entity
-public class MemberEntity extends AuditingFields {
+public class MemberEntity extends AuditingFields implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private Long memberId;
+    private Integer memberId;
 
     @Enumerated(EnumType.STRING)
     private SkinType skinType;
@@ -83,4 +91,60 @@ public class MemberEntity extends AuditingFields {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(role.toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password.getEncryptedPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Builder
+    public MemberEntity(
+            Integer memberId,
+            SkinType skinType,
+            String loginId,
+            Password password,
+            String name,
+            String phoneNumber,
+            Gender gender,
+            String nickname,
+            String birth,
+            String ci,
+            Provider provider,
+            String socialTokenId,
+            String refreshToken,
+            Boolean isCancel,
+            Role role
+    ){
+        this.memberId = memberId;
+        this.skinType = skinType;
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.nickname = nickname;
+        this.birth = birth;
+        this.ci = ci;
+        this.provider = provider;
+        this.socialTokenId = socialTokenId;
+        this.refreshToken = refreshToken;
+        this.isCancel = isCancel;
+        this.role = role;
+    }
+
+    public void changeRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
 }

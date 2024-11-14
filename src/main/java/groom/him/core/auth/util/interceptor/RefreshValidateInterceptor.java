@@ -32,7 +32,7 @@ public class RefreshValidateInterceptor implements HandlerInterceptor {
         String refreshToken = jwtTokenProvider.resolveToken(request);
         try {
             if (refreshToken != null) {
-                Long userId = Long.parseLong(jwtTokenProvider.getUserId(refreshToken));
+                Integer userId = Integer.parseInt(jwtTokenProvider.getUserId(refreshToken));
                 if (authService.existsRefreshToken(userId, refreshToken) && jwtTokenProvider.isTokenNonExpired(refreshToken)) {
                     try {
                         Authentication authentication = getAuthentication(refreshToken);
