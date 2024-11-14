@@ -15,7 +15,9 @@ public record Response<T>(
     public Response(Integer statusCode, T data) {
         this(statusCode, null, data);
     }
+    public Response(Integer statusCode) { this(statusCode, null, null); }
 
+    public static Response success() { return success(SUCCESS_HTTP_STATUS); }
     public static <T> Response<T> success(T data) {
         return success(SUCCESS_HTTP_STATUS, data);
     }

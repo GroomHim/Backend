@@ -1,0 +1,31 @@
+INSERT INTO BRAND (BRAND_ID, BRAND_EN_NM, BRAND_NM, REG_DT, UDT_DT)
+VALUES (1, 'CALVINKEIN', '캘빈클라인', NOW(), NOW()),
+       (2, 'HERA', '헤라', NOW(), NOW()),
+       (3, 'FORMENT', '포맨트', NOW(), NOW()),
+       (4, 'IOPE', '아이오페', NOW(), NOW()),
+       (5, 'DASHU', '다슈', NOW(), NOW());
+
+INSERT INTO PRODUCT (PRODUCT_ID, PRODUCT_NAME, DISCOUNT_RATE, DISCOUNTED_PRICE, PRICE, SKIN_TYPE,
+                     BRAND_ID, REG_DT, UDT_DT)
+VALUES (1, 'Product A', 0.2, 4000, 5000, 'OILY_TYPE_1', 1, NOW(), NOW()),
+       (2, 'Product B', 0.2, 4800, 6000, 'OILY_TYPE_1', 2, NOW(), NOW()),
+       (3, 'Product C', 0.3, 3500, 5000, 'DRY_TYPE_1', 3, NOW(), NOW()),
+       (4, 'Product D', 0.3, 2100, 3000, 'DRY_TYPE_1', 4, NOW(), NOW()),
+       (5, 'Product E', 0.3, 7000, 10000, 'DRY_TYPE_1', 5, NOW(), NOW()),
+       (6, 'Product F', 0.5, 2500, 5000, 'COMBINATION_OILY_TYPE_1', 1, NOW(), NOW()),
+       (7, 'Product G', 0.5, 1500, 3000, 'COMBINATION_OILY_TYPE_1', 2, NOW(), NOW()),
+       (8, 'Product H', 0.5, 4000, 8000, 'COMBINATION_OILY_TYPE_1', 3, NOW(), NOW()),
+       (9, 'Product I', 0.5, 6000, 12000, 'COMBINATION_OILY_TYPE_1', 4, NOW(), NOW()),
+       (10, 'Product J', 0.2, 72000.00, 90000.00, 'COMBINATION_OILY_TYPE_1', 5, NOW(), NOW());
+
+INSERT INTO PRODUCT_IMG (PRODUCT_IMG_ID, IMG_URL, PRODUCT_ID, REG_DT, UDT_DT)
+VALUES (1, 'https://example.com/images/product1_1.jpg', 1, NOW(), NOW()),
+       (2, 'https://example.com/images/product1_2.jpg', 1, NOW(), NOW()),
+       (3, 'https://example.com/images/product2_1.jpg', 2, NOW(), NOW()),
+       (4, 'https://example.com/images/product2_2.jpg', 2, NOW(), NOW()),
+       (5, 'https://example.com/images/product3_1.jpg', 3, NOW(), NOW()),
+       (6, 'https://example.com/images/product3_2.jpg', 3, NOW(), NOW()),
+       (7, 'https://example.com/images/product4_1.jpg', 4, NOW(), NOW()),
+       (8, 'https://example.com/images/product4_2.jpg', 4, NOW(), NOW()),
+       (9, 'https://example.com/images/product5_1.jpg', 5, NOW(), NOW()),
+       (10, 'https://example.com/images/product5_2.jpg', 5, NOW(), NOW());
