@@ -110,12 +110,12 @@ public class JwtTokenProvider {
         } else throw new RuntimeException("Invalid token");
     }
 
-//    public String resolveRefreshToken(HttpServletRequest request){
-//        if(request.getHeader(REFRESHTOKEN_HEADER_NAME) == null){
-//            return null;
-//        }
-//        return request.getHeader(REFRESHTOKEN_HEADER_NAME);
-//    }
+    public String resolveRefreshToken(HttpServletRequest request){
+        if(request.getHeader(REFRESHTOKEN_HEADER_NAME) == null){
+            return null;
+        }
+        return request.getHeader(REFRESHTOKEN_HEADER_NAME);
+    }
 
     public boolean isTokenNonExpired(String jwtToken) {
         try {

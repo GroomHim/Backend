@@ -4,6 +4,7 @@ import groom.him.common.models.constant.Gender;
 import groom.him.common.models.constant.Role;
 import groom.him.common.models.entity.AuditingFields;
 import groom.him.common.models.entity.SkinTypeEntity;
+import groom.him.core.model.product.entity.SkinType;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.data.Password;
 import jakarta.persistence.Column;
@@ -40,7 +41,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "member_id")
     private Integer memberId;
 
-    @NotNull
     @OneToOne
     @JoinColumn(name = "skin_type_id")
     private SkinTypeEntity skinTypeEntity;
@@ -117,7 +117,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Builder
     public MemberEntity(
             Integer memberId,
-            SkinType skinType,
+            SkinTypeEntity skinType,
             String loginId,
             Password password,
             String name,
@@ -133,7 +133,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
             Role role
     ) {
         this.memberId = memberId;
-        this.skinType = skinType;
+        this.skinTypeEntity = skinType;
         this.loginId = loginId;
         this.password = password;
         this.name = name;
