@@ -8,9 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
-    Optional<MemberEntity> findByMemberIdAndIsCancelTrue(Integer id);
+    Optional<MemberEntity> findByMemberIdAndIsCancelFalse(Integer id);
 
     Optional<MemberEntity> findByMemberIdAndRefreshToken(Integer id, String refreshToken);
 
-    Optional<MemberEntity> findByLoginIdAndIsCancelTrue(String loginId);
+    Optional<MemberEntity> findByLoginIdAndIsCancelFalse(String loginId);
 }

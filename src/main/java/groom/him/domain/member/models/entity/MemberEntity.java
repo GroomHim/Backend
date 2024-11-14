@@ -103,6 +103,8 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         return this.password.getEncryptedPassword();
     }
 
+    public String getSalt() { return this.password.getSalt(); }
+
     @Override
     public String getUsername() {
         return name;

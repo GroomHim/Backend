@@ -2,8 +2,7 @@ package groom.him.core.auth.service;
 
 import groom.him.common.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
-import groom.him.core.auth.dto.response.RefreshTokenResponse;
-import groom.him.core.auth.dto.response.LogInResponse;
+import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
@@ -22,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -48,14 +48,19 @@ public class AuthService implements UserDetailsService {
         return authenticationToken;
     }
 
-//    public LogInResponse logIn(final String loginId, final String password) {
-////        Optional<MemberEntity> optionalUser = memberRepository.findByPhoneNumberAndLoginVerificationCodeAndLoginVerificationExpiredAtIsAfterAndIsEnabledTrue(phoneNumber, verificationCode, new Timestamp(System.currentTimeMillis()));
-//        MemberEntity member = memberRepository.findByLoginIdAndIsCancelTrue(loginId).orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST));
-//        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
-//        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
-//        member.changeRefreshToken(refreshToken);
-//        return new LogInResponse(accessToken, refreshToken);
-//    }
+    public SignInResponse signIn(final String loginId, final String password) throws Exception {
+        MemberEntity member = memberRepository.findByLoginIdAndIsCancelFalse(loginId).orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST));
+        String pwd = member.getPassword();//
+        String salt = member.getSalt();
+        System.out.println(pwd);
+        System.out.println(hashing(password, salt));
+        if(!pwd.equals(hashing(password, salt))) throw new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST);
+        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
+        member.changeRefreshToken(refreshToken);
+
+        return new SignInResponse(accessToken, refreshToken);
+    }
 
     // SALT 값 생성
     private String getSalt() throws Exception {
@@ -67,18 +72,20 @@ public class AuthService implements UserDetailsService {
     }
 
     // 비밀번호 해싱
-    private String hashing(byte[] password, String Salt) throws Exception {
-
+    private String hashing(String password, String salt) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");    // SHA-256 해시함수를 사용
 
-        // key-stretching
+//        String passwordStr = byteToString(password);
+        byte[] passwordBtye = password.getBytes();
+        // Key stretching
         for (int i = 0; i < 10000; i++) {
-            String temp = password + Salt;    // 패스워드와 Salt 를 합쳐 새로운 문자열 생성
-            md.update(temp.getBytes());                        // temp 의 문자열을 해싱하여 md 에 저장해둔다
-            password = md.digest();                            // md 객체의 다이제스트를 얻어 password 를 갱신한다
+            String temp = password + salt;       // Concatenate password and salt
+            md.update(temp.getBytes());             // Hash temp and update md
+            passwordBtye = md.digest();                 // Digest and update password
+            password = byteToString(passwordBtye);   // Convert updated password back to string
         }
 
-        return byteToString(password);
+        return password;
     }
 
     // 바이트 값을 16진수로 변경해준다
@@ -92,7 +99,7 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        return memberRepository.findByMemberIdAndIsCancelTrue(Integer.parseInt(memberId)).orElseThrow(() -> new UsernameNotFoundException(memberId));
+        return memberRepository.findByMemberIdAndIsCancelFalse(Integer.parseInt(memberId)).orElseThrow(() -> new UsernameNotFoundException(memberId));
     }
 
 //    public RefreshTokenResponse regenerateToken(MemberEntity user) {
@@ -110,11 +117,15 @@ public class AuthService implements UserDetailsService {
 
     public MemberEntity signUp(SignUpRequest request) throws Exception {
         String salt = getSalt();
+        System.out.println(
+                salt
+        );
+        System.out.println(Arrays.toString(request.password().getBytes()));
         MemberEntity member = MemberEntity.builder()
                 .loginId(request.loginId())
                 .ci(request.ci())
                 .birth(request.birth())
-                .password(new Password(hashing(request.password().getBytes(), salt), salt))
+                .password(new Password(hashing(request.password(), salt), salt))
                 .name(request.name())
                 .gender(request.gender())
                 .isCancel(false)
@@ -127,9 +138,8 @@ public class AuthService implements UserDetailsService {
         return member;
     }
 
-//    public String logout(MemberEntity member) {
-//        Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
-//        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
-//        return "로그아웃에 성공하였습니다.";
-//    }
+    public void signOut(MemberEntity member) {
+        Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
+        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
+    }
 }

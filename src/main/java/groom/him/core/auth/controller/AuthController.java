@@ -1,6 +1,8 @@
 package groom.him.core.auth.controller;
 
+import groom.him.core.auth.dto.request.SignInRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
+import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
@@ -17,18 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    //    @PostMapping
-//    public LogInResponse logIn(){
-//
-//    }
-//
-//    @PostMapping
-//    public Response logOut(){
+    @PostMapping("/sign-in")
+    public Response<SignInResponse> signIn(@RequestBody SignInRequest request) throws Exception {
+        SignInResponse response = authService.signIn(request.loginId(), request.password());
+        return Response.success(response);
+    }
+
+//    @PostMapping("/sign-out")
+//    public Response signOut(){
+//        authService.signOut();
 //    }
 
     @PostMapping("/sign-up")
     @ResponseBody
-    public Response signUp(@RequestBody SignUpRequest request) throws Exception {
+    public Response<MemberEntity> signUp(@RequestBody SignUpRequest request) throws Exception {
         MemberEntity member = authService.signUp(request);
         return Response.success(member);
     }
