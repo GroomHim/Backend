@@ -2,8 +2,8 @@ package groom.him.domain.member.models.entity;
 
 import groom.him.common.models.constant.Gender;
 import groom.him.common.models.constant.Role;
-import groom.him.common.models.constant.SkinType;
 import groom.him.common.models.entity.AuditingFields;
+import groom.him.common.models.entity.SkinTypeEntity;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.data.Password;
 import jakarta.persistence.Column;
@@ -14,6 +14,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -38,8 +40,10 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "member_id")
     private Integer memberId;
 
-    @Enumerated(EnumType.STRING)
-    private SkinType skinType;
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "skin_type_id")
+    private SkinTypeEntity skinTypeEntity;
 
     @NotNull
     @Column(length = 15, name = "login_id")
