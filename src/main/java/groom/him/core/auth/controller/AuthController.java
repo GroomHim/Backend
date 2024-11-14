@@ -24,8 +24,8 @@ public class AuthController {
 //
 //    @PostMapping
 //    public Response logOut(){
-//
 //    }
+
     @PostMapping("/sign-up")
     @ResponseBody
     public Response signUp(@RequestBody SignUpRequest request) throws Exception {

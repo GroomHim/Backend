@@ -48,14 +48,14 @@ public class AuthService implements UserDetailsService {
         return authenticationToken;
     }
 
-    public LogInResponse logIn(final String loginId, final String password) {
-//        Optional<MemberEntity> optionalUser = memberRepository.findByPhoneNumberAndLoginVerificationCodeAndLoginVerificationExpiredAtIsAfterAndIsEnabledTrue(phoneNumber, verificationCode, new Timestamp(System.currentTimeMillis()));
-        MemberEntity member = memberRepository.findByLoginIdAndIsCancelTrue(loginId).orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST));
-        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
-        member.changeRefreshToken(refreshToken);
-        return new LogInResponse(accessToken, refreshToken);
-    }
+//    public LogInResponse logIn(final String loginId, final String password) {
+////        Optional<MemberEntity> optionalUser = memberRepository.findByPhoneNumberAndLoginVerificationCodeAndLoginVerificationExpiredAtIsAfterAndIsEnabledTrue(phoneNumber, verificationCode, new Timestamp(System.currentTimeMillis()));
+//        MemberEntity member = memberRepository.findByLoginIdAndIsCancelTrue(loginId).orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST));
+//        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
+//        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
+//        member.changeRefreshToken(refreshToken);
+//        return new LogInResponse(accessToken, refreshToken);
+//    }
 
     // SALT 값 생성
     private String getSalt() throws Exception {
@@ -95,13 +95,13 @@ public class AuthService implements UserDetailsService {
         return memberRepository.findByMemberIdAndIsCancelTrue(Integer.parseInt(memberId)).orElseThrow(() -> new UsernameNotFoundException(memberId));
     }
 
-    public RefreshTokenResponse regenerateToken(MemberEntity user) {
-        final String accessToken = jwtTokenProvider.createToken(user.getMemberId(), toAuthentication(user.getMemberId(), user.getRole()), user.getCi());
-        final String refreshToken = jwtTokenProvider.createRefreshToken(user.getMemberId(), toAuthentication(user.getMemberId(), user.getRole()), user.getCi());
-        Optional<MemberEntity> optionalMember = memberRepository.findById(user.getMemberId());
-        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(refreshToken);
-        return new RefreshTokenResponse(accessToken, refreshToken);
-    }
+//    public RefreshTokenResponse regenerateToken(MemberEntity user) {
+//        final String accessToken = jwtTokenProvider.createToken(user.getMemberId(), toAuthentication(user.getMemberId(), user.getRole()), user.getCi());
+//        final String refreshToken = jwtTokenProvider.createRefreshToken(user.getMemberId(), toAuthentication(user.getMemberId(), user.getRole()), user.getCi());
+//        Optional<MemberEntity> optionalMember = memberRepository.findById(user.getMemberId());
+//        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(refreshToken);
+//        return new RefreshTokenResponse(accessToken, refreshToken);
+//    }
 
     public Boolean existsRefreshToken(Integer userId, String refreshToken) {
         Optional<MemberEntity> optionalMember = memberRepository.findByMemberIdAndRefreshToken(userId, refreshToken);
@@ -127,9 +127,9 @@ public class AuthService implements UserDetailsService {
         return member;
     }
 
-    public String logout(MemberEntity member) {
-        Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
-        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
-        return "로그아웃에 성공하였습니다.";
-    }
+//    public String logout(MemberEntity member) {
+//        Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
+//        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
+//        return "로그아웃에 성공하였습니다.";
+//    }
 }
