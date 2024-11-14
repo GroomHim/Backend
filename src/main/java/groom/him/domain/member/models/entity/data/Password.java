@@ -19,8 +19,9 @@ public class Password {
     @NotNull
     @Column(length = 32, name = "salt")
     private String salt;
+
     @Builder
-    public Password(String encryptedPassword, String salt){
+    public Password(String encryptedPassword, String salt) {
         this.encryptedPassword = encryptedPassword;
         this.salt = salt;
     }

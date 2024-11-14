@@ -35,7 +35,7 @@ public class SecurityConfig {
     private final String ORIGIN = "http://localhost:3000";
     private final String[] FRONT_SRC_URLS = new String[]{"/webjars/**", "/configuration/ui", "/configuration/security"};
     private final String[] DOCS_SRC_URLS = new String[]{"/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v1/api-docs", "/swagger/**","/groomhim/v1/health-check"};
-    private final String[] AUTH_URLS = new String[] {"/groomhim/auth/sign-in", "/groomhim/auth/refresh-token"};
+    private final String[] AUTH_URLS = new String[] {"/api/v1/auth/sign-up", "/groomhim/auth/refresh-token"};
     private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
 
     @Bean

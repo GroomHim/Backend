@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+
 @Entity
 @Getter
 public class SkinType {

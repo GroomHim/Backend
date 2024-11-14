@@ -81,7 +81,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "social_token_id")
     private String socialTokenId;
 
-    @NotNull
     @Column(length = 200, name = "refresh_token")
     private String refreshToken;
 
@@ -126,7 +125,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
             String refreshToken,
             Boolean isCancel,
             Role role
-    ){
+    ) {
         this.memberId = memberId;
         this.skinType = skinType;
         this.loginId = loginId;
@@ -144,7 +143,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.role = role;
     }
 
-    public void changeRefreshToken(String refreshToken){
+    public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 }

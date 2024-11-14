@@ -6,7 +6,7 @@ import groom.him.core.exception.HttpErrorCode;
 public class MemberException {
 
     public static class MemberNotExistException extends BusinessException {
-        public MemberNotExistException(HttpErrorCode httpErrorCode){
+        public MemberNotExistException(HttpErrorCode httpErrorCode) {
             super(httpErrorCode);
         }
     }

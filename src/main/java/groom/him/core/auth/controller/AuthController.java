@@ -1,7 +1,6 @@
 package groom.him.core.auth.controller;
 
 import groom.him.core.auth.dto.request.SignUpRequest;
-import groom.him.core.auth.dto.response.LogInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-//    @PostMapping
+    //    @PostMapping
 //    public LogInResponse logIn(){
 //
 //    }
@@ -28,37 +26,10 @@ public class AuthController {
 //    public Response logOut(){
 //
 //    }
-
     @PostMapping("/sign-up")
     @ResponseBody
     public Response signUp(@RequestBody SignUpRequest request) throws Exception {
         MemberEntity member = authService.signUp(request);
         return Response.success(member);
     }
-
-
-//    @PostMapping
-//    public Response oauthSignUp(){
-//
-//    }
-//
-//    @PostMapping
-//    public Response refreshToken(){
-//
-//    }
-//
-//    @PostMapping
-//    public Response validateEmail(){
-//
-//    }
-//
-//    @PostMapping
-//    public Response validateId(){
-//
-//    }
-//
-//    @PostMapping
-//    public Response validateNickname(){
-//
-//    }
 }

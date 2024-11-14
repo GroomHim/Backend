@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface MemberRepository extends JpaRepository<MemberEntity,Integer> {
-    Optional<MemberEntity> findByIdAndIsEnabledTrue(Integer id);
-    Optional<MemberEntity> findByIdAndRefreshToken(Integer id, String refreshToken);
+public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
+    Optional<MemberEntity> findByMemberIdAndIsCancelTrue(Integer id);
 
-    Optional<MemberEntity> findByLoginIdAndIsEnabledTrue(String loginId);
+    Optional<MemberEntity> findByMemberIdAndRefreshToken(Integer id, String refreshToken);
+
+    Optional<MemberEntity> findByLoginIdAndIsCancelTrue(String loginId);
 }
