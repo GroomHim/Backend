@@ -10,4 +10,10 @@ public class MemberException {
             super(httpErrorCode);
         }
     }
+
+    public static class MemberDuplicatedException extends BusinessException {
+        public MemberDuplicatedException(HttpErrorCode httpErrorCode) {
+            super(httpErrorCode);
+        }
+    }
 }

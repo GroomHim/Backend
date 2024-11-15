@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum MemberErrorCode implements HttpErrorCode {
-    MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "잘못된 요청입니다.");
+    MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
+    MEMBER_DUPLICATED(HttpStatus.CONFLICT, "이미 존재하는 사용자입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

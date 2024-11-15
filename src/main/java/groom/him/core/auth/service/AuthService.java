@@ -103,6 +103,7 @@ public class AuthService implements UserDetailsService {
 
     public MemberEntity signUp(SignUpRequest request) throws Exception {
         String salt = getSalt();
+        if (isCiExist(request.ci())) throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
         MemberEntity member = MemberEntity.builder()
                 .loginId(request.loginId())
                 .ci(request.ci())
@@ -124,5 +125,10 @@ public class AuthService implements UserDetailsService {
     public void signOut(MemberEntity member) {
         Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
         optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
+    }
+
+    private Boolean isCiExist(String ci){
+        Optional<MemberEntity> optionalMember = memberRepository.findByCiAndIsCancelFalse(ci);
+        return optionalMember.isPresent();
     }
 }
