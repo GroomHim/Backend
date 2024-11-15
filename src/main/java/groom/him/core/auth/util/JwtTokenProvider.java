@@ -59,10 +59,9 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject(memberId.toString())
                 .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(new Date(now.getTime() + expireTime))//유닉스타임으로 변경
+                .setExpiration(new Date(now.getTime() + expireTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-
     }
 
     public String getUserId(String token) {
@@ -81,7 +80,6 @@ public class JwtTokenProvider {
         return authorities;
     }
 
-    //파싱하는 부분
     public String resolveToken(HttpServletRequest request) {
         if (request.getHeader(TOKEN_HEADER_NAME) == null) {
             return null; // TODO: Exception

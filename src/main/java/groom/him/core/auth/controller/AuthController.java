@@ -7,6 +7,7 @@ import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,12 @@ public class AuthController {
     public Response<SignInResponse> signIn(@RequestBody SignInRequest request) throws Exception {
         SignInResponse response = authService.signIn(request.loginId(), request.password());
         return Response.success(response);
+    }
+
+    @PostMapping("/sign-out")
+    public Response signOut(@AuthenticationPrincipal MemberEntity member){
+        authService.signOut(member);
+        return Response.success();
     }
 
     @PostMapping("/sign-up")
