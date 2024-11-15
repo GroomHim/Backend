@@ -31,16 +31,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtTokenProvider.isTokenNonExpired(token)) {
             Authentication authentication = getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else if( token == null){
+        } else if (token == null) {
             throw new RuntimeException("token doesn't exist!");
-        } else if( !jwtTokenProvider.isTokenNonExpired(token) ){
+        } else if (!jwtTokenProvider.isTokenNonExpired(token)) {
             throw new RuntimeException("invalid token!");
         }
-
         filterChain.doFilter(request, response);
-        System.out.println("end filter");
     }
-
 
     private Authentication getAuthentication(String token) throws UsernameNotFoundException {
         UserDetails userDetails = authService.loadUserByUsername(jwtTokenProvider.getUserId(token));

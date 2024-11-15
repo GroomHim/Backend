@@ -25,6 +25,7 @@ import java.security.InvalidParameterException;
 @RequiredArgsConstructor
 public class RefreshValidateInterceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
+
     private final AuthService authService;
 
     @Override
@@ -49,7 +50,7 @@ public class RefreshValidateInterceptor implements HandlerInterceptor {
                 log.info("refresh token is null");
                 return false;
             }
-        } catch(ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e){
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
             e.printStackTrace();
             log.info("invalid token");
             throw new InvalidParameterException("유효하지 않은 토큰입니다.");
