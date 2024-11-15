@@ -18,7 +18,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleCommonException(CommonException e) {
         e.printStackTrace();
         return ResponseEntity.status(e.getHttpErrorCode().getHttpStatus())
-            .body(makeErrorResponse(e.getHttpErrorCode()));
+                .body(makeErrorResponse(e.getHttpErrorCode()));
     }
 
     private ErrorResponse makeErrorResponse(HttpErrorCode errorCode) {

@@ -1,7 +1,11 @@
 package groom.him.core.config;
 
+import groom.him.core.auth.service.AuthService;
+import groom.him.core.auth.util.JwtTokenProvider;
+import groom.him.core.auth.util.filter.JwtAuthenticationFilter;
 import groom.him.core.auth.util.handler.AuthAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -16,13 +20,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+
 import java.util.Collections;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final AuthService authService;
 
     private final String ORIGIN = "http://localhost:3000";
 
@@ -30,14 +40,14 @@ public class SecurityConfig {
 
     private final String[] DOCS_SRC_URLS = new String[]{"/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v1/api-docs", "/swagger/**","/groomhim/v1/health-check"};
 
-    private final String[] AUTH_URLS = new String[] {"/groomhim/auth/sign-in", "/groomhim/auth/refresh-token"};
+    private final String[] AUTH_URLS = new String[]{"/api/v1/auth/sign-up", "/api/v1/auth/sign-in", "/groomhim/auth/refresh-token"};
 
     private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(corsConfigurer-> corsConfigurer.configurationSource(corsConfigurationSource()))
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authz) -> authz
@@ -46,8 +56,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(accessDeniedCustomHandler));
 
-        // TODO: Add JWT authentication filter
-        // http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
