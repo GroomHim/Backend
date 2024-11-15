@@ -25,11 +25,6 @@ public class AuthController {
         return Response.success(response);
     }
 
-//    @PostMapping("/sign-out")
-//    public Response signOut(){
-//        authService.signOut();
-//    }
-
     @PostMapping("/sign-up")
     @ResponseBody
     public Response<MemberEntity> signUp(@RequestBody SignUpRequest request) throws Exception {
