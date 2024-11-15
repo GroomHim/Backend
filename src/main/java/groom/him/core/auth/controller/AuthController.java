@@ -34,8 +34,8 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @ResponseBody
-    public Response<MemberEntity> signUp(@RequestBody SignUpRequest request) throws Exception {
-        MemberEntity member = authService.signUp(request);
-        return Response.success(member);
+    public Response signUp(@RequestBody SignUpRequest request) throws Exception {
+        authService.signUp(request);
+        return Response.success();
     }
 }
