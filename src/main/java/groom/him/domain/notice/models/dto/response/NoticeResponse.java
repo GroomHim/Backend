@@ -13,10 +13,10 @@ public record NoticeResponse(
     LocalDateTime regDt,
     LocalDateTime udtDt
 ) {
-
-    public NoticeResponse(NoticeEntity notice) {
-        this(notice.getNoticeId(), notice.getMemberId(), notice.getTitle(), notice.getContent(),
-            notice.getIsPublic(), notice.getRegDt(), notice.getUpdDt()
+    
+    public static NoticeResponse of(NoticeEntity notice) {
+        return new NoticeResponse(notice.getNoticeId(), notice.getMemberId(), notice.getTitle(),
+            notice.getContent(), notice.getIsPublic(), notice.getRegDt(), notice.getUpdDt()
         );
     }
 }

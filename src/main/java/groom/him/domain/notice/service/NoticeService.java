@@ -20,7 +20,7 @@ public class NoticeService {
         List<NoticeEntity> noticeEntityList = noticeRepository.findAllByIsPublicOrderByRegDtDesc(
             IsPublic.OPEN);
         return noticeEntityList.stream()
-            .map(NoticeResponse::new)
+            .map(NoticeResponse::of)
             .toList();
     }
 }
