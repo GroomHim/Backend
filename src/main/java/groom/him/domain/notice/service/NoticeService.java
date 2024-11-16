@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NoticeService {
+
     private final NoticeRepository noticeRepository;
 
     public NoticeService(NoticeRepository noticeRepository) {
@@ -16,12 +17,10 @@ public class NoticeService {
     }
 
     public List<NoticeResponse> getNoticeList() {
-        List<NoticeEntity> noticeEntityList = noticeRepository.findAllByIsPublicOrderByRegDtDesc(IsPublic.OPEN);
+        List<NoticeEntity> noticeEntityList = noticeRepository.findAllByIsPublicOrderByRegDtDesc(
+            IsPublic.OPEN);
         return noticeEntityList.stream()
-            .map(notice -> new NoticeResponse(
-                notice.getNoticeId(), notice.getMemberId(), notice.getTitle(), notice.getContent(),
-                notice.getIsPublic(), notice.getRegDt(), notice.getUpdDt())
-            )
+            .map(NoticeResponse::new)
             .toList();
     }
 }
