@@ -1,7 +1,7 @@
 package groom.him.domain.notice.models.dto.response;
 
 import groom.him.core.common.enums.IsPublic;
-import groom.him.domain.notice.models.entities.NoticeEntity;
+import groom.him.domain.notice.models.entity.NoticeEntity;
 import java.time.LocalDateTime;
 
 public record NoticeResponse(
@@ -13,7 +13,7 @@ public record NoticeResponse(
     LocalDateTime regDt,
     LocalDateTime udtDt
 ) {
-    
+
     public static NoticeResponse of(NoticeEntity notice) {
         return new NoticeResponse(notice.getNoticeId(), notice.getMemberId(), notice.getTitle(),
             notice.getContent(), notice.getIsPublic(), notice.getRegDt(), notice.getUpdDt()

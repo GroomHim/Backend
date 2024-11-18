@@ -2,7 +2,7 @@ package groom.him.domain.notice.service;
 
 import groom.him.core.common.enums.IsPublic;
 import groom.him.domain.notice.models.dto.response.NoticeResponse;
-import groom.him.domain.notice.models.entities.NoticeEntity;
+import groom.him.domain.notice.models.entity.NoticeEntity;
 import groom.him.domain.notice.repository.NoticeRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
