@@ -57,5 +57,4 @@ public class AuthController {
         }
         else throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_NOT_VALID);
     }
-
 }
