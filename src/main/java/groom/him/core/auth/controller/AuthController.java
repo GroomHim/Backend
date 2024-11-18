@@ -5,6 +5,11 @@ import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
+import groom.him.core.exception.CommonErrorCode;
+import groom.him.core.exception.ErrorResponse;
+import groom.him.core.exception.HttpErrorCode;
+import groom.him.core.model.member.exception.MemberErrorCode;
+import groom.him.core.model.member.exception.MemberException;
 import groom.him.domain.member.models.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,4 +43,15 @@ public class AuthController {
         authService.signUp(request);
         return Response.success();
     }
+
+    @PostMapping("/validate/login-id/{login-id}")
+    @ResponseBody
+    public Response validateLoginId(String loginId) throws Exception {
+        Boolean result = authService.validateLoginId(loginId);
+        if (result){
+            return Response.success();
+        }
+        throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
+    }
+
 }

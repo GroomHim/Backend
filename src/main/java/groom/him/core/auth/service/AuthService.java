@@ -27,6 +27,8 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,5 +132,13 @@ public class AuthService implements UserDetailsService {
     private Boolean isCiExist(String ci){
         Optional<MemberEntity> optionalMember = memberRepository.findByCiAndIsCancelFalse(ci);
         return optionalMember.isPresent();
+    }
+
+    public Boolean validateLoginId(String loginId){
+        String regex = "[!@#$%^&*]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(loginId);
+
+        return !matcher.find();
     }
 }
