@@ -42,6 +42,8 @@ public class SecurityConfig {
 
     private final String[] AUTH_URLS = new String[]{"/api/v1/auth/sign-up", "/api/v1/auth/sign-in", "/groomhim/auth/refresh-token"};
 
+    private final String[] SIGN_UP_VALIDATION_URLS = new String[]{ "/api/v1/auth/validate/login-id/{login_id}" };
+
     private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
 
     @Bean
@@ -66,7 +68,8 @@ public class SecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(FRONT_SRC_URLS)
                 .requestMatchers(DOCS_SRC_URLS)
-                .requestMatchers(AUTH_URLS);
+                .requestMatchers(AUTH_URLS)
+                .requestMatchers(SIGN_UP_VALIDATION_URLS);
     }
 
     public CorsConfigurationSource corsConfigurationSource() {

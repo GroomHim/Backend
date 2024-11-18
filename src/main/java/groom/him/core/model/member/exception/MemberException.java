@@ -16,4 +16,10 @@ public class MemberException {
             super(httpErrorCode);
         }
     }
+
+    public static class MemberNotValidException extends BusinessException {
+        public MemberNotValidException(HttpErrorCode httpErrorCode) {
+            super(httpErrorCode);
+        }
+    }
 }

@@ -11,6 +11,8 @@ import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -134,11 +137,10 @@ public class AuthService implements UserDetailsService {
         return optionalMember.isPresent();
     }
 
-    public Boolean validateLoginId(String loginId){
-        String regex = "[!@#$%^&*]";
+    public boolean validateLoginId(String loginId){
+        String regex = "[/\\[\\]{}?.,;:|\\)*~`!^\\-_+<>@#$%&\\=('\"]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(loginId);
-
         return !matcher.find();
     }
 }
