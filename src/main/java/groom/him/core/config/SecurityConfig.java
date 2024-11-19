@@ -42,7 +42,7 @@ public class SecurityConfig {
 
     private final String[] AUTH_URLS = new String[]{"/api/v1/auth/sign-up", "/api/v1/auth/sign-in", "/groomhim/auth/refresh-token"};
 
-    private final String[] SIGN_UP_VALIDATION_URLS = new String[]{ "/api/v1/auth/validate/login-id/{login_id}" };
+    private final String[] SIGN_UP_VALIDATION_URLS = new String[]{ "/api/v1/auth/validate/login-id/{loginId}", "/api/v1/auth/validate/nickname/{nickname}" };
 
     private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
 

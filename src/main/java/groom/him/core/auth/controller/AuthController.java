@@ -51,8 +51,17 @@ public class AuthController {
 
     @GetMapping("/validate/login-id/{loginId}")
     @ResponseBody
-    public Response validateLoginId(@PathVariable String loginId) throws Exception {
+    public Response validateLoginId(@PathVariable String loginId) {
         if (authService.validateLoginId(loginId)){
+            return Response.success();
+        }
+        else throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_NOT_VALID);
+    }
+
+    @GetMapping("/validate/nickname/{nickname}")
+    @ResponseBody
+    public Response validateNickname(@PathVariable String nickname){
+        if (authService.validateNickname(nickname)){
             return Response.success();
         }
         else throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_NOT_VALID);

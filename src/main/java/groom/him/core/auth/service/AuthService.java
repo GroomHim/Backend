@@ -138,11 +138,17 @@ public class AuthService implements UserDetailsService {
     }
 
     public boolean validateLoginId(String loginId){
-        Optional<MemberEntity> member = memberRepository.findByLoginIdAndIsCancelFalse(loginId);
+        Optional<MemberEntity> member = memberRepository.findByLoginId(loginId);
         if (member.isPresent()) throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
         String regex = "[/\\[\\]{}?.,;:|\\)*~`!^\\-_+<>@#$%&\\=('\"]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(loginId);
         return !matcher.find();
+    }
+
+    public boolean validateNickname(String email){
+        Optional<MemberEntity> member = memberRepository.findByNickname(email);
+        if (member.isPresent()) throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
+        return true;
     }
 }
