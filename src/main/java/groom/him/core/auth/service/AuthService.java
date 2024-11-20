@@ -53,12 +53,12 @@ public class AuthService implements UserDetailsService {
     }
 
     public SignInResponse signIn(final String loginId, final String password) throws Exception {
-        MemberEntity member = memberRepository.findByLoginIdAndIsCancelFalse(loginId).orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST));
+        MemberEntity member = memberRepository.findByLoginIdAndIsCancelFalse(loginId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
         String pwd = member.getPassword();
         String salt = member.getSalt();
 
         if (!pwd.equals(hashing(password, salt)))
-            throw new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST);
+            throw new MemberException(MemberErrorCode.MEMBER_NOT_EXIST);
         String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
         member.changeRefreshToken(refreshToken);
@@ -103,12 +103,12 @@ public class AuthService implements UserDetailsService {
 
     public Boolean existsRefreshToken(Integer userId, String refreshToken) {
         Optional<MemberEntity> optionalMember = memberRepository.findByMemberIdAndRefreshToken(userId, refreshToken);
-        return !optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).getRefreshToken().isEmpty();
+        return !optionalMember.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).getRefreshToken().isEmpty();
     }
 
     public MemberEntity signUp(SignUpRequest request) throws Exception {
         String salt = getSalt();
-        if (isCiExist(request.ci())) throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
+        if (isCiExist(request.ci())) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         MemberEntity member = MemberEntity.builder()
                 .loginId(request.loginId())
                 .ci(request.ci())
@@ -129,7 +129,7 @@ public class AuthService implements UserDetailsService {
 
     public void signOut(MemberEntity member) {
         Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
-        optionalMember.orElseThrow(() -> new MemberException.MemberNotExistException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
+        optionalMember.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
     }
 
     private Boolean isCiExist(String ci){
@@ -139,7 +139,7 @@ public class AuthService implements UserDetailsService {
 
     public boolean validateLoginId(String loginId){
         Optional<MemberEntity> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
+        if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         String regex = "[/\\[\\]{}?.,;:|\\)*~`!^\\-_+<>@#$%&\\=('\"]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(loginId);
@@ -148,7 +148,7 @@ public class AuthService implements UserDetailsService {
 
     public boolean validateNickname(String email){
         Optional<MemberEntity> member = memberRepository.findByNickname(email);
-        if (member.isPresent()) throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_DUPLICATED);
+        if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         return true;
     }
 }

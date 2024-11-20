@@ -55,7 +55,7 @@ public class AuthController {
         if (authService.validateLoginId(loginId)){
             return Response.success();
         }
-        else throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_NOT_VALID);
+        else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
     }
 
     @GetMapping("/validate/nickname/{nickname}")
@@ -64,6 +64,6 @@ public class AuthController {
         if (authService.validateNickname(nickname)){
             return Response.success();
         }
-        else throw new MemberException.MemberDuplicatedException(MemberErrorCode.MEMBER_NOT_VALID);
+        else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
     }
 }
