@@ -9,8 +9,10 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import java.io.IOException;
 
 public class AuthAccessDeniedHandler implements AccessDeniedHandler {
-    private AuthAccessDeniedHandler() { }
+    private AuthAccessDeniedHandler() {}
+
     private final static AuthAccessDeniedHandler accessDeniedCustomHandler = new AuthAccessDeniedHandler();
+
     public static AuthAccessDeniedHandler getInstance() {
         return accessDeniedCustomHandler;
     }
