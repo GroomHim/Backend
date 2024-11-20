@@ -4,8 +4,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.core.common.enums.IsPublic;
 import groom.him.domain.faq.models.dto.response.FaqResponse;
-import groom.him.core.domain.faq.models.entity.QFaqCategoryEntity;
-import groom.him.core.domain.faq.models.entity.QFaqEntity;
+import groom.him.domain.faq.models.entity.QFaqCategoryEntity;
+import groom.him.domain.faq.models.entity.QFaqEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 

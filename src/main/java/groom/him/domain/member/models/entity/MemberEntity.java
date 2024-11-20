@@ -4,7 +4,6 @@ import groom.him.common.models.constant.Gender;
 import groom.him.common.models.constant.Role;
 import groom.him.common.models.entity.AuditingFields;
 import groom.him.common.models.entity.SkinTypeEntity;
-import groom.him.core.model.product.entity.SkinType;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.data.Password;
 import jakarta.persistence.Column;
@@ -19,6 +18,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,15 +29,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MEMBER")
 @Entity
 public class MemberEntity extends AuditingFields implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -98,8 +97,8 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(role.toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -107,7 +106,9 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         return this.password.getEncryptedPassword();
     }
 
-    public String getSalt() { return this.password.getSalt(); }
+    public String getSalt() {
+        return this.password.getSalt();
+    }
 
     @Override
     public String getUsername() {
@@ -116,21 +117,21 @@ public class MemberEntity extends AuditingFields implements UserDetails {
 
     @Builder
     public MemberEntity(
-            Integer memberId,
-            SkinTypeEntity skinType,
-            String loginId,
-            Password password,
-            String name,
-            String phoneNumber,
-            Gender gender,
-            String nickname,
-            String birth,
-            String ci,
-            Provider provider,
-            String socialTokenId,
-            String refreshToken,
-            Boolean isCancel,
-            Role role
+        Integer memberId,
+        SkinTypeEntity skinType,
+        String loginId,
+        Password password,
+        String name,
+        String phoneNumber,
+        Gender gender,
+        String nickname,
+        String birth,
+        String ci,
+        Provider provider,
+        String socialTokenId,
+        String refreshToken,
+        Boolean isCancel,
+        Role role
     ) {
         this.memberId = memberId;
         this.skinTypeEntity = skinType;

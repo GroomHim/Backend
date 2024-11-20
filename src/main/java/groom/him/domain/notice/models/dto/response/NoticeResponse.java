@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record NoticeResponse(
     Long noticeId,
-    Long memberId,
+    Integer memberId,
     String title,
     String content,
     IsPublic isPublic,
