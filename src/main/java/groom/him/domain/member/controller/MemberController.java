@@ -20,7 +20,7 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/wish")
-    public Response<List<ProductBriefResponse>> getFaqList(
+    public Response<List<ProductBriefResponse>> findUserWishList(
         @PathVariable("memberId") Integer memberId, @RequestParam("skin-type") Boolean isSkinType) {
         List<ProductBriefResponse> data = memberService.findUserWishList(memberId, isSkinType);
         return Response.success(data);
