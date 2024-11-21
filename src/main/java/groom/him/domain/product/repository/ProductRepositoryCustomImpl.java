@@ -17,7 +17,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<ProductEntity> findUserWishProductBriefBySkinType(Integer memberId,
+    public List<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId,
         Boolean isSkinType) {
         QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;

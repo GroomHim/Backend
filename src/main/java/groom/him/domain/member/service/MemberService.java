@@ -15,9 +15,9 @@ public class MemberService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductBriefResponse> findUserWishList(Integer memberId, Boolean isSkinType) {
+    public List<ProductBriefResponse> findMemberWishList(Integer memberId, Boolean isSkinType) {
         // TODO: 1+N 문제 발생
-        List<ProductEntity> productEntityList = productRepository.findUserWishProductBriefBySkinType(
+        List<ProductEntity> productEntityList = productRepository.findMemberWishProductBriefBySkinType(
             memberId, isSkinType);
         return productEntityList.stream().map(product -> ProductBriefResponse.of(product,
                 productRepository.findSkinTypeNameListByProductId(product.getProductId())))
