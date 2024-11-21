@@ -16,4 +16,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
     Optional<MemberEntity> findByLoginIdAndIsCancelFalse(String loginId);
 
     Optional<MemberEntity> findByCiAndIsCancelFalse(String ci);
+
+    Optional<MemberEntity> findByLoginId(String loginId);
+
+    Optional<MemberEntity> findByNickname(String nickname);
 }

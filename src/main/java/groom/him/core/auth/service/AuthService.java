@@ -11,6 +11,7 @@ import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,14 +22,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -130,5 +133,20 @@ public class AuthService implements UserDetailsService {
     private Boolean isCiExist(String ci){
         Optional<MemberEntity> optionalMember = memberRepository.findByCiAndIsCancelFalse(ci);
         return optionalMember.isPresent();
+    }
+
+    public boolean validateLoginId(String loginId){
+        Optional<MemberEntity> member = memberRepository.findByLoginId(loginId);
+        if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
+        String regex = "[/\\[\\]{}?.,;:|\\)*~`!^\\-_+<>@#$%&\\=('\"]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(loginId);
+        return !matcher.find();
+    }
+
+    public boolean validateNickname(String nickname){
+        Optional<MemberEntity> member = memberRepository.findByNickname(nickname);
+        if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
+        return true;
     }
 }
