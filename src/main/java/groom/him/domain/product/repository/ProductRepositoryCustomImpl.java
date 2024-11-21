@@ -3,7 +3,6 @@ package groom.him.domain.product.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import groom.him.common.models.entity.QSkinTypeEntity;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.product.models.entity.ProductEntity;
@@ -45,19 +44,6 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(wish.product, product)
             .where(builder)
             .orderBy(wish.regDt.asc())
-            .fetch();
-    }
-
-    @Override
-    public List<String> findSkinTypeNameListByProductId(Integer productId) {
-        QSkinTypeEntity skinType = QSkinTypeEntity.skinTypeEntity;
-        QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
-
-        return jpaQueryFactory
-            .select(skinType.skinTypeName)
-            .from(skinType)
-            .join(productSkinTypeLink).on(productSkinTypeLink.skinType.eq(skinType))
-            .where(productSkinTypeLink.product.productId.eq(productId))
             .fetch();
     }
 }
