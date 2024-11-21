@@ -4,17 +4,14 @@ import groom.him.common.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.util.JwtTokenProvider;
-import groom.him.core.model.banword.repository.BanwordRepository;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.constant.Provider;
-import groom.him.domain.member.models.entity.BanwordEntity;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +22,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -42,8 +38,6 @@ import java.util.stream.Collectors;
 public class AuthService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-
-    private final BanwordRepository banwordRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -152,7 +146,6 @@ public class AuthService implements UserDetailsService {
 
     public boolean validateNickname(String nickname){
         Optional<MemberEntity> member = memberRepository.findByNickname(nickname);
-//        nickname = banwordRepository.findByBanword(nickname).ifPresent(throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID));
         if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         return true;
     }

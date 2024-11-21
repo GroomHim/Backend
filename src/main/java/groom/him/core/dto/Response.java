@@ -20,7 +20,7 @@ public record Response<T>(
         this(statusCode, null, null);
     }
 
-    public static Response success() {
+    public static Response<Integer> success() {
         return success(SUCCESS_HTTP_STATUS);
     }
 

@@ -5,6 +5,6 @@ import groom.him.core.exception.HttpErrorCode;
 
 public class MemberException extends BusinessException {
     public MemberException(HttpErrorCode httpErrorCode) {
-            super(httpErrorCode);
-        }
+        super(httpErrorCode);
+    }
 }

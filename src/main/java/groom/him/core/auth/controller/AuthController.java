@@ -5,9 +5,6 @@ import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
-import groom.him.core.exception.CommonErrorCode;
-import groom.him.core.exception.ErrorResponse;
-import groom.him.core.exception.HttpErrorCode;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.domain.member.models.entity.MemberEntity;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,7 +47,7 @@ public class AuthController {
 
     @GetMapping("/validate/login-id/{loginId}")
     @ResponseBody
-    public Response validateLoginId(@PathVariable String loginId) {
+    public Response<Integer> validateLoginId(@PathVariable String loginId) {
         if (authService.validateLoginId(loginId)){
             return Response.success();
         }
@@ -60,7 +56,7 @@ public class AuthController {
 
     @GetMapping("/validate/nickname/{nickname}")
     @ResponseBody
-    public Response validateNickname(@PathVariable String nickname){
+    public Response<Integer> validateNickname(@PathVariable String nickname){
         if (authService.validateNickname(nickname)){
             return Response.success();
         }
