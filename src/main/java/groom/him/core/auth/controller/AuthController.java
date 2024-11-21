@@ -33,14 +33,14 @@ public class AuthController {
     }
 
     @PostMapping("/sign-out")
-    public Response signOut(@AuthenticationPrincipal MemberEntity member){
+    public Response<Integer> signOut(@AuthenticationPrincipal MemberEntity member){
         authService.signOut(member);
         return Response.success();
     }
 
     @PostMapping("/sign-up")
     @ResponseBody
-    public Response signUp(@RequestBody SignUpRequest request) throws Exception {
+    public Response<Integer> signUp(@RequestBody SignUpRequest request) throws Exception {
         authService.signUp(request);
         return Response.success();
     }

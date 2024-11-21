@@ -1,6 +1,5 @@
 package groom.him.core.auth.util.filter;
 
-
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.auth.util.JwtTokenProvider;
 import jakarta.servlet.FilterChain;

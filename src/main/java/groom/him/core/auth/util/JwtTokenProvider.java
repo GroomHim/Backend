@@ -1,6 +1,5 @@
 package groom.him.core.auth.util;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -39,7 +38,7 @@ public class JwtTokenProvider {
 
     private final String REFRESHTOKEN_HEADER_NAME = "REFRESH-TOKEN";
 
-    private static final String AUTHORITIES_KEY = "role";
+    private final String AUTHORITIES_KEY = "role";
 
     public String createToken(Integer memberId, Authentication authentication, String ci) {
         return generateToken(memberId, authentication, tokenValidTime, ci);
