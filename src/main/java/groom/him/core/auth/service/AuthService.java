@@ -4,12 +4,23 @@ import groom.him.common.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.util.JwtTokenProvider;
+import groom.him.core.exception.CommonErrorCode;
+import groom.him.core.exception.CommonException;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,15 +32,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -64,7 +66,7 @@ public class AuthService implements UserDetailsService {
         return new SignInResponse(accessToken, refreshToken);
     }
 
-    private String getSalt() throws Exception {
+    public String getSalt() {
         SecureRandom rnd = new SecureRandom();
         byte[] temp = new byte[SALT_SIZE];
         rnd.nextBytes(temp);
@@ -72,16 +74,20 @@ public class AuthService implements UserDetailsService {
         return byteToString(temp);
     }
 
-    private String hashing(String password, String salt) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
+    private String hashing(String password, String salt) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-        byte[] passwordBtye;
+            byte[] passwordBtye;
 
-        for (int i = 0; i < 10000; i++) {
-            String temp = password + salt;
-            md.update(temp.getBytes());
-            passwordBtye = md.digest();
-            password = byteToString(passwordBtye);
+            for (int i = 0; i < 10000; i++) {
+                String temp = password + salt;
+                md.update(temp.getBytes());
+                passwordBtye = md.digest();
+                password = byteToString(passwordBtye);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new CommonException(CommonErrorCode.INTERNAL_SERVER_ERROR);
         }
         return password;
     }
