@@ -46,7 +46,7 @@ public class ProductEntity extends AuditingFields {
     @Column(name = "discounted_price")
     private Integer discountedPrice;
 
-    @Column(name = "ingredients")
+    @Column(name = "ingredients", columnDefinition = "TEXT")
     private String ingredients;
 
     @NotNull
