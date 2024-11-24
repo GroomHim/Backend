@@ -74,7 +74,7 @@ public class AuthService implements UserDetailsService {
         return byteToString(temp);
     }
 
-    private String hashing(String password, String salt) {
+    public String hashing(String password, String salt) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
