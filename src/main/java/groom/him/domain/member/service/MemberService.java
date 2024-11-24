@@ -17,8 +17,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void modifyPassword(MemberEntity memberEntity, String newPassword) {
-        MemberEntity member = getMemberById(memberEntity.getMemberId());
+    public void modifyPassword(Integer memberId, String newPassword) {
+        MemberEntity member = getMemberById(memberId);
         Password password = authService.encryptPassword(newPassword);
         member.changePassword(password);
     }
@@ -26,5 +26,14 @@ public class MemberService {
     private MemberEntity getMemberById(Integer memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+    }
+
+    public void validatePassword(Integer memberId, String password) {
+        MemberEntity member = getMemberById(memberId);
+        String encryptPassword = authService.hashing(password, member.getSalt());
+
+        if (!member.getPassword().equals(encryptPassword)) {
+            throw new MemberException(MemberErrorCode.MEMBER_INVALID_PASSWORD);
+        }
     }
 }
