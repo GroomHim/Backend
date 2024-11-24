@@ -1,6 +1,6 @@
 package groom.him.domain.member.controller;
 
-import groom.him.core.auth.dto.request.ModifyPasswordRequest;
+import groom.him.domain.member.models.dto.request.ModifyPasswordRequest;
 import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
 public class MemberController {
-
     private final MemberService memberService;
 
     @PutMapping("/pwd")
