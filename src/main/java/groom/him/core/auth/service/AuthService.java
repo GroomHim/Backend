@@ -100,6 +100,11 @@ public class AuthService implements UserDetailsService {
         return sb.toString();
     }
 
+    public Password encryptPassword(String password) {
+        String salt = getSalt();
+        return new Password(hashing(password, salt), salt);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
         return memberRepository.findByMemberIdAndIsCancelFalse(Integer.parseInt(memberId)).orElseThrow(() -> new UsernameNotFoundException(memberId));
