@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
 public class MemberController {
-
     private final MemberService memberService;
 
     @PutMapping("/pwd")
