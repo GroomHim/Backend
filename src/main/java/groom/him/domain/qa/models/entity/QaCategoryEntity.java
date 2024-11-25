@@ -26,7 +26,7 @@ public class QaCategoryEntity extends RegisterDateFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qa_category_id")
-    private Integer QaCategoryId;
+    private Integer qaCategoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_qa_category_id")
@@ -38,7 +38,7 @@ public class QaCategoryEntity extends RegisterDateFields {
 
     @NotNull
     @Column(length = 15, name = "qa_category_name")
-    private String QaCategoryName;
+    private String qaCategoryName;
 
     @NotNull
     @Column(name = "is_leaf")
