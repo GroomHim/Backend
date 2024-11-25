@@ -153,4 +153,8 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void changePassword(Password password) {
+        this.password = password;
+    }
 }
