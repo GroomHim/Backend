@@ -48,7 +48,7 @@ public class QaEntity extends AuditingFields {
 
     @NotNull
     @Convert(converter = QaStatusConverter.class)
-    @Column(name = "status", length = 5)
+    @Column(name = "status", length = 10)
     private QaStatus status = QaStatus.PENDING;
 
     @Builder
