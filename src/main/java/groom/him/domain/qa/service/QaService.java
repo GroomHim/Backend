@@ -34,7 +34,9 @@ public class QaService {
             .map(category -> QaCategoryResponse.of(
                 category.getQaCategoryName(),
                 category.getChildren().stream()
-                    .map(QaCategoryEntity::getQaCategoryName)
+                    .map(subCategory -> QaCategoryResponse.SubCategory.of(
+                        subCategory.getQaCategoryId(),
+                        subCategory.getQaCategoryName()))
                     .collect(Collectors.toList()))
             ).collect(Collectors.toList());
     }
