@@ -12,5 +12,5 @@ public interface QaCategoryRepository extends JpaRepository<QaCategoryEntity, Lo
     @EntityGraph(attributePaths = {"children"})
     List<QaCategoryEntity> findAllByParentQaCategoryIsNull();
 
-    Optional<QaCategoryEntity> findByQaCategoryId(Integer qaCategoryId);
+    Optional<QaCategoryEntity> findByQaCategoryIdAndIsLeafTrue(Integer qaCategoryId);
 }

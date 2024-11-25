@@ -44,7 +44,8 @@ public class QaService {
     public void addQa(QaRequest request, Integer memberId) {
         MemberEntity member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
-        QaCategoryEntity qaCategory = qaCategoryRepository.findByQaCategoryId(request.categoryId())
+        QaCategoryEntity qaCategory = qaCategoryRepository.findByQaCategoryIdAndIsLeafTrue(
+                request.categoryId())
             .orElseThrow(() -> new QaException(QaErrorCode.QA_CATEGORY_NOT_EXIST));
         qaRepository.save(QaEntity.builder().member(member).qaCategory(qaCategory)
             .title(request.title()).content(request.content()).build());
