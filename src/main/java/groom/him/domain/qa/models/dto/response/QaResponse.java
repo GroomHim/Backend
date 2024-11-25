@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @JsonInclude(Include.NON_NULL)
 public record QaResponse(
     Integer qaId,
-    String category,
+    String categoryName,
     String title,
     String content,
     String answer,
@@ -16,8 +16,8 @@ public record QaResponse(
     LocalDateTime regDt
 ) {
 
-    public static QaResponse of(Integer qaId, String category, String title, String content,
+    public static QaResponse of(Integer qaId, String categoryName, String title, String content,
         String answer, QaStatus status, LocalDateTime regDt) {
-        return new QaResponse(qaId, category, title, content, answer, status, regDt);
+        return new QaResponse(qaId, categoryName, title, content, answer, status, regDt);
     }
 }
