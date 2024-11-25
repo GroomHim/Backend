@@ -29,9 +29,9 @@ public class QaController {
     }
 
     @PostMapping("")
-    public Response<Integer> addQa(@RequestBody QaRequest request, @AuthenticationPrincipal
+    public Response<Void> addQa(@RequestBody QaRequest request, @AuthenticationPrincipal
     MemberEntity member) {
         qaService.addQa(request, member.getMemberId());
-        return Response.success(HttpStatus.CREATED.value());
+        return new Response(HttpStatus.CREATED.value());
     }
 }
