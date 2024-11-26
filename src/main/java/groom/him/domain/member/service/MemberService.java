@@ -1,14 +1,18 @@
 package groom.him.domain.member.service;
 
-import groom.him.core.auth.service.AuthService;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
-import groom.him.domain.member.models.entity.MemberEntity;
-import groom.him.domain.member.models.entity.data.Password;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.repository.ProductRepository;
+import groom.him.domain.qa.models.dto.response.QaResponse;
+import groom.him.domain.qa.models.enums.QaStatus;
+import groom.him.domain.qa.repository.QaRepository;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import groom.him.core.auth.service.AuthService;
+import groom.him.domain.member.models.entity.MemberEntity;
+import groom.him.domain.member.models.entity.data.Password;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ public class MemberService {
     private final AuthService authService;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
+    private final QaRepository qaRepository;
 
     @Transactional
     public void modifyPassword(Integer memberId, String newPassword) {
@@ -45,5 +50,11 @@ public class MemberService {
     public List<ProductBriefResponse> findMemberWishList(Integer memberId, Boolean isSkinType) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType).stream()
             .map(ProductBriefResponse::of).collect(Collectors.toList());
+    }
+
+    public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
+        LocalDate startDate, LocalDate endDate) {
+        return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
+            endDate);
     }
 }
