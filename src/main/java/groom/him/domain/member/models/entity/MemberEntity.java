@@ -56,7 +56,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private String name;
 
     @NotNull
-    @Column(length = 11, name = "phone_number")
+    @Column(length = 20, name = "phone_number")
     private String phoneNumber;
 
     @NotNull
@@ -69,7 +69,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private String nickname;
 
     @NotNull
-    @Column(length = 8, name = "birth")
+    @Column(length = 10, name = "birth")
     private String birth;
 
     @NotNull
