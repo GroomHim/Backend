@@ -147,6 +147,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.gender = gender;
         this.nickname = nickname;
         this.birth = birth;
+        this.email = email;
         this.ci = ci;
         this.provider = provider;
         this.socialTokenId = socialTokenId;
