@@ -38,7 +38,7 @@ public class MemberService {
 
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
         LocalDate startDate, LocalDate endDate) {
-        this.checkMemberValidationById(memberId);
+        checkMemberValidationById(memberId);
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
     }

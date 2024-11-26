@@ -10,6 +10,7 @@ import groom.him.domain.qa.models.entity.QQaEntity;
 import groom.him.domain.qa.models.enums.QaStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +32,7 @@ public class QaRepositoryCustomImpl implements QaRepositoryCustom {
         }
         if (startDate != null && endDate != null) {
             LocalDateTime startDateTime = startDate.atStartOfDay();
-            LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+            LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
             builder.and(qa.regDt.between(startDateTime, endDateTime));
         }
 

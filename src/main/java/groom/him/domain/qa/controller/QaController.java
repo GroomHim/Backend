@@ -28,7 +28,7 @@ public class QaController {
         return Response.success(qaService.findQaCategoryList());
     }
 
-    @PostMapping("")
+    @PostMapping()
     public Response<Void> addQa(@RequestBody QaRequest request, @AuthenticationPrincipal
     MemberEntity member) {
         qaService.addQa(request, member.getMemberId());
