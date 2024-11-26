@@ -8,27 +8,48 @@ import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 import groom.him.domain.qa.repository.QaRepository;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
+import groom.him.core.auth.service.AuthService;
+import groom.him.domain.member.models.entity.MemberEntity;
+import groom.him.domain.member.models.entity.data.Password;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
+    private final AuthService authService;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final QaRepository qaRepository;
 
-    public MemberService(MemberRepository memberRepository, ProductRepository productRepository,
-        QaRepository qaRepository) {
-        this.memberRepository = memberRepository;
-        this.productRepository = productRepository;
-        this.qaRepository = qaRepository;
-    }
-
     public void checkMemberValidationById(Integer memberId) {
         memberRepository.findByMemberIdAndIsCancelFalse(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+    }
+
+    @Transactional
+    public void modifyPassword(Integer memberId, String newPassword) {
+        MemberEntity member = getMemberById(memberId);
+        Password password = authService.encryptPassword(newPassword);
+        member.changePassword(password);
+    }
+
+    private MemberEntity getMemberById(Integer memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+    }
+
+    public void validatePassword(Integer memberId, String password) {
+        MemberEntity member = getMemberById(memberId);
+        String encryptPassword = authService.hashing(password, member.getSalt());
+
+        if (!member.getPassword().equals(encryptPassword)) {
+            throw new MemberException(MemberErrorCode.MEMBER_INVALID_PASSWORD);
+        }
     }
 
     public List<ProductBriefResponse> findMemberWishList(Integer memberId, Boolean isSkinType) {
