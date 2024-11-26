@@ -26,11 +26,6 @@ public class MemberService {
     private final ProductRepository productRepository;
     private final QaRepository qaRepository;
 
-    public void checkMemberValidationById(Integer memberId) {
-        memberRepository.findByMemberIdAndIsCancelFalse(memberId)
-            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
-    }
-
     @Transactional
     public void modifyPassword(Integer memberId, String newPassword) {
         MemberEntity member = getMemberById(memberId);
@@ -59,7 +54,6 @@ public class MemberService {
 
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
         LocalDate startDate, LocalDate endDate) {
-        checkMemberValidationById(memberId);
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
     }

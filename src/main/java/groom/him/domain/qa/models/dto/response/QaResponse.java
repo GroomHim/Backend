@@ -15,9 +15,4 @@ public record QaResponse(
     QaStatus status,
     LocalDateTime regDt
 ) {
-
-    public static QaResponse of(Integer qaId, String categoryName, String title, String content,
-        String answer, QaStatus status, LocalDateTime regDt) {
-        return new QaResponse(qaId, categoryName, title, content, answer, status, regDt);
-    }
 }
