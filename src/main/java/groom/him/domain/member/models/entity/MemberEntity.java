@@ -73,6 +73,10 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private String birth;
 
     @NotNull
+    @Column(length = 50, name = "email")
+    private String email;
+
+    @NotNull
     @Column(name = "ci")
     private String ci;
 
@@ -126,6 +130,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         Gender gender,
         String nickname,
         String birth,
+        String email,
         String ci,
         Provider provider,
         String socialTokenId,

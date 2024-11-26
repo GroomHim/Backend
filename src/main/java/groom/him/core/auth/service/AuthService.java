@@ -124,6 +124,7 @@ public class AuthService implements UserDetailsService {
                 .birth(request.birth())
                 .password(new Password(hashing(request.password(), salt), salt))
                 .name(request.name())
+                .email(request.email())
                 .gender(request.gender())
                 .isCancel(false)
                 .role(Role.USER)

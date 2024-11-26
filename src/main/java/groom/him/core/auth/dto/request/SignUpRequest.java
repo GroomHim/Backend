@@ -10,6 +10,7 @@ public record SignUpRequest(
         String phoneNumber,
         String birth,
         String loginId,
+        String email,
         String nickname
 ) {
 }
