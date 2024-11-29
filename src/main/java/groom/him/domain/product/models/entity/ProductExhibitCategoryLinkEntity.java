@@ -1,7 +1,7 @@
 package groom.him.domain.product.models.entity;
 
 import groom.him.common.models.entity.RegisterDateFields;
-import groom.him.common.models.entity.SkinTypeEntity;
+import groom.him.domain.category.models.entity.ExhibitCategoryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,19 +17,19 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "PRODUCT_SKIN_TYPE_LINK")
+@Table(name = "PRODUCT_EXHIBIT_CATEGORY_LINK")
 @Entity
-public class ProductSkinTypeLinkEntity extends RegisterDateFields {
+public class ProductExhibitCategoryLinkEntity extends RegisterDateFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_skin_type_id")
-    private Integer productSkinTypeId;
+    @Column(name = "product_exhibit_category_id")
+    private Integer productExhibitCategoryId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibit_category_id", nullable = false)
+    private ExhibitCategoryEntity exhibitCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skin_type_id", nullable = false)
-    private SkinTypeEntity skinType;
 }
