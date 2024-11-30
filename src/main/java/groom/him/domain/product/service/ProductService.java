@@ -28,4 +28,10 @@ public class ProductService {
         return productRepository.findProductListBySkinTypeOrderByQuantity(skinTypeId)
             .stream().map(ProductBriefResponse::of).toList();
     }
+
+    public List<ProductBriefResponse> findProductBriefByPrice(Integer minPrice, Integer maxPrice) {
+        return productRepository.findProductListByPriceRange(minPrice, maxPrice)
+            .stream().map(ProductBriefResponse::of).toList();
+    }
+
 }

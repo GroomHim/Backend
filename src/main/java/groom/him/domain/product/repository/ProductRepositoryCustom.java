@@ -7,4 +7,6 @@ public interface ProductRepositoryCustom {
     List<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId, Boolean isSkinType);
 
     List<ProductEntity> findProductListBySkinTypeOrderByQuantity(Integer skinType);
+
+    List<ProductEntity> findProductListByPriceRange(Integer minPrice, Integer maxPrice);
 }

@@ -35,7 +35,14 @@ public class ProductController {
         } else {
             skinTypeId = member.getSkinTypeEntity().getSkinTypeId();
         }
-        System.out.println(skinTypeId);
         return Response.success(productService.findRecommendProductBriefBySkinType(skinTypeId));
+    }
+
+    @GetMapping("/price")
+    public Response<List<ProductBriefResponse>> findProductBriefByCost(
+        @RequestParam(value = "min-price") Integer minPrice,
+        @RequestParam(value = "max-price") Integer maxPrice
+    ) {
+        return Response.success(productService.findProductBriefByPrice(minPrice, maxPrice));
     }
 }
