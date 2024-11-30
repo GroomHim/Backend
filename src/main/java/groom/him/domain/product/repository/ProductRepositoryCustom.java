@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     List<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId, Boolean isSkinType);
+
+    List<ProductEntity> findProductListBySkinTypeOrderByQuantity(Integer skinType);
 }

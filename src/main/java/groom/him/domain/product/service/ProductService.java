@@ -23,4 +23,9 @@ public class ProductService {
             subCategoryIdList);
         return productEntityList.stream().map(ProductBriefResponse::of).toList();
     }
+
+    public List<ProductBriefResponse> findRecommendProductBriefBySkinType(Integer skinTypeId) {
+        return productRepository.findProductListBySkinTypeOrderByQuantity(skinTypeId)
+            .stream().map(ProductBriefResponse::of).toList();
+    }
 }
