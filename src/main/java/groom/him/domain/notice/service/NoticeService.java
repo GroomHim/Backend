@@ -15,7 +15,7 @@ public class NoticeService {
         this.noticeRepository = noticeRepository;
     }
 
-    public List<NoticeResponse> getNoticeList() {
+    public List<NoticeResponse> findNoticeList() {
         List<NoticeEntity> noticeEntityList = noticeRepository.findAllByIsPublicOrderByRegDtDesc(
             IsPublic.OPEN);
         return noticeEntityList.stream()

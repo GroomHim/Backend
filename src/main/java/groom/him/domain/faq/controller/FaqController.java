@@ -18,7 +18,7 @@ public class FaqController {
     }
 
     @GetMapping
-    public Response<List<FaqResponse>> getFaqList() {
-        return Response.success(faqService.getFaqList());
+    public Response<List<FaqResponse>> findFaqList() {
+        return Response.success(faqService.findFaqList());
     }
 }

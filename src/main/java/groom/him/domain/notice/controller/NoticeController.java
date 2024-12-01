@@ -18,7 +18,7 @@ public class NoticeController {
     }
 
     @GetMapping
-    public Response<List<NoticeResponse>> getNoticeList() {
-        return Response.success(noticeService.getNoticeList());
+    public Response<List<NoticeResponse>> findNoticeList() {
+        return Response.success(noticeService.findNoticeList());
     }
 }
