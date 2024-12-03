@@ -1,6 +1,7 @@
 package groom.him.domain.product.service;
 
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
+import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
@@ -17,10 +18,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
 
-    public Slice<ProductBriefResponse> findRandomProductBrief(Pageable pageable) {
-        List<Integer> target = List.of(1, 2);
+    public Slice<ProductBriefResponse> findRandomProductBrief(Pageable pageable,
+        RandomProductRequest request) {
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
-            target);
+            request.categoryIdList());
         List<ProductEntity> productEntityList = productRepository.findRandomProductEntitiesByCategoryId(
             pageable.getPageSize() + 1,
             (int) pageable.getOffset(), subCategoryIdList);
