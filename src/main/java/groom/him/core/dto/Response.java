@@ -2,7 +2,7 @@ package groom.him.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 @JsonInclude(Include.NON_NULL)
 public record Response<T>(
@@ -29,12 +29,14 @@ public record Response<T>(
     }
 
     public static <T> Response<T> success(int httpStatus, T data) {
-        if (data instanceof Page<?> page) {
+        if (data instanceof Slice<?>) {
+            Slice<?> slice = (Slice<?>) data;
 
-            Meta meta = new Meta(page.getPageable().getOffset(), page.getNumberOfElements(),
-                    page.isLast(), page.getSort().isSorted());
-            return new Response<>(httpStatus, meta, (T) page.getContent());
+            Meta meta = new Meta(slice.getPageable().getOffset(), slice.getNumberOfElements(),
+                    slice.isLast(), slice.getSort().isSorted());
+            return new Response<>(httpStatus, meta, (T) slice.getContent());
         }
+
         return new Response<>(httpStatus, data);
     }
 
