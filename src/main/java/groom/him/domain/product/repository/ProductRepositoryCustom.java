@@ -11,5 +11,6 @@ public interface ProductRepositoryCustom {
     Slice<ProductEntity> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
         Integer skinType);
 
-    List<ProductEntity> findProductListByPriceRange(Integer minPrice, Integer maxPrice);
+    Slice<ProductEntity> findProductListByPriceRange(Pageable pageable, Integer minPrice,
+        Integer maxPrice);
 }

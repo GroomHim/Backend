@@ -83,18 +83,30 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<ProductEntity> findProductListByPriceRange(Integer minPrice, Integer maxPrice) {
+    public Slice<ProductEntity> findProductListByPriceRange(Pageable pageable, Integer minPrice,
+        Integer maxPrice) {
         QProductEntity product = QProductEntity.productEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
 
-        return jpaQueryFactory
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductEntity> content = jpaQueryFactory
             .select(product)
             .from(product)
             .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .where(product.discountedPrice.between(minPrice, maxPrice))
             .groupBy(product.productId)
             .orderBy(orderDetail.quantity.sum().desc())
-            .limit(20)
+            .offset(pageable.getOffset())
+            .limit(limit)
             .fetch();
+
+        boolean hasNext = false;
+        if (content.size() > pageable.getPageSize()) {
+            hasNext = true;
+            content.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 }

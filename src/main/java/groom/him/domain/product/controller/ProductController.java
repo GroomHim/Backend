@@ -43,10 +43,12 @@ public class ProductController {
     }
 
     @GetMapping("/price")
-    public Response<List<ProductBriefResponse>> findProductBriefByCost(
+    public Response<Slice<ProductBriefResponse>> findProductBriefByCost(
         @RequestParam(value = "min-price") Integer minPrice,
-        @RequestParam(value = "max-price") Integer maxPrice
+        @RequestParam(value = "max-price") Integer maxPrice,
+        Pageable pageable
     ) {
-        return Response.success(productService.findProductBriefByPrice(minPrice, maxPrice));
+        return Response.success(
+            productService.findProductBriefByPrice(pageable, minPrice, maxPrice));
     }
 }

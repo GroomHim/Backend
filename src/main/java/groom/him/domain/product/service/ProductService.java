@@ -41,9 +41,10 @@ public class ProductService {
             .map(ProductBriefResponse::of);
     }
 
-    public List<ProductBriefResponse> findProductBriefByPrice(Integer minPrice, Integer maxPrice) {
-        return productRepository.findProductListByPriceRange(minPrice, maxPrice)
-            .stream().map(ProductBriefResponse::of).toList();
+    public Slice<ProductBriefResponse> findProductBriefByPrice(Pageable pageable, Integer minPrice,
+        Integer maxPrice) {
+        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice)
+            .map(ProductBriefResponse::of);
     }
 
 }
