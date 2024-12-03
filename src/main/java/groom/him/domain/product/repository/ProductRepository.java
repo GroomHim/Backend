@@ -16,8 +16,11 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
            LEFT JOIN PRODUCT_EXHIBIT_CATEGORY_LINK pecl on p.product_id = pecl.product_id
            WHERE pecl.exhibit_category_id IN :target
            ORDER BY rand()
-           LIMIT 20;
+           LIMIT :size
+           OFFSET :offset;
         """, nativeQuery = true)
     List<ProductEntity> findRandomProductEntitiesByCategoryId(
+        @Param("size") int size,
+        @Param("offset") int offset,
         @Param("target") List<Integer> target);
 }

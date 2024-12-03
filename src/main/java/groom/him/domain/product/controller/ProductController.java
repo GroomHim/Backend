@@ -7,6 +7,8 @@ import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +23,8 @@ public class ProductController {
     private final SkinTypeService skinTypeService;
 
     @GetMapping("/recommend/random")
-    public Response<List<ProductBriefResponse>> findRandomProductBrief() {
-        return Response.success(productService.findRandomProductBrief());
+    public Response<Slice<ProductBriefResponse>> findRandomProductBrief(Pageable pageable) {
+        return Response.success(productService.findRandomProductBrief(pageable));
     }
 
     @GetMapping("/recommend/skin-type")

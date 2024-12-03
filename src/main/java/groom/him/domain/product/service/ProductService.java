@@ -6,6 +6,9 @@ import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,14 +17,22 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
 
-    public List<ProductBriefResponse> findRandomProductBrief() {
-        // TODO: '얼굴', '바디'에 해당하는 값을 하드코딩으로 넣을지? FE에서 request로 넘겨줄지?
+    public Slice<ProductBriefResponse> findRandomProductBrief(Pageable pageable) {
         List<Integer> target = List.of(1, 2);
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
             target);
         List<ProductEntity> productEntityList = productRepository.findRandomProductEntitiesByCategoryId(
-            subCategoryIdList);
-        return productEntityList.stream().map(ProductBriefResponse::of).toList();
+            pageable.getPageSize() + 1,
+            (int) pageable.getOffset(), subCategoryIdList);
+
+        boolean hasNext = false;
+        if (productEntityList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            productEntityList.removeLast();
+        }
+
+        return new SliceImpl<>(productEntityList.stream().map(ProductBriefResponse::of).toList(),
+            pageable, hasNext);
     }
 
     public List<ProductBriefResponse> findRecommendProductBriefBySkinType(Integer skinTypeId) {
