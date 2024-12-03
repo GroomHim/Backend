@@ -13,7 +13,7 @@ public class FaqService {
         this.faqRepository = faqRepository;
     }
 
-    public List<FaqResponse> getFaqList() {
+    public List<FaqResponse> findFaqList() {
         return faqRepository.findFaqByIsPublicOrderByPrio();
     }
 }
