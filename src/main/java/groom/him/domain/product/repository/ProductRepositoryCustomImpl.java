@@ -11,6 +11,9 @@ import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
@@ -49,12 +52,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<ProductEntity> findProductListBySkinTypeOrderByQuantity(Integer skinType) {
+    public Slice<ProductEntity> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
+        Integer skinType) {
         QProductEntity product = QProductEntity.productEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
 
-        return jpaQueryFactory
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductEntity> content = jpaQueryFactory
             .select(product)
             .from(product)
             .join(productSkinTypeLink)
@@ -63,8 +69,17 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .where(productSkinTypeLink.skinType.skinTypeId.eq(skinType))
             .groupBy(product.productId)
             .orderBy(orderDetail.quantity.sum().desc())
-            .limit(20)
+            .offset(pageable.getOffset())
+            .limit(limit)
             .fetch();
+
+        boolean hasNext = false;
+        if (content.size() > pageable.getPageSize()) {
+            hasNext = true;
+            content.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     @Override

@@ -28,8 +28,9 @@ public class ProductController {
     }
 
     @GetMapping("/recommend/skin-type")
-    public Response<List<ProductBriefResponse>> findRecommendProductBriefBySkinType(
-        @AuthenticationPrincipal MemberEntity member
+    public Response<Slice<ProductBriefResponse>> findRecommendProductBriefBySkinType(
+        @AuthenticationPrincipal MemberEntity member,
+        Pageable pageable
     ) {
         Integer skinTypeId;
         if (member.getSkinTypeEntity() == null) {
@@ -37,7 +38,8 @@ public class ProductController {
         } else {
             skinTypeId = member.getSkinTypeEntity().getSkinTypeId();
         }
-        return Response.success(productService.findRecommendProductBriefBySkinType(skinTypeId));
+        return Response.success(
+            productService.findRecommendProductBriefBySkinType(pageable, skinTypeId));
     }
 
     @GetMapping("/price")

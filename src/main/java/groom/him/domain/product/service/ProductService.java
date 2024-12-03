@@ -35,9 +35,10 @@ public class ProductService {
             pageable, hasNext);
     }
 
-    public List<ProductBriefResponse> findRecommendProductBriefBySkinType(Integer skinTypeId) {
-        return productRepository.findProductListBySkinTypeOrderByQuantity(skinTypeId)
-            .stream().map(ProductBriefResponse::of).toList();
+    public Slice<ProductBriefResponse> findRecommendProductBriefBySkinType(Pageable pageable,
+        Integer skinTypeId) {
+        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId)
+            .map(ProductBriefResponse::of);
     }
 
     public List<ProductBriefResponse> findProductBriefByPrice(Integer minPrice, Integer maxPrice) {
