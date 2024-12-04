@@ -26,7 +26,7 @@ public class NoticeEntity extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_id")
-    private Long noticeId;
+    private Integer noticeId;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

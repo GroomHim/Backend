@@ -49,6 +49,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private String loginId;
 
     @Embedded
+    @Column(length = 64, name = "password")
     private Password password;
 
     @NotNull
