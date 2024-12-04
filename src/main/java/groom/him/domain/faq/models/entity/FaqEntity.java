@@ -33,7 +33,7 @@ public class FaqEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT 사용
     @Column(name = "faq_id")
-    private Long faqId;
+    private Integer faqId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faq_category_id")

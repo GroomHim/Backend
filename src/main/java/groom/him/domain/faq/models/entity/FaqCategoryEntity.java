@@ -20,7 +20,7 @@ public class FaqCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT 사용
     @Column(name = "faq_category_id")
-    private Long faqCategoryId;
+    private Integer faqCategoryId;
 
     @Column(name = "faq_category_name")
     private String faqCategoryName;

@@ -1,5 +1,6 @@
 package groom.him.domain.product.models.entity;
 
+import groom.him.common.models.entity.RegisterDateFields;
 import groom.him.common.models.entity.SkinTypeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "PRODUCT_SKIN_TYPE_LINK")
 @Entity
-public class ProductSkinTypeLinkEntity {
+public class ProductSkinTypeLinkEntity extends RegisterDateFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_skin_type_id")
