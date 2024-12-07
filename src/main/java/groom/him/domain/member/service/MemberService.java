@@ -39,6 +39,15 @@ public class MemberService {
     }
 
     @Transactional
+    public MemberResponse modifyMyInfo(Integer memberId, ModifyMyInfoRequest request) {
+        authService.validateNickname(request.nickname());
+
+        MemberEntity member = getMemberById(memberId);
+        member.changeNicknameAndEmail(request.nickname(), request.email());
+        return MemberResponse.from(member);
+    }
+
+    @Transactional
     public void modifyPassword(Integer memberId, String newPassword) {
         MemberEntity member = getMemberById(memberId);
         Password password = authService.encryptPassword(newPassword);

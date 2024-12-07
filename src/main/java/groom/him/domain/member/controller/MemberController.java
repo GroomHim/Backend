@@ -30,6 +30,13 @@ public class MemberController {
         return Response.success(response);
     }
 
+    @PatchMapping
+    public Response<MemberResponse> modifyMyInfo(@AuthenticationPrincipal MemberEntity member,
+                                                 @RequestBody ModifyMyInfoRequest request) {
+        var response = memberService.modifyMyInfo(member.getMemberId(), request);
+        return Response.success(response);
+    }
+
     @PatchMapping("/pwd")
     public Response<Integer> modifyPassword(@AuthenticationPrincipal MemberEntity member,
                                             @RequestBody ModifyPasswordRequest request) {
