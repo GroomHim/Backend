@@ -1,7 +1,9 @@
 package groom.him.core.auth.controller;
 
+import groom.him.core.auth.dto.request.FindLoginIdRequest;
 import groom.him.core.auth.dto.request.SignInRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
+import groom.him.core.auth.dto.response.FindLoginIdResponse;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
@@ -33,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-out")
-    public Response<Integer> signOut(@AuthenticationPrincipal MemberEntity member){
+    public Response<Integer> signOut(@AuthenticationPrincipal MemberEntity member) {
         authService.signOut(member);
         return Response.success();
     }
@@ -48,18 +50,23 @@ public class AuthController {
     @GetMapping("/validate/login-id/{loginId}")
     @ResponseBody
     public Response<Integer> validateLoginId(@PathVariable String loginId) {
-        if (authService.validateLoginId(loginId)){
+        if (authService.validateLoginId(loginId)) {
             return Response.success();
-        }
-        else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+        } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+    }
+
+    @PostMapping("/find/login-id")
+    public Response<FindLoginIdResponse> findLoginId(@RequestBody FindLoginIdRequest request) {
+        var loginId = authService.findLoginIdByCi(request.ci());
+        var response = new FindLoginIdResponse(loginId);
+        return Response.success(response);
     }
 
     @GetMapping("/validate/nickname/{nickname}")
     @ResponseBody
-    public Response<Integer> validateNickname(@PathVariable String nickname){
-        if (authService.validateNickname(nickname)){
+    public Response<Integer> validateNickname(@PathVariable String nickname) {
+        if (authService.validateNickname(nickname)) {
             return Response.success();
-        }
-        else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+        } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
     }
 }
