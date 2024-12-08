@@ -5,7 +5,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
-import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.order.models.entity.QOrderDetailEntity;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
@@ -50,6 +50,65 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(wish.product, product)
             .where(builder)
             .orderBy(wish.regDt.asc())
+            .offset(pageable.getOffset())
+            .limit(limit)
+            .fetch();
+
+        boolean hasNext = false;
+        if (content.size() > pageable.getPageSize()) {
+            hasNext = true;
+            content.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
+    public Slice<ProductEntity> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
+        Integer skinType) {
+        QProductEntity product = QProductEntity.productEntity;
+        QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
+        QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
+
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductEntity> content = jpaQueryFactory
+            .select(product)
+            .from(product)
+            .join(productSkinTypeLink)
+            .on(productSkinTypeLink.product.productId.eq(product.productId))
+            .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinType))
+            .groupBy(product.productId)
+            .orderBy(orderDetail.quantity.sum().desc())
+            .offset(pageable.getOffset())
+            .limit(limit)
+            .fetch();
+
+        boolean hasNext = false;
+        if (content.size() > pageable.getPageSize()) {
+            hasNext = true;
+            content.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
+    public Slice<ProductEntity> findProductListByPriceRange(Pageable pageable, Integer minPrice,
+        Integer maxPrice) {
+        QProductEntity product = QProductEntity.productEntity;
+        QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
+
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductEntity> content = jpaQueryFactory
+            .select(product)
+            .from(product)
+            .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .where(product.discountedPrice.between(minPrice, maxPrice))
+            .groupBy(product.productId)
+            .orderBy(orderDetail.quantity.sum().desc())
             .offset(pageable.getOffset())
             .limit(limit)
             .fetch();
