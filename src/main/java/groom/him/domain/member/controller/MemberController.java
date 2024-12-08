@@ -11,6 +11,8 @@ import groom.him.domain.qa.models.enums.QaStatus;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,10 +37,12 @@ public class MemberController {
     }
 
     @GetMapping("/wish")
-    public Response<List<ProductBriefResponse>> findMemberWishList(
+    public Response<Slice<ProductBriefResponse>> findMemberWishList(
         @AuthenticationPrincipal MemberEntity member,
-        @RequestParam("skin-type") Boolean isSkinType) {
-        return Response.success(memberService.findMemberWishList(member.getMemberId(), isSkinType));
+        @RequestParam("skin-type") Boolean isSkinType,
+        Pageable pageable) {
+        return Response.success(
+            memberService.findMemberWishList(member.getMemberId(), isSkinType, pageable));
     }
 
     @GetMapping("/qa")

@@ -20,13 +20,14 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId,
-        Boolean isSkinType) {
+    public Slice<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId,
+        Boolean isSkinType, Pageable pageable) {
         QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;
         QMemberEntity member = QMemberEntity.memberEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
 
+        int limit = pageable.getPageSize() + 1;
         BooleanBuilder builder = new BooleanBuilder();
 
         if (isSkinType) {
@@ -42,13 +43,24 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         } else {
             builder.and(wish.member.memberId.eq(memberId));
         }
-        return jpaQueryFactory
+
+        List<ProductEntity> content = jpaQueryFactory
             .select(product)
             .from(wish)
             .leftJoin(wish.product, product)
             .where(builder)
             .orderBy(wish.regDt.asc())
+            .offset(pageable.getOffset())
+            .limit(limit)
             .fetch();
+
+        boolean hasNext = false;
+        if (content.size() > pageable.getPageSize()) {
+            hasNext = true;
+            content.remove(pageable.getPageSize());
+        }
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     @Override

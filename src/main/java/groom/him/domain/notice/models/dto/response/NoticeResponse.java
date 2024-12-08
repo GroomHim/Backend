@@ -5,7 +5,7 @@ import groom.him.domain.notice.models.entity.NoticeEntity;
 import java.time.LocalDateTime;
 
 public record NoticeResponse(
-    Long noticeId,
+    Integer noticeId,
     Integer memberId,
     String title,
     String content,
