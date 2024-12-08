@@ -65,4 +65,8 @@ public class AddressEntity extends AuditingFields {
         this.addressDetail = addressDetail;
         this.isDefault = isDefault;
     }
+
+    public void changeIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 }

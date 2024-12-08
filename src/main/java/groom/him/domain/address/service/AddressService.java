@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -19,9 +20,14 @@ public class AddressService {
 
     private static final Integer MAX_ADDRESS_CNT = 10;
 
+    @Transactional
     public void addMemberAddress(MemberEntity member, AddAddressRequest request) {
         if (addressRepository.findAllByMemberId(member.getMemberId()).size() >= MAX_ADDRESS_CNT) {
             throw new AddressException(AddressErrorCode.MAX_ADDRESS_LIMIT_EXCEEDED);
+        }
+        if (request.isDefault()) {
+            addressRepository.findByMemberIdAndIsDefaultTrue(member.getMemberId())
+                .ifPresent(entity -> entity.changeIsDefault(false));
         }
         AddressEntity address = new AddressEntity(member, request.name(), request.phoneNumber(),
             request.alias(), request.address(), request.addressDetail(), request.isDefault());
