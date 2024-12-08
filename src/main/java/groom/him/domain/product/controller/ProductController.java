@@ -35,12 +35,8 @@ public class ProductController {
         @AuthenticationPrincipal MemberEntity member,
         Pageable pageable
     ) {
-        Integer skinTypeId;
-        if (member.getSkinTypeEntity() == null) {
-            skinTypeId = skinTypeService.getRandomSkinTypeId();
-        } else {
-            skinTypeId = member.getSkinTypeEntity().getSkinTypeId();
-        }
+        Integer skinTypeId = member.getSkinTypeEntity() == null ?
+            skinTypeService.getRandomSkinTypeId() : member.getSkinTypeEntity().getSkinTypeId();
         return Response.success(
             productService.findRecommendProductBriefBySkinType(pageable, skinTypeId));
     }
