@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,4 +53,16 @@ public class AddressEntity extends AuditingFields {
     @NotNull
     @Column(name = "is_default")
     private Boolean isDefault;
+
+    @Builder
+    public AddressEntity(MemberEntity member, String name, String phoneNumber,
+        String alias, String address, String addressDetail, Boolean isDefault) {
+        this.member = member;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.alias = alias;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.isDefault = isDefault;
+    }
 }
