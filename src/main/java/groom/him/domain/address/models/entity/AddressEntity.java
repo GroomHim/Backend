@@ -1,6 +1,7 @@
 package groom.him.domain.address.models.entity;
 
 import groom.him.common.models.entity.AuditingFields;
+import groom.him.domain.address.models.dto.request.ModifyAddressRequest;
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,5 +69,14 @@ public class AddressEntity extends AuditingFields {
 
     public void changeIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public void modifyAddress(ModifyAddressRequest request) {
+        this.name = request.name();
+        this.phoneNumber = request.phoneNumber();
+        this.alias = request.alias();
+        this.address = request.address();
+        this.addressDetail = request.addressDetail();
+        this.isDefault = request.isDefault();
     }
 }

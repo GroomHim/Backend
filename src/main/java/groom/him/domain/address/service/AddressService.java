@@ -1,7 +1,9 @@
 package groom.him.domain.address.service;
 
+import groom.him.core.exception.CommonErrorCode;
 import groom.him.domain.address.exception.AddressException;
 import groom.him.domain.address.models.dto.request.AddAddressRequest;
+import groom.him.domain.address.models.dto.request.ModifyAddressRequest;
 import groom.him.domain.address.models.dto.response.AddressResponse;
 import groom.him.domain.address.models.entity.AddressEntity;
 import groom.him.domain.address.models.enums.AddressErrorCode;
@@ -26,9 +28,9 @@ public class AddressService {
             throw new AddressException(AddressErrorCode.MAX_ADDRESS_LIMIT_EXCEEDED);
         }
         if (request.isDefault()) {
-            addressRepository.findByMemberIdAndIsDefaultTrue(member.getMemberId())
-                .ifPresent(entity -> entity.changeIsDefault(false));
+            setPreviousDefaultAddressFalse(member.getMemberId());
         }
+
         AddressEntity address = new AddressEntity(member, request.name(), request.phoneNumber(),
             request.alias(), request.address(), request.addressDetail(), request.isDefault());
         addressRepository.save(address);
@@ -37,5 +39,25 @@ public class AddressService {
     public List<AddressResponse> findMemberAddressList(Integer memberId) {
         return addressRepository.findAllByMemberId(memberId).stream().map((AddressResponse::of))
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void modifyAddress(Integer memberId, Integer addressId, ModifyAddressRequest request) {
+        AddressEntity addressEntity = addressRepository.findById(addressId)
+            .orElseThrow(() -> new AddressException(AddressErrorCode.ADDRESS_NOT_EXIST));
+
+        if (request.isDefault()) {
+            setPreviousDefaultAddressFalse(memberId);
+        }
+
+        if (!addressEntity.getMember().getMemberId().equals(memberId)) {
+            throw new AddressException(CommonErrorCode.UNAUTHORIZED);
+        }
+        addressEntity.modifyAddress(request);
+    }
+
+    private void setPreviousDefaultAddressFalse(Integer memberId) {
+        addressRepository.findByMemberIdAndIsDefaultTrue(memberId)
+            .ifPresent(entity -> entity.changeIsDefault(false));
     }
 }
