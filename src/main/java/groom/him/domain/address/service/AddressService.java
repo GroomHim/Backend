@@ -1,6 +1,7 @@
 package groom.him.domain.address.service;
 
 import groom.him.core.exception.CommonErrorCode;
+import groom.him.core.exception.CommonException;
 import groom.him.domain.address.exception.AddressException;
 import groom.him.domain.address.models.dto.request.AddAddressRequest;
 import groom.him.domain.address.models.dto.request.ModifyAddressRequest;
@@ -12,6 +13,7 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,5 +61,23 @@ public class AddressService {
     private void setPreviousDefaultAddressFalse(Integer memberId) {
         addressRepository.findByMemberIdAndIsDefaultTrue(memberId)
             .ifPresent(entity -> entity.changeIsDefault(false));
+    }
+
+    @Transactional
+    public void deleteAddressList(Integer memberId, List<Integer> addressIdList) {
+        try {
+            for (Integer addressId : addressIdList) {
+                AddressEntity addressEntity = addressRepository.findById(addressId)
+                    .orElseThrow(() -> new AddressException(AddressErrorCode.ADDRESS_NOT_EXIST));
+
+                if (!addressEntity.getMember().getMemberId().equals(memberId)) {
+                    throw new AddressException(CommonErrorCode.UNAUTHORIZED);
+                }
+
+                addressRepository.delete(addressEntity);
+            }
+        } catch (DataAccessException e) {
+            throw new CommonException(CommonErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 }
