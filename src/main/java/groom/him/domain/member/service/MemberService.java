@@ -4,7 +4,6 @@ import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
-import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
@@ -15,11 +14,10 @@ import groom.him.core.auth.service.AuthService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,18 +30,18 @@ public class MemberService {
 
     @Transactional
     public void modifyPassword(Integer memberId, String newPassword) {
-        MemberEntity member = getMemberById(memberId);
+        MemberEntity member = findMemberById(memberId);
         Password password = authService.encryptPassword(newPassword);
         member.changePassword(password);
     }
 
-    private MemberEntity getMemberById(Integer memberId) {
+    public MemberEntity findMemberById(Integer memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
     }
 
     public void validatePassword(Integer memberId, String password) {
-        MemberEntity member = getMemberById(memberId);
+        MemberEntity member = findMemberById(memberId);
         String encryptPassword = authService.hashing(password, member.getSalt());
 
         if (!member.getPassword().equals(encryptPassword)) {
