@@ -1,6 +1,8 @@
 package groom.him.domain.product.service;
 
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
+import groom.him.domain.product.exception.ProductErrorCode;
+import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
@@ -17,6 +19,11 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
+
+    public ProductEntity findProductById(Integer productId) {
+        return productRepository.findById(productId).orElseThrow(
+                () -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+    }
 
     public Slice<ProductBriefResponse> findRandomProductBrief(Pageable pageable,
         RandomProductRequest request) {
@@ -47,5 +54,4 @@ public class ProductService {
         return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice)
             .map(ProductBriefResponse::of);
     }
-
 }
