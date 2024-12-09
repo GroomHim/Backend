@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+    private static final int RECENT_WORD_CNT = 5;
+
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
     private final SearchRepository searchRepository;
@@ -54,7 +56,7 @@ public class ProductService {
     }
 
     public List<ProductBriefResponse> findSearchProductIndex(String word, MemberEntity member){
-        if(member != null) {
+        if(searchRepository.countByMember(member) < RECENT_WORD_CNT) {
             SearchEntity search = SearchEntity.builder()
                     .member(member)
                     .searchWord(word)
