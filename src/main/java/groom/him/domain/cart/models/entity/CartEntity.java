@@ -35,4 +35,8 @@ public class CartEntity extends RegisterDateFields {
         this.member = member;
         this.product = product;
     }
+
+    public void increaseCount() {
+        this.count++;
+    }
 }

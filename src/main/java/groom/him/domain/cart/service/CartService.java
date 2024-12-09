@@ -1,11 +1,14 @@
 package groom.him.domain.cart.service;
 
+import groom.him.domain.cart.models.dto.CartResponse;
 import groom.him.domain.cart.models.entity.CartEntity;
 import groom.him.domain.cart.repository.CartRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.service.ProductService;
+import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +20,21 @@ public class CartService {
     private final MemberService memberService;
     private final ProductService productService;
 
-    public void addCart(Integer memberId, Integer productId) {
+    @Transactional
+    public CartResponse saveCart(Integer memberId, Integer productId) {
         MemberEntity member = memberService.findMemberById(memberId);
         ProductEntity product = productService.findProductById(productId);
 
-        CartEntity entity = new CartEntity(member, product);
-        cartRepository.save(entity);
+        Optional<CartEntity> cartOptional = cartRepository.findByMemberAndProduct(member, product);
+
+        if (cartOptional.isPresent()) {
+            CartEntity cart = cartOptional.get();
+            cart.increaseCount();
+            return CartResponse.from(cart);
+        }
+
+        CartEntity newCart = new CartEntity(member, product);
+        CartEntity savedCart = cartRepository.save(newCart);
+        return CartResponse.from(savedCart);
     }
 }
