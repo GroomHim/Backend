@@ -1,9 +1,11 @@
 package groom.him.domain.product.controller;
 
 import groom.him.core.dto.Response;
+import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +19,7 @@ public class ProductController {
     private final ProductService searchService;
 
     @GetMapping("/search")
-    public Response<List<ProductBriefResponse>> findSearchProductIndex(@RequestParam String word){
-        return Response.success(searchService.findSearchProductIndex(word));
+    public Response<List<ProductBriefResponse>> findSearchProductIndex(@AuthenticationPrincipal MemberEntity member, @RequestParam String word){
+        return Response.success(searchService.findSearchProductIndex(word, member));
     }
 }

@@ -1,4 +1,4 @@
-package groom.him.domain.product.models.entity;
+package groom.him.domain.search.models.entity;
 
 import groom.him.common.models.entity.RegisterDateFields;
 import groom.him.domain.member.models.entity.MemberEntity;
@@ -11,9 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.ahocorasick.trie.Trie;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "SEARCH")
 public class SearchEntity extends RegisterDateFields {
     @Id
@@ -27,4 +33,9 @@ public class SearchEntity extends RegisterDateFields {
     @Column(name = "search_word")
     private String searchWord;
 
+    @Builder
+    public SearchEntity(MemberEntity member, String searchWord){
+        this.member = member;
+        this.searchWord = searchWord;
+    }
 }
