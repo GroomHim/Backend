@@ -1,6 +1,8 @@
 package groom.him.domain.product.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.member.models.entity.QMemberEntity;
@@ -10,15 +12,18 @@ import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+
+import static com.querydsl.core.types.dsl.Expressions.stringPath;
+import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
 
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
-
+    private static QProductEntity product = QProductEntity.productEntity;
     @Override
     public List<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId,
         Boolean isSkinType) {
-        QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;
         QMemberEntity member = QMemberEntity.memberEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
@@ -46,4 +51,12 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .orderBy(wish.regDt.asc())
             .fetch();
     }
+
+    public List<ProductEntity> findSearchProduct(String word){
+        return jpaQueryFactory.selectFrom(product)
+                .where(product.productName.contains(word))
+                .orderBy(product.regDt.desc())
+                .fetch();
+    }
+
 }
