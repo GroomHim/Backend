@@ -2,7 +2,6 @@ package groom.him.domain.product.service;
 
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
-import groom.him.domain.product.models.entity.QSearchEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.search.models.entity.SearchEntity;
 import groom.him.domain.search.repository.SearchRepository;
@@ -26,6 +25,7 @@ public class ProductService {
                     .build();
             searchRepositoy.save(search);
         }
+        System.out.println(member.toString());
         return productRepository.findSearchProductIndex(word).stream()
                 .map(ProductBriefResponse::of).collect(Collectors.toList());
 
