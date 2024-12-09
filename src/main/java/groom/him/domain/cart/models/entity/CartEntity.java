@@ -39,4 +39,8 @@ public class CartEntity extends RegisterDateFields {
     public void increaseCount() {
         this.count++;
     }
+
+    public void decreaseCount() {
+        this.count--;
+    }
 }

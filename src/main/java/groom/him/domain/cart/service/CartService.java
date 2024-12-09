@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CartService {
+
     private final CartRepository cartRepository;
     private final MemberService memberService;
     private final ProductService productService;
@@ -56,17 +57,43 @@ public class CartService {
     @Transactional
     public void deleteCart(Integer memberId, Integer cartId) {
         CartEntity entity = findById(cartId);
+        validateMemberOfCart(memberId, entity);
+        cartRepository.delete(entity);
+    }
 
-        if (!Objects.equals(entity.getMember().getMemberId(), memberId)) {
-            throw new CartException(CartErrorCode.CART_UNAUTHORIZED);
+    @Transactional
+    public CartResponse increaseCount(Integer memberId, Integer cartId) {
+        CartEntity entity = findById(cartId);
+        validateMemberOfCart(memberId, entity);
+
+        entity.increaseCount();
+        return CartResponse.from(entity);
+    }
+
+    @Transactional
+    public CartResponse decreaseCount(Integer memberId, Integer cartId) {
+        CartEntity entity = findById(cartId);
+        validateMemberOfCart(memberId, entity);
+
+        if (entity.getCount() == 0) {
+            throw new CartException(CartErrorCode.CART_NOT_DECREASE_PRODUCT_COUNT);
         }
 
-        cartRepository.delete(entity);
+        entity.decreaseCount();
+        return CartResponse.from(entity);
     }
 
     private CartEntity findById(Integer cartId) {
         return cartRepository.findById(cartId).orElseThrow(
             () -> new CartException(CartErrorCode.CART_NOT_EXIST)
         );
+    }
+
+    private void validateMemberOfCart(Integer memberId, CartEntity entity) {
+        MemberEntity cartMember = entity.getMember();
+
+        if (!Objects.equals(cartMember.getMemberId(), memberId)) {
+            throw new CartException(CartErrorCode.CART_UNAUTHORIZED);
+        }
     }
 }
