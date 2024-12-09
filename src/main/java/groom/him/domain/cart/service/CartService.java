@@ -1,5 +1,7 @@
 package groom.him.domain.cart.service;
 
+import groom.him.domain.cart.exception.CartErrorCode;
+import groom.him.domain.cart.exception.CartException;
 import groom.him.domain.cart.models.dto.CartResponse;
 import groom.him.domain.cart.models.dto.CartsResponse;
 import groom.him.domain.cart.models.entity.CartEntity;
@@ -11,6 +13,7 @@ import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.service.ProductService;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CartService {
-
     private final CartRepository cartRepository;
     private final MemberService memberService;
     private final ProductService productService;
@@ -49,5 +51,22 @@ public class CartService {
         CartEntity newCart = new CartEntity(member, product);
         CartEntity savedCart = cartRepository.save(newCart);
         return CartResponse.from(savedCart);
+    }
+
+    @Transactional
+    public void deleteCart(Integer memberId, Integer cartId) {
+        CartEntity entity = findById(cartId);
+
+        if (!Objects.equals(entity.getMember().getMemberId(), memberId)) {
+            throw new CartException(CartErrorCode.CART_UNAUTHORIZED);
+        }
+
+        cartRepository.delete(entity);
+    }
+
+    private CartEntity findById(Integer cartId) {
+        return cartRepository.findById(cartId).orElseThrow(
+            () -> new CartException(CartErrorCode.CART_NOT_EXIST)
+        );
     }
 }
