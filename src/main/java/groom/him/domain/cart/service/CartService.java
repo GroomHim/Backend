@@ -23,7 +23,6 @@ public class CartService {
     private final MemberService memberService;
     private final ProductService productService;
 
-    @Transactional
     public List<CartsResponse> findCarts(Integer memberId) {
         MemberEntity member = memberService.findMemberById(memberId);
 
