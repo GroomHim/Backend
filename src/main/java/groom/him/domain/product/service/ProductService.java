@@ -61,7 +61,6 @@ public class ProductService {
                     .build();
             searchRepository.save(search);
         }
-        System.out.println(member.toString());
         return productRepository.findSearchProductIndex(word).stream()
             .map(ProductBriefResponse::of).collect(Collectors.toList());
 

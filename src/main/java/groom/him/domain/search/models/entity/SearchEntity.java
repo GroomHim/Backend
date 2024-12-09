@@ -24,7 +24,7 @@ public class SearchEntity extends RegisterDateFields {
     @Id
     @Column(name = "search_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer searchId;
+    private Long searchId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity member;
