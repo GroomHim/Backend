@@ -1,6 +1,8 @@
 package groom.him.domain.member.controller;
 
 import groom.him.core.dto.Response;
+import groom.him.core.model.member.exception.MemberErrorCode;
+import groom.him.core.model.member.exception.MemberException;
 import groom.him.domain.member.models.dto.request.ModifyPasswordRequest;
 import groom.him.domain.member.models.dto.request.ValidatePasswordRequest;
 import groom.him.domain.member.models.entity.MemberEntity;
@@ -10,6 +12,9 @@ import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 import java.time.LocalDate;
 import java.util.List;
+
+import groom.him.domain.search.models.entity.SearchEntity;
+import groom.him.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/members")
 public class MemberController {
     private final MemberService memberService;
+    private final SearchService searchService;
 
     @PatchMapping("/pwd")
     public Response<Integer> modifyPassword(@AuthenticationPrincipal MemberEntity member,
@@ -53,5 +59,10 @@ public class MemberController {
         @RequestParam(value = "end-date", required = false) LocalDate endDate) {
         return Response.success(
             memberService.findMemberQaList(member.getMemberId(), qaStatus, startDate, endDate));
+    }
+
+    @GetMapping("/search")
+    public Response<List<String>> findSearchList(@AuthenticationPrincipal MemberEntity member){
+        return Response.success(searchService.findSearchList(member));
     }
 }

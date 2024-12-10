@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-out")
-    public Response<Integer> signOut(@AuthenticationPrincipal MemberEntity member){
+    public Response<Integer> signOut(@AuthenticationPrincipal MemberEntity member) {
         authService.signOut(member);
         return Response.success();
     }
@@ -48,18 +48,16 @@ public class AuthController {
     @GetMapping("/validate/login-id/{loginId}")
     @ResponseBody
     public Response<Integer> validateLoginId(@PathVariable String loginId) {
-        if (authService.validateLoginId(loginId)){
+        if (authService.validateLoginId(loginId)) {
             return Response.success();
-        }
-        else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+        } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
     }
 
     @GetMapping("/validate/nickname/{nickname}")
     @ResponseBody
-    public Response<Integer> validateNickname(@PathVariable String nickname){
-        if (authService.validateNickname(nickname)){
+    public Response<Integer> validateNickname(@PathVariable String nickname) {
+        if (authService.validateNickname(nickname)) {
             return Response.success();
-        }
-        else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+        } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
     }
 }
