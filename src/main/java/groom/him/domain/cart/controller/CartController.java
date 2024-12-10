@@ -8,6 +8,7 @@ import groom.him.domain.cart.service.CartService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,6 @@ public class CartController {
     public Response<Integer> deleteCart(@AuthenticationPrincipal MemberEntity member,
         @RequestParam Integer cartId) {
         cartService.deleteCart(member.getMemberId(), cartId);
-        return Response.success();
+        return new Response<>(HttpStatus.NO_CONTENT.value());
     }
 }
