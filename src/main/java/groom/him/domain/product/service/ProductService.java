@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.entity.ProductEntity;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -63,8 +65,9 @@ public class ProductService {
                     .build();
             searchRepository.save(search);
         }
-        return productRepository.findSearchProductIndex(word).stream()
-            .map(ProductBriefResponse::of).collect(Collectors.toList());
-
+        List<ProductBriefResponse> list = new ArrayList<>();
+        productRepository.findSearchProductIndex(word).stream()
+            .map(ProductBriefResponse::of).forEach(list::add);
+        return list;
     }
 }
