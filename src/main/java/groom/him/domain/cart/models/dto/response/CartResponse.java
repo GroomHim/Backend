@@ -1,4 +1,4 @@
-package groom.him.domain.cart.models.dto;
+package groom.him.domain.cart.models.dto.response;
 
 import groom.him.domain.cart.models.entity.CartEntity;
 

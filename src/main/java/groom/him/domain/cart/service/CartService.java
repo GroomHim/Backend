@@ -2,8 +2,8 @@ package groom.him.domain.cart.service;
 
 import groom.him.domain.cart.exception.CartErrorCode;
 import groom.him.domain.cart.exception.CartException;
-import groom.him.domain.cart.models.dto.CartResponse;
-import groom.him.domain.cart.models.dto.CartsResponse;
+import groom.him.domain.cart.models.dto.response.CartResponse;
+import groom.him.domain.cart.models.dto.response.CartsResponse;
 import groom.him.domain.cart.models.entity.CartEntity;
 import groom.him.domain.cart.repository.CartRepository;
 import groom.him.domain.member.models.entity.MemberEntity;

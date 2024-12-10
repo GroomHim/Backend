@@ -1,8 +1,8 @@
 package groom.him.domain.cart.controller;
 
 import groom.him.core.dto.Response;
-import groom.him.domain.cart.models.dto.CartResponse;
-import groom.him.domain.cart.models.dto.CartsResponse;
+import groom.him.domain.cart.models.dto.response.CartResponse;
+import groom.him.domain.cart.models.dto.response.CartsResponse;
 import groom.him.domain.cart.service.CartService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import java.util.List;
