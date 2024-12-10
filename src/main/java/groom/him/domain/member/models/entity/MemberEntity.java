@@ -104,8 +104,8 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(role.toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -124,22 +124,22 @@ public class MemberEntity extends AuditingFields implements UserDetails {
 
     @Builder
     public MemberEntity(
-            Integer memberId,
-            SkinTypeEntity skinType,
-            String loginId,
-            Password password,
-            String name,
-            String phoneNumber,
-            Gender gender,
-            String nickname,
-            String birth,
-            String email,
-            String ci,
-            Provider provider,
-            String socialTokenId,
-            String refreshToken,
-            Boolean isCancel,
-            Role role
+        Integer memberId,
+        SkinTypeEntity skinType,
+        String loginId,
+        Password password,
+        String name,
+        String phoneNumber,
+        Gender gender,
+        String nickname,
+        String birth,
+        String email,
+        String ci,
+        Provider provider,
+        String socialTokenId,
+        String refreshToken,
+        Boolean isCancel,
+        Role role
     ) {
         this.memberId = memberId;
         this.skinTypeEntity = skinType;

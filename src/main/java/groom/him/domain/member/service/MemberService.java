@@ -1,6 +1,5 @@
 package groom.him.domain.member.service;
 
-import groom.him.core.dto.Response;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
@@ -34,7 +33,7 @@ public class MemberService {
     private final QaRepository qaRepository;
 
     public MemberResponse findMyInfo(Integer memberId) {
-        MemberEntity member = getMemberById(memberId);
+        MemberEntity member = findById(memberId);
         return MemberResponse.from(member);
     }
 
@@ -42,25 +41,25 @@ public class MemberService {
     public MemberResponse modifyMyInfo(Integer memberId, ModifyMyInfoRequest request) {
         authService.validateNickname(request.nickname());
 
-        MemberEntity member = getMemberById(memberId);
+        MemberEntity member = findById(memberId);
         member.changeNicknameAndEmail(request.nickname(), request.email());
         return MemberResponse.from(member);
     }
 
     @Transactional
     public void modifyPassword(Integer memberId, String newPassword) {
-        MemberEntity member = getMemberById(memberId);
+        MemberEntity member = findById(memberId);
         Password password = authService.encryptPassword(newPassword);
         member.changePassword(password);
     }
 
-    private MemberEntity getMemberById(Integer memberId) {
+    private MemberEntity findById(Integer memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
     }
 
     public void validatePassword(Integer memberId, String password) {
-        MemberEntity member = getMemberById(memberId);
+        MemberEntity member = findById(memberId);
         String encryptPassword = authService.hashing(password, member.getSalt());
 
         if (!member.getPassword().equals(encryptPassword)) {
@@ -70,12 +69,12 @@ public class MemberService {
 
     public List<ProductBriefResponse> findMemberWishList(Integer memberId, Boolean isSkinType) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType).stream()
-                .map(ProductBriefResponse::of).collect(Collectors.toList());
+            .map(ProductBriefResponse::of).collect(Collectors.toList());
     }
 
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
                                              LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
-                endDate);
+            endDate);
     }
 }
