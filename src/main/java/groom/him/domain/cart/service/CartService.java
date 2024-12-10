@@ -2,6 +2,7 @@ package groom.him.domain.cart.service;
 
 import groom.him.domain.cart.exception.CartErrorCode;
 import groom.him.domain.cart.exception.CartException;
+import groom.him.domain.cart.models.dto.request.ModifyCartCountRequest;
 import groom.him.domain.cart.models.dto.response.CartResponse;
 import groom.him.domain.cart.models.dto.response.CartsResponse;
 import groom.him.domain.cart.models.entity.CartEntity;
@@ -12,16 +13,18 @@ import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.service.ProductService;
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class CartService {
-
     private final CartRepository cartRepository;
     private final MemberService memberService;
     private final ProductService productService;
@@ -62,25 +65,17 @@ public class CartService {
     }
 
     @Transactional
-    public CartResponse increaseCount(Integer memberId, Integer cartId) {
-        CartEntity entity = findById(cartId);
-        validateMemberOfCart(memberId, entity);
+    public List<CartResponse> modifyCartsCount(Integer memberId, List<ModifyCartCountRequest> request) {
+        List<CartResponse> response = new ArrayList<>();
 
-        entity.increaseCount();
-        return CartResponse.from(entity);
-    }
-
-    @Transactional
-    public CartResponse decreaseCount(Integer memberId, Integer cartId) {
-        CartEntity entity = findById(cartId);
-        validateMemberOfCart(memberId, entity);
-
-        if (entity.getCount() == 0) {
-            throw new CartException(CartErrorCode.CART_NOT_DECREASE_PRODUCT_COUNT);
+        for (ModifyCartCountRequest item : request) {
+            CartEntity cart = findById(item.cartId());
+            validateMemberOfCart(memberId, cart);
+            cart.modifyCount(item.count());
+            response.add(CartResponse.from(cart));
         }
 
-        entity.decreaseCount();
-        return CartResponse.from(entity);
+        return response;
     }
 
     private CartEntity findById(Integer cartId) {

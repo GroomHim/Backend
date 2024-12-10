@@ -1,6 +1,7 @@
 package groom.him.domain.cart.controller;
 
 import groom.him.core.dto.Response;
+import groom.him.domain.cart.models.dto.request.ModifyCartCountRequest;
 import groom.him.domain.cart.models.dto.response.CartResponse;
 import groom.him.domain.cart.models.dto.response.CartsResponse;
 import groom.him.domain.cart.service.CartService;
@@ -8,12 +9,7 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/v1/carts")
 @RequiredArgsConstructor
@@ -31,6 +27,13 @@ public class CartController {
     public Response<CartResponse> saveCart(@AuthenticationPrincipal MemberEntity member,
                                   @RequestParam Integer productId) {
         var response = cartService.saveCart(member.getMemberId(), productId);
+        return Response.success(response);
+    }
+
+    @PatchMapping("/count")
+    public Response<List<CartResponse>> modifyCartsCount(@AuthenticationPrincipal MemberEntity member,
+                                                  @RequestBody List<ModifyCartCountRequest> modifyCartCountRequest) {
+        var response = cartService.modifyCartsCount(member.getMemberId(), modifyCartCountRequest);
         return Response.success(response);
     }
 
