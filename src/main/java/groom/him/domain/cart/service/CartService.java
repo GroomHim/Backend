@@ -71,6 +71,11 @@ public class CartService {
         for (ModifyCartCountRequest item : request) {
             CartEntity cart = findById(item.cartId());
             validateMemberOfCart(memberId, cart);
+
+            if (item.count() < 0) {
+                throw new CartException(CartErrorCode.CART_NOT_DECREASE_PRODUCT_COUNT);
+            }
+
             cart.modifyCount(item.count());
             response.add(CartResponse.from(cart));
         }
