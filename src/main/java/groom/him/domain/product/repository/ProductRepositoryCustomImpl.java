@@ -2,11 +2,15 @@ package groom.him.domain.product.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.order.models.entity.QOrderDetailEntity;
+import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
@@ -21,7 +25,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<ProductEntity> findMemberWishProductBriefBySkinType(Integer memberId,
+    public Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,
         Boolean isSkinType, Pageable pageable) {
         QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;
@@ -45,8 +49,17 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             builder.and(wish.member.memberId.eq(memberId));
         }
 
-        List<ProductEntity> content = jpaQueryFactory
-            .select(product)
+        List<ProductWithWishResponse> content = jpaQueryFactory
+            .select(Projections.constructor(
+                ProductWithWishResponse.class,
+                Projections.constructor(
+                    ProductBriefResponse.class,
+                    product.productId, product.productName, product.price, product.discountRate,
+                    product.discountedPrice, product.imgUrl
+                ), new CaseBuilder()
+                    .when(wish.product.productId.isNotNull()).then(true)
+                    .otherwise(false)
+            ))
             .from(wish)
             .leftJoin(wish.product, product)
             .where(builder)
