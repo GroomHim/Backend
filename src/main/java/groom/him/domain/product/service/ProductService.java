@@ -19,22 +19,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
 
-    public Slice<ProductBriefResponse> findRandomProductBrief(Pageable pageable,
+    public Slice<ProductWithWishResponse> findRandomProductBrief(Pageable pageable,
         RandomProductRequest request) {
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
             request.categoryIdList());
-        List<ProductEntity> productEntityList = productRepository.findRandomProductEntitiesByCategoryId(
-            pageable.getPageSize() + 1,
-            (int) pageable.getOffset(), subCategoryIdList);
-
-        boolean hasNext = false;
-        if (productEntityList.size() > pageable.getPageSize()) {
-            hasNext = true;
-            productEntityList.removeLast();
-        }
-
-        return new SliceImpl<>(productEntityList.stream().map(ProductBriefResponse::of).toList(),
-            pageable, hasNext);
+        return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList);
     }
 
     public Slice<ProductWithWishResponse> findRecommendProductBriefBySkinType(Pageable pageable,

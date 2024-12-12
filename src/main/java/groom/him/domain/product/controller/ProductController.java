@@ -26,7 +26,7 @@ public class ProductController {
     private final SkinTypeService skinTypeService;
 
     @GetMapping("/recommend/random")
-    public Response<Slice<ProductBriefResponse>> findRandomProductBrief(Pageable pageable,
+    public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
         @RequestBody RandomProductRequest request) {
         return Response.success(productService.findRandomProductBrief(pageable, request));
     }

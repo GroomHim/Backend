@@ -4,15 +4,17 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import groom.him.domain.category.models.entity.QExhibitCategoryEntity;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.order.models.entity.QOrderDetailEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
-import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.QProductEntity;
+import groom.him.domain.product.models.entity.QProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -74,9 +76,43 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
+        List<Integer> target) {
+        QProductEntity product = QProductEntity.productEntity;
+        QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
+        QWishEntity wish = QWishEntity.wishEntity;
+
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductWithWishResponse> content = jpaQueryFactory
+            .select(Projections.constructor(
+                ProductWithWishResponse.class,
+                Projections.constructor(
+                    ProductBriefResponse.class,
+                    product.productId, product.productName, product.price, product.discountRate,
+                    product.discountedPrice, product.imgUrl
+                ), new CaseBuilder()
+                    .when(wish.product.productId.isNotNull()).then(true)
+                    .otherwise(false)
+            ))
+            .from(product)
+            .leftJoin(productExhibitCategoryLink)
+            .on(product.productId.eq(productExhibitCategoryLink.product.productId))
+            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
+            .where(productExhibitCategoryLink.product.productId.in(target))
+            .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+            .offset(pageable.getOffset())
+            .limit(limit)
+            .fetch();
+
+        boolean hasNext = isHasNext(pageable, content);
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
     public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
-        Pageable pageable,
-        Integer skinType) {
+        Pageable pageable, Integer skinType) {
         QProductEntity product = QProductEntity.productEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
@@ -118,7 +154,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         QProductEntity product = QProductEntity.productEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
         QWishEntity wish = QWishEntity.wishEntity;
-        
+
         int limit = pageable.getPageSize() + 1;
 
         List<ProductWithWishResponse> content = jpaQueryFactory
