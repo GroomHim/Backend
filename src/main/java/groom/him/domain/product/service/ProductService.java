@@ -3,6 +3,7 @@ package groom.him.domain.product.service;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import java.util.List;
@@ -36,10 +37,9 @@ public class ProductService {
             pageable, hasNext);
     }
 
-    public Slice<ProductBriefResponse> findRecommendProductBriefBySkinType(Pageable pageable,
+    public Slice<ProductWithWishResponse> findRecommendProductBriefBySkinType(Pageable pageable,
         Integer skinTypeId) {
-        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId)
-            .map(ProductBriefResponse::of);
+        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId);
     }
 
     public Slice<ProductBriefResponse> findProductBriefByPrice(Pageable pageable, Integer minPrice,

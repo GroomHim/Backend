@@ -5,6 +5,7 @@ import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("/recommend/skin-type")
-    public Response<Slice<ProductBriefResponse>> findRecommendProductBriefBySkinType(
+    public Response<Slice<ProductWithWishResponse>> findRecommendProductBriefBySkinType(
         @AuthenticationPrincipal MemberEntity member,
         Pageable pageable
     ) {

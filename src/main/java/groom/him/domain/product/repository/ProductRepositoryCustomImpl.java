@@ -74,20 +74,32 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Slice<ProductEntity> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
+    public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
+        Pageable pageable,
         Integer skinType) {
         QProductEntity product = QProductEntity.productEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
+        QWishEntity wish = QWishEntity.wishEntity;
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductEntity> content = jpaQueryFactory
-            .select(product)
+        List<ProductWithWishResponse> content = jpaQueryFactory
+            .select(Projections.constructor(
+                ProductWithWishResponse.class,
+                Projections.constructor(
+                    ProductBriefResponse.class,
+                    product.productId, product.productName, product.price, product.discountRate,
+                    product.discountedPrice, product.imgUrl
+                ), new CaseBuilder()
+                    .when(wish.product.productId.isNotNull()).then(true)
+                    .otherwise(false)
+            ))
             .from(product)
             .join(productSkinTypeLink)
             .on(productSkinTypeLink.product.productId.eq(product.productId))
             .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(productSkinTypeLink.skinType.skinTypeId.eq(skinType))
             .groupBy(product.productId)
             .orderBy(orderBySaleQuantity(orderDetail))
