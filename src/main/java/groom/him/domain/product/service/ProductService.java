@@ -42,10 +42,9 @@ public class ProductService {
         return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId);
     }
 
-    public Slice<ProductBriefResponse> findProductBriefByPrice(Pageable pageable, Integer minPrice,
-        Integer maxPrice) {
-        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice)
-            .map(ProductBriefResponse::of);
+    public Slice<ProductWithWishResponse> findProductBriefByPrice(Pageable pageable,
+        Integer minPrice, Integer maxPrice) {
+        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice);
     }
 
 }

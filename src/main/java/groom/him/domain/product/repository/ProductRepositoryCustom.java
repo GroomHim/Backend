@@ -9,7 +9,7 @@ public interface ProductRepositoryCustom {
     Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
         Integer skinType);
 
-    Slice<ProductEntity> findProductListByPriceRange(Pageable pageable, Integer minPrice,
+    Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable, Integer minPrice,
         Integer maxPrice);
 
     Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,

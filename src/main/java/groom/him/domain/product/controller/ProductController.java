@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping("/price")
-    public Response<Slice<ProductBriefResponse>> findProductBriefByCost(
+    public Response<Slice<ProductWithWishResponse>> findProductBriefByCost(
         @RequestParam(value = "min-price") Integer minPrice,
         @RequestParam(value = "max-price") Integer maxPrice,
         Pageable pageable
