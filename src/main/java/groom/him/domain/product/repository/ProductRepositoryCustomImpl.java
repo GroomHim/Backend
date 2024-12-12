@@ -1,6 +1,7 @@
 package groom.him.domain.product.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.member.models.entity.QMemberEntity;
@@ -54,11 +55,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
-        boolean hasNext = false;
-        if (content.size() > pageable.getPageSize()) {
-            hasNext = true;
-            content.remove(pageable.getPageSize());
-        }
+        boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
     }
@@ -80,16 +77,12 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .where(productSkinTypeLink.skinType.skinTypeId.eq(skinType))
             .groupBy(product.productId)
-            .orderBy(orderDetail.quantity.sum().desc())
+            .orderBy(orderBySaleQuantity(orderDetail))
             .offset(pageable.getOffset())
             .limit(limit)
             .fetch();
 
-        boolean hasNext = false;
-        if (content.size() > pageable.getPageSize()) {
-            hasNext = true;
-            content.remove(pageable.getPageSize());
-        }
+        boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
     }
@@ -108,17 +101,26 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .where(product.discountedPrice.between(minPrice, maxPrice))
             .groupBy(product.productId)
-            .orderBy(orderDetail.quantity.sum().desc())
+            .orderBy(orderBySaleQuantity(orderDetail))
             .offset(pageable.getOffset())
             .limit(limit)
             .fetch();
 
+        boolean hasNext = isHasNext(pageable, content);
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    private boolean isHasNext(Pageable pageable, List<?> content) {
         boolean hasNext = false;
         if (content.size() > pageable.getPageSize()) {
             hasNext = true;
             content.remove(pageable.getPageSize());
         }
+        return hasNext;
+    }
 
-        return new SliceImpl<>(content, pageable, hasNext);
+    private OrderSpecifier<Integer> orderBySaleQuantity(QOrderDetailEntity orderDetail) {
+        return orderDetail.quantity.sum().desc();
     }
 }
