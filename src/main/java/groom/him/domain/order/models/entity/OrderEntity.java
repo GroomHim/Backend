@@ -1,7 +1,7 @@
-package groom.him.domain.member.models.entity;
+package groom.him.domain.order.models.entity;
 
 import groom.him.common.models.entity.RegisterDateFields;
-import groom.him.domain.product.models.entity.ProductEntity;
+import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,25 +11,30 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "WISH")
+@Table(name = "ORDER")
 @Entity
-public class WishEntity extends RegisterDateFields {
+public class OrderEntity extends RegisterDateFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wish_id")
-    private Integer wishId;
+    @Column(name = "order_id")
+    private Integer orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private MemberEntity member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductEntity product;
+    @NotNull
+    @Column(name = "price")
+    private Integer price;
+
+    @NotNull
+    @Column(name = "quantity")
+    private Integer quantity;
 }

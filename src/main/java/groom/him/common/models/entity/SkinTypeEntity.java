@@ -20,7 +20,7 @@ public class SkinTypeEntity extends RegisterDateFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skin_type_id")
-    private Long skinTypeId;
+    private Integer skinTypeId;
 
     @NotNull
     @Column(name = "skin_type_name", length = 10)
