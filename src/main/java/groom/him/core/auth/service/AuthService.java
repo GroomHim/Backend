@@ -161,4 +161,9 @@ public class AuthService implements UserDetailsService {
         if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         return true;
     }
+
+    public String findLoginIdByCi(String ci) {
+        MemberEntity member = memberRepository.findByCi(ci).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+        return member.getLoginId();
+    }
 }

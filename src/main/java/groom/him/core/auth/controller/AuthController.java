@@ -1,7 +1,9 @@
 package groom.him.core.auth.controller;
 
+import groom.him.core.auth.dto.request.FindLoginIdRequest;
 import groom.him.core.auth.dto.request.SignInRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
+import groom.him.core.auth.dto.response.FindLoginIdResponse;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
@@ -51,6 +53,14 @@ public class AuthController {
         if (authService.validateLoginId(loginId)) {
             return Response.success();
         } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+
+    }
+
+    @PostMapping("/find/login-id")
+    public Response<FindLoginIdResponse> findLoginId(@RequestBody FindLoginIdRequest request) {
+        var loginId = authService.findLoginIdByCi(request.ci());
+        var response = new FindLoginIdResponse(loginId);
+        return Response.success(response);
     }
 
     @GetMapping("/validate/nickname/{nickname}")
