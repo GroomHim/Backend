@@ -40,9 +40,7 @@ public class SecurityConfig {
 
     private final String[] DOCS_SRC_URLS = new String[]{"/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger/**", "/api/v1/health-check"};
 
-    private final String[] AUTH_URLS = new String[]{"/v1/auth/sign-up", "/v1/auth/sign-in", "/groomhim/auth/refresh-token"};
-
-    private final String[] SIGN_UP_VALIDATION_URLS = new String[]{ "/v1/auth/validate/login-id/{loginId}", "/v1/auth/validate/nickname/{nickname}" };
+    private final String[] AUTH_URLS = new String[]{"/v1/auth/**", "/groomhim/auth/refresh-token"};
 
     private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
 
@@ -68,8 +66,7 @@ public class SecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(FRONT_SRC_URLS)
                 .requestMatchers(DOCS_SRC_URLS)
-                .requestMatchers(AUTH_URLS)
-                .requestMatchers(SIGN_UP_VALIDATION_URLS);
+                .requestMatchers(AUTH_URLS);
     }
 
     public CorsConfigurationSource corsConfigurationSource() {

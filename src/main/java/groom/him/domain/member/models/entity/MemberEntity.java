@@ -18,9 +18,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -163,5 +165,10 @@ public class MemberEntity extends AuditingFields implements UserDetails {
 
     public void changePassword(Password password) {
         this.password = password;
+    }
+
+    public void changeNicknameAndEmail(String nickname, String email) {
+        this.nickname = nickname;
+        this.email = email;
     }
 }
