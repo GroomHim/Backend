@@ -6,7 +6,7 @@ import groom.him.domain.search.models.entity.SearchEntity;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
-@Builder
+
 public record SearchResponse (
     Integer memberId,
     String searchWord,
