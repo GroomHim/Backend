@@ -9,11 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 public record SearchResponse (
     Integer memberId,
-
     String searchWord,
-
     LocalDateTime regDt
-
 ){
     public static SearchResponse of(SearchEntity search, Integer memberId) {
         return new SearchResponse(memberId, search.getSearchWord(), search.getRegDt());
