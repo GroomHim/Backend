@@ -58,7 +58,7 @@ public class ProductService {
     }
 
     public List<ProductBriefResponse> findSearchProductIndex(String word, MemberEntity member){
-        if(searchRepository.countByMember(member) < RECENT_WORD_CNT) {
+        if(searchRepository.countByMember_MemberId(member.getMemberId()) < RECENT_WORD_CNT) {
             SearchEntity search = SearchEntity.builder()
                     .member(member)
                     .searchWord(word)

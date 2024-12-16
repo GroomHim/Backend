@@ -17,7 +17,7 @@ public class SearchService {
 
     public List<String> findSearchList(MemberEntity member){
         ArrayList<String> list = new ArrayList<>();
-        searchRepository.findTop5ByMemberOrderByRegDtDesc(member).forEach(entity -> list.add(entity.getSearchWord()));
+        searchRepository.findTop5ByMember_MemberIdOrderByRegDtDesc(member.getMemberId()).forEach(entity -> list.add(entity.getSearchWord()));
         return list;
     }
 }
