@@ -1,13 +1,12 @@
 package groom.him.domain.product.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import groom.him.domain.category.models.entity.QExhibitCategoryEntity;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.order.models.entity.QOrderDetailEntity;
@@ -58,9 +57,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     ProductBriefResponse.class,
                     product.productId, product.productName, product.price, product.discountRate,
                     product.discountedPrice, product.imgUrl
-                ), new CaseBuilder()
-                    .when(wish.product.productId.isNotNull()).then(true)
-                    .otherwise(false)
+                ), isProductWished(wish)
             ))
             .from(wish)
             .leftJoin(wish.product, product)
@@ -91,9 +88,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     ProductBriefResponse.class,
                     product.productId, product.productName, product.price, product.discountRate,
                     product.discountedPrice, product.imgUrl
-                ), new CaseBuilder()
-                    .when(wish.product.productId.isNotNull()).then(true)
-                    .otherwise(false)
+                ), isProductWished(wish)
             ))
             .from(product)
             .leftJoin(productExhibitCategoryLink)
@@ -127,9 +122,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     ProductBriefResponse.class,
                     product.productId, product.productName, product.price, product.discountRate,
                     product.discountedPrice, product.imgUrl
-                ), new CaseBuilder()
-                    .when(wish.product.productId.isNotNull()).then(true)
-                    .otherwise(false)
+                ), isProductWished(wish)
             ))
             .from(product)
             .join(productSkinTypeLink)
@@ -164,9 +157,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                     ProductBriefResponse.class,
                     product.productId, product.productName, product.price, product.discountRate,
                     product.discountedPrice, product.imgUrl
-                ), new CaseBuilder()
-                    .when(wish.product.productId.isNotNull()).then(true)
-                    .otherwise(false)
+                ), isProductWished(wish)
             ))
             .from(product)
             .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
@@ -181,6 +172,10 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    private Expression<Boolean> isProductWished(QWishEntity wish) {
+        return wish.product.productId.isNotNull();
     }
 
     private boolean isHasNext(Pageable pageable, List<?> content) {
