@@ -76,5 +76,6 @@ public class AuthController {
     @PostMapping("/agreement")
     public Response<Integer> createAgreement(@RequestBody CreateAgreementRequest request){
         agreementService.createAgreement(request);
+        return Response.success();
     }
 }

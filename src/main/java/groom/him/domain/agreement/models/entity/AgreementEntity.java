@@ -1,6 +1,5 @@
 package groom.him.domain.agreement.models.entity;
 
-import groom.him.domain.agreement.models.dto.CreateAgreementRequest;
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,17 +23,41 @@ import lombok.NonNull;
 public class AgreementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer agreementId;
+    private Integer agreementId;
+
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    MemberEntity member;
+    private MemberEntity member;
+
     @Column(name = "terms_of_service_consent")
-    Boolean termsOfServiceConsent;
+    private Boolean termsOfServiceConsent;
+
     @Column(name = "personal_data_consent")
-    Boolean personalDataConsent;
+    private Boolean personalDataConsent;
+
     @Column(name = "marketing_consent")
-    Boolean marketingConsent;
+    private Boolean marketingConsent;
+
     @Column(name = "location_consent")
-    Boolean locationConsent;
+    private Boolean locationConsent;
+
+    @Builder
+    public AgreementEntity(
+        MemberEntity member,
+        Boolean termsOfServiceConsent,
+        Boolean personalDataConsent,
+        Boolean marketingConsent,
+        Boolean locationConsent
+    ){
+        this.member = member;
+        this.termsOfServiceConsent = termsOfServiceConsent;
+        this.personalDataConsent = personalDataConsent;
+        this.marketingConsent = marketingConsent;
+        this.locationConsent = locationConsent;
+    }
+
+    public void modifyMember(MemberEntity member){
+        this.member = member;
+    }
 }

@@ -1,6 +1,7 @@
 package groom.him.domain.agreement.models.dto;
 
 import groom.him.domain.agreement.models.entity.AgreementEntity;
+import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
 
 public record CreateAgreementRequest (
@@ -11,7 +12,11 @@ public record CreateAgreementRequest (
     Boolean locationConsent
 ){
   public static AgreementEntity from(CreateAgreementRequest request){
-    AgreementEntity agreement = new AgreementEntity();
-    
+    return AgreementEntity.builder()
+        .termsOfServiceConsent(request.termsOfServiceConsent)
+        .personalDataConsent(request.personalDataConsent)
+        .marketingConsent(request.marketingConsent)
+        .locationConsent(request.locationConsent).
+        build();
   }
 }
