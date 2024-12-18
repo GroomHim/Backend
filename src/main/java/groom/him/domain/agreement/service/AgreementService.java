@@ -16,7 +16,7 @@ public class AgreementService {
     private final AgreementRepository agreementRepository;
     private final MemberRepository memberRepository;
 
-    public AgreementEntity createAgreement(CreateAgreementRequest request){
+    public AgreementEntity addAgreement(CreateAgreementRequest request){
         MemberEntity member = memberRepository.findById(request.memberId()).orElseThrow(() -> new MemberException(
             MemberErrorCode.MEMBER_NOT_EXIST));
         AgreementEntity agreement = request.from(request);

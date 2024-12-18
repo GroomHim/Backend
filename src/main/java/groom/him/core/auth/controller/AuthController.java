@@ -14,6 +14,7 @@ import groom.him.domain.agreement.service.AgreementService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,8 +75,8 @@ public class AuthController {
     }
 
     @PostMapping("/agreement")
-    public Response<Integer> createAgreement(@RequestBody CreateAgreementRequest request){
-        agreementService.createAgreement(request);
-        return Response.success();
+    public Response<Integer> addAgreement(@RequestBody CreateAgreementRequest request){
+        agreementService.addAgreement(request);
+        return Response.success(HttpStatus.CREATED.value());
     }
 }
