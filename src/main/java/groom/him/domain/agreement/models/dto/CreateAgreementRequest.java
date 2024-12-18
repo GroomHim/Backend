@@ -1,8 +1,6 @@
 package groom.him.domain.agreement.models.dto;
 
 import groom.him.domain.agreement.models.entity.AgreementEntity;
-import groom.him.domain.member.models.entity.MemberEntity;
-import jakarta.persistence.Column;
 
 public record CreateAgreementRequest (
     Integer memberId,
