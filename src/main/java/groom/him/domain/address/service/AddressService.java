@@ -10,6 +10,7 @@ import groom.him.domain.address.models.entity.AddressEntity;
 import groom.him.domain.address.models.enums.AddressErrorCode;
 import groom.him.domain.address.repository.AddressRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,10 @@ public class AddressService {
     }
 
     public List<AddressResponse> findMemberAddressList(Integer memberId) {
-        return addressRepository.findAllByMemberId(memberId).stream().map((AddressResponse::of))
-            .collect(Collectors.toList());
+        List<AddressResponse> result = new ArrayList<>();
+        addressRepository.findAllByMemberId(memberId).stream().map(AddressResponse::of)
+            .forEach(result::add);
+        return result;
     }
 
     @Transactional
