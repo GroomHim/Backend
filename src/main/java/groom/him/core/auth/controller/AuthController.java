@@ -9,9 +9,12 @@ import groom.him.core.auth.service.AuthService;
 import groom.him.core.dto.Response;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
+import groom.him.domain.agreement.models.dto.CreateAgreementRequest;
+import groom.him.domain.agreement.service.AgreementService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
+    private final AgreementService agreementService;
     @PostMapping("/sign-in")
     public Response<SignInResponse> signIn(@RequestBody SignInRequest request) throws Exception {
         SignInResponse response = authService.signIn(request.loginId(), request.password());
@@ -69,5 +72,11 @@ public class AuthController {
         if (authService.validateNickname(nickname)) {
             return Response.success();
         } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+    }
+
+    @PostMapping("/agreement")
+    public Response<Integer> addAgreement(@RequestBody CreateAgreementRequest request){
+        agreementService.addAgreement(request);
+        return Response.success(HttpStatus.CREATED.value());
     }
 }
