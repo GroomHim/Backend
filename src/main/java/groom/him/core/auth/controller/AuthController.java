@@ -53,6 +53,7 @@ public class AuthController {
         if (authService.validateLoginId(loginId)) {
             return Response.success();
         } else throw new MemberException(MemberErrorCode.MEMBER_NOT_VALID);
+
     }
 
     @PostMapping("/find/login-id")

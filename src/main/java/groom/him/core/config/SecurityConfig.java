@@ -36,11 +36,8 @@ public class SecurityConfig {
 
     private final String ORIGIN = "http://localhost:3000";
 
-    private final String[] FRONT_SRC_URLS = new String[]{"/webjars/**", "/configuration/ui", "/configuration/security"};
 
-    private final String[] DOCS_SRC_URLS = new String[]{"/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger/**", "/api/v1/health-check"};
-
-    private final String[] AUTH_URLS = new String[]{"/v1/auth/**", "/groomhim/auth/refresh-token"};
+    private final String[] PERMIT_URLS = new String[]{"/webjars/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger/**", "/v1/health-check", "/v1/auth/sign-up", "/v1/auth/sign-in", "/v1/auth/validate/login-id/{loginId}", "/v1/auth/validate/nickname/{nickname}"};
 
     private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
 
@@ -51,7 +48,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authz) -> authz
-                        .anyRequest().permitAll() // TODO : 운영 서버에서는 authenticated()로 변경 요함
+                        .anyRequest()
+                        .permitAll()
+                        // TODO : 운영 서버에서는 authenticated()로 변경 요함
                 )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(accessDeniedCustomHandler));
@@ -64,9 +63,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers(FRONT_SRC_URLS)
-                .requestMatchers(DOCS_SRC_URLS)
-                .requestMatchers(AUTH_URLS);
+                .requestMatchers(PERMIT_URLS);
     }
 
     public CorsConfigurationSource corsConfigurationSource() {
