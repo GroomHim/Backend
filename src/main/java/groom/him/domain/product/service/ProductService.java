@@ -8,6 +8,8 @@ import groom.him.domain.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
+import groom.him.domain.product.exception.ProductErrorCode;
+import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.entity.ProductEntity;
 
@@ -26,6 +28,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
     private final SearchRepository searchRepository;
+
+    public ProductEntity findProductById(Integer productId) {
+        return productRepository.findById(productId).orElseThrow(
+                () -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+    }
 
     public Slice<ProductBriefResponse> findRandomProductBrief(Pageable pageable,
         RandomProductRequest request) {
