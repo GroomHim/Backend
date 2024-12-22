@@ -54,7 +54,7 @@ public class MemberService {
         member.changePassword(password);
     }
 
-    private MemberEntity findById(Integer memberId) {
+    public MemberEntity findById(Integer memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
     }

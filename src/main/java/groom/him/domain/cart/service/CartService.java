@@ -30,7 +30,7 @@ public class CartService {
     private final ProductService productService;
 
     public List<CartsResponse> findCarts(Integer memberId) {
-        MemberEntity member = memberService.findMemberById(memberId);
+        MemberEntity member = memberService.findById(memberId);
 
         return cartRepository.findAllByMemberOrderByRegDt(member).stream()
             .map(cart -> new CartsResponse(
@@ -41,7 +41,7 @@ public class CartService {
 
     @Transactional
     public CartResponse saveCart(Integer memberId, Integer productId) {
-        MemberEntity member = memberService.findMemberById(memberId);
+        MemberEntity member = memberService.findById(memberId);
         ProductEntity product = productService.findProductById(productId);
 
         Optional<CartEntity> cartOptional = cartRepository.findByMemberAndProduct(member, product);
@@ -68,7 +68,7 @@ public class CartService {
     public List<CartResponse> modifyCartsCount(Integer memberId, List<ModifyCartCountRequest> request) {
         List<CartResponse> response = new ArrayList<>();
 
-        for (ModifyCartCountRequest item : request) {
+        request.forEach(item -> {
             CartEntity cart = findById(item.cartId());
             validateMemberOfCart(memberId, cart);
 
@@ -78,7 +78,7 @@ public class CartService {
 
             cart.modifyCount(item.count());
             response.add(CartResponse.from(cart));
-        }
+        });
 
         return response;
     }
