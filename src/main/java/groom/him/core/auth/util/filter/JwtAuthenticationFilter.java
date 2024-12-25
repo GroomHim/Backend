@@ -13,9 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
 
 @Slf4j
@@ -30,6 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtTokenProvider.isTokenNonExpired(token)) {
             Authentication authentication = getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("skip all the next filter");
+            request.getRequestDispatcher(request.getRequestURI()).forward(request, response);
+            System.out.println("-------------------");
         } else if (token == null) {
             throw new RuntimeException("token doesn't exist!");
         } else if (!jwtTokenProvider.isTokenNonExpired(token)) {

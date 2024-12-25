@@ -2,6 +2,7 @@ package groom.him.core.auth.service;
 
 import groom.him.common.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
+import groom.him.core.auth.dto.response.RefreshTokenResponse;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.exception.CommonErrorCode;
@@ -59,11 +60,18 @@ public class AuthService implements UserDetailsService {
 
         if (!pwd.equals(hashing(password, salt)))
             throw new MemberException(MemberErrorCode.MEMBER_NOT_EXIST);
-        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
+        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
         member.changeRefreshToken(refreshToken);
-
         return new SignInResponse(accessToken, refreshToken);
+    }
+
+    public RefreshTokenResponse regenerateToken(MemberEntity member){
+        final String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
+        final String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
+        Optional<MemberEntity> optionalUser = memberRepository.findById(member.getMemberId());
+        optionalUser.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(refreshToken);
+        return new RefreshTokenResponse(accessToken, refreshToken);
     }
 
     public String getSalt() {

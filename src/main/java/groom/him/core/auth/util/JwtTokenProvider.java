@@ -1,5 +1,9 @@
 package groom.him.core.auth.util;
 
+import groom.him.core.exception.CommonErrorCode;
+import groom.him.core.exception.CommonException;
+import groom.him.core.model.member.exception.MemberErrorCode;
+import groom.him.core.model.member.exception.MemberException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -33,22 +37,21 @@ public class JwtTokenProvider {
 
     @Value("${jwt.refreshToken-valid-time}")
     private long refreshTokenValidTime;
-
     private final String TOKEN_HEADER_NAME = "Authorization";
 
     private final String REFRESHTOKEN_HEADER_NAME = "REFRESH-TOKEN";
 
     private final String AUTHORITIES_KEY = "role";
 
-    public String createToken(Integer memberId, Authentication authentication, String ci) {
-        return generateToken(memberId, authentication, tokenValidTime, ci);
+    public String createToken(Integer memberId, Authentication authentication) {
+        return generateToken(memberId, authentication, tokenValidTime);
     }
 
-    public String createRefreshToken(Integer memberId, Authentication authentication, String ci) {
-        return generateToken(memberId, authentication, refreshTokenValidTime, ci);
+    public String createRefreshToken(Integer memberId, Authentication authentication) {
+        return generateToken(memberId, authentication, refreshTokenValidTime);
     }
 
-    public String generateToken(Integer memberId, Authentication authentication, long expireTime, String ci) {
+    public String generateToken(Integer memberId, Authentication authentication, long expireTime) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -62,6 +65,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+
 
     public String getUserId(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
@@ -81,7 +85,7 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest request) {
         if (request.getHeader(TOKEN_HEADER_NAME) == null) {
-            return null; // TODO: Exception
+            return null;
         }
         String authorization = request.getHeader(TOKEN_HEADER_NAME);
         if (Pattern.matches("^Bearer .*", authorization)) {
@@ -89,6 +93,7 @@ public class JwtTokenProvider {
             return authorization;
         } else throw new RuntimeException("Invalid token");
     }
+
 
     public String resolveRefreshToken(HttpServletRequest request) {
         if (request.getHeader(REFRESHTOKEN_HEADER_NAME) == null) {
