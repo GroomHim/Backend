@@ -4,6 +4,7 @@ import groom.him.common.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.RefreshTokenResponse;
 import groom.him.core.auth.dto.response.SignInResponse;
+import groom.him.core.auth.util.CookieUtils;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.exception.CommonErrorCode;
 import groom.him.core.exception.CommonException;
@@ -13,6 +14,9 @@ import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
+import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -53,7 +57,7 @@ public class AuthService implements UserDetailsService {
         return authenticationToken;
     }
 
-    public SignInResponse signIn(final String loginId, final String password) throws Exception {
+    public SignInResponse signIn(final String loginId, final String password, HttpServletResponse httpRes) throws Exception {
         MemberEntity member = memberRepository.findByLoginIdAndIsCancelFalse(loginId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
         String pwd = member.getPassword();
         String salt = member.getSalt();
@@ -62,15 +66,18 @@ public class AuthService implements UserDetailsService {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_EXIST);
         String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
+        CookieUtils.addRememberMeCookie(httpRes, URLEncoder.encode("Bearer " + accessToken, StandardCharsets.UTF_8));
+
         member.changeRefreshToken(refreshToken);
         return new SignInResponse(accessToken, refreshToken);
     }
 
-    public RefreshTokenResponse regenerateToken(MemberEntity member){
+    public RefreshTokenResponse regenerateToken(MemberEntity member, HttpServletResponse httpRes){
         final String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
         final String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
         Optional<MemberEntity> optionalUser = memberRepository.findById(member.getMemberId());
         optionalUser.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(refreshToken);
+        CookieUtils.addRememberMeCookie(httpRes, URLEncoder.encode("Bearer " + accessToken, StandardCharsets.UTF_8));
         return new RefreshTokenResponse(accessToken, refreshToken);
     }
 

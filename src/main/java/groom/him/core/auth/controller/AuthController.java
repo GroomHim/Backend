@@ -13,6 +13,7 @@ import groom.him.core.dto.Response;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.domain.member.models.entity.MemberEntity;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,15 +33,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-in")
-    public Response<SignInResponse> signIn(@RequestBody SignInRequest request) throws Exception {
-        SignInResponse response = authService.signIn(request.loginId(), request.password());
-
+    public Response<SignInResponse> signIn(@RequestBody SignInRequest request,  HttpServletResponse httpRes) throws Exception {
+        SignInResponse response = authService.signIn(request.loginId(), request.password(), httpRes);
         return Response.success(response);
     }
 
     @PostMapping("/refresh-token")
-    public Response<RefreshTokenResponse> refreshToken(@AuthenticationPrincipal MemberEntity member) throws Exception {
-        RefreshTokenResponse response = authService.regenerateToken(member);
+    public Response<RefreshTokenResponse> refreshToken(@AuthenticationPrincipal MemberEntity member, HttpServletResponse httpRes) throws Exception {
+        RefreshTokenResponse response = authService.regenerateToken(member, httpRes);
         return Response.success(response);
     }
 

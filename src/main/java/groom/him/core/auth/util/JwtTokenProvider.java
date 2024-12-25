@@ -43,6 +43,7 @@ public class JwtTokenProvider {
 
     private final String AUTHORITIES_KEY = "role";
 
+
     public String createToken(Integer memberId, Authentication authentication) {
         return generateToken(memberId, authentication, tokenValidTime);
     }

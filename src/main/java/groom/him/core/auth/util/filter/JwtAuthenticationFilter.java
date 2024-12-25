@@ -1,6 +1,7 @@
 package groom.him.core.auth.util.filter;
 
 import groom.him.core.auth.service.AuthService;
+import groom.him.core.auth.util.CookieUtils;
 import groom.him.core.auth.util.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,9 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtTokenProvider.isTokenNonExpired(token)) {
             Authentication authentication = getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("skip all the next filter");
-            request.getRequestDispatcher(request.getRequestURI()).forward(request, response);
-            System.out.println("-------------------");
         } else if (token == null) {
             throw new RuntimeException("token doesn't exist!");
         } else if (!jwtTokenProvider.isTokenNonExpired(token)) {

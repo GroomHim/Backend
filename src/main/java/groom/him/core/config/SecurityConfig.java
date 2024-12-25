@@ -57,6 +57,7 @@ public class SecurityConfig {
     private final AuthService authService;
     private final String ORIGIN = "http://localhost:3000";
     private final String[] PERMIT_URLS = new String[]{"/webjars/**", "/configuration/ui", "/configuration/security", "/swagger-ui.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/swagger/**", "/v1/health-check", "/v1/auth/sign-up", "/v1/auth/sign-in", "/v1/auth/validate/login-id/**", "/v1/auth/validate/nickname/**"};
+
     private final AuthAccessDeniedHandler accessDeniedCustomHandler;
 
     @Bean
@@ -67,7 +68,6 @@ public class SecurityConfig {
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authz) -> authz
                         .anyRequest().permitAll()
-                        // TODO : 운영 서버에서는 authenticated()로 변경 요함
                 )
                 .httpBasic(Customizer.withDefaults())
             .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(accessDeniedCustomHandler));

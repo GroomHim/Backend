@@ -25,7 +25,6 @@ import java.security.InvalidParameterException;
 @RequiredArgsConstructor
 public class RefreshValidateInterceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
-
     private final AuthService authService;
 
     @Override
@@ -57,7 +56,6 @@ public class RefreshValidateInterceptor implements HandlerInterceptor {
         }
         return true;
     }
-
 
     private Authentication getAuthentication(String token) throws UsernameNotFoundException, JsonProcessingException {
         UserDetails userDetails = authService.loadUserByUsername(jwtTokenProvider.getUserId(token));
