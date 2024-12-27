@@ -13,4 +13,6 @@ public interface CartRepository extends JpaRepository<CartEntity, Integer> {
     Optional<CartEntity> findByMemberAndProduct(MemberEntity member, ProductEntity product);
 
     List<CartEntity> findAllByMemberOrderByRegDt(MemberEntity member);
+
+    Integer countDistinctByMember_MemberId(Integer memberId);
 }

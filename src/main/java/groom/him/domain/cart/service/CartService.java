@@ -7,6 +7,7 @@ import groom.him.domain.cart.models.dto.response.CartResponse;
 import groom.him.domain.cart.models.dto.response.CartsResponse;
 import groom.him.domain.cart.models.entity.CartEntity;
 import groom.him.domain.cart.repository.CartRepository;
+import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
@@ -65,7 +66,8 @@ public class CartService {
     }
 
     @Transactional
-    public List<CartResponse> modifyCartsCount(Integer memberId, List<ModifyCartCountRequest> request) {
+    public List<CartResponse> modifyCartsCount(Integer memberId,
+        List<ModifyCartCountRequest> request) {
         List<CartResponse> response = new ArrayList<>();
 
         request.forEach(item -> {
@@ -95,5 +97,9 @@ public class CartService {
         if (!Objects.equals(cartMember.getMemberId(), memberId)) {
             throw new CartException(CartErrorCode.CART_UNAUTHORIZED);
         }
+    }
+
+    public CountResponse findMemberCartCount(Integer memberId) {
+        return new CountResponse(cartRepository.countDistinctByMember_MemberId(memberId));
     }
 }
