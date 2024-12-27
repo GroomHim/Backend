@@ -10,6 +10,7 @@ import groom.him.domain.member.models.dto.response.MemberResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 
@@ -59,7 +60,7 @@ public class MemberController {
     }
 
     @GetMapping("/wish")
-    public Response<Slice<ProductBriefResponse>> findMemberWishList(
+    public Response<Slice<ProductWithWishResponse>> findMemberWishList(
         @AuthenticationPrincipal MemberEntity member,
         @RequestParam("skin-type") Boolean isSkinType,
         Pageable pageable) {

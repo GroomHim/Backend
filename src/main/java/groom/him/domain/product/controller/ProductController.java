@@ -5,6 +5,7 @@ import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +27,13 @@ public class ProductController {
     private final SkinTypeService skinTypeService;
 
     @GetMapping("/recommend/random")
-    public Response<Slice<ProductBriefResponse>> findRandomProductBrief(Pageable pageable,
+    public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
         @RequestBody RandomProductRequest request) {
         return Response.success(productService.findRandomProductBrief(pageable, request));
     }
 
     @GetMapping("/recommend/skin-type")
-    public Response<Slice<ProductBriefResponse>> findRecommendProductBriefBySkinType(
+    public Response<Slice<ProductWithWishResponse>> findRecommendProductBriefBySkinType(
         @AuthenticationPrincipal MemberEntity member,
         Pageable pageable
     ) {
@@ -43,7 +44,7 @@ public class ProductController {
     }
 
     @GetMapping("/price")
-    public Response<Slice<ProductBriefResponse>> findProductBriefByCost(
+    public Response<Slice<ProductWithWishResponse>> findProductBriefByCost(
         @RequestParam(value = "min-price") Integer minPrice,
         @RequestParam(value = "max-price") Integer maxPrice,
         Pageable pageable

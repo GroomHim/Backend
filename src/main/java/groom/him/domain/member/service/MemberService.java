@@ -5,7 +5,7 @@ import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.response.MemberResponse;
-import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
@@ -68,14 +68,14 @@ public class MemberService {
         }
     }
 
-    public Slice<ProductBriefResponse> findMemberWishList(Integer memberId, Boolean isSkinType,
-                                                          Pageable pageable) {
+    public Slice<ProductWithWishResponse> findMemberWishList(Integer memberId, Boolean isSkinType,
+        Pageable pageable) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
-            pageable).map(ProductBriefResponse::of);
+            pageable);
     }
 
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
-                                             LocalDate startDate, LocalDate endDate) {
+        LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
     }
