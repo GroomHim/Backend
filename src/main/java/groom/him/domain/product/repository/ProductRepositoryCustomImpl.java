@@ -24,7 +24,7 @@ import org.springframework.data.domain.SliceImpl;
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
-
+    private static QProductEntity product = QProductEntity.productEntity;
     @Override
     public Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,
         Boolean isSkinType, Pageable pageable) {
