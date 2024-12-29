@@ -4,7 +4,9 @@ import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
+import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.dto.response.MemberResponse;
+import groom.him.domain.member.repository.WishRepository;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.qa.models.dto.response.QaResponse;
@@ -32,6 +34,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final QaRepository qaRepository;
+    private final WishRepository wishRepository;
 
     public MemberResponse findMyInfo(Integer memberId) {
         MemberEntity member = findById(memberId);
@@ -78,5 +81,9 @@ public class MemberService {
         LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
+    }
+
+    public CountResponse findMemberWishCount(Integer memberId) {
+        return new CountResponse(wishRepository.countDistinctByMember_MemberId(memberId));
     }
 }
