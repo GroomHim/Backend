@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
-import groom.him.domain.product.models.dto.request.RandomProductRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +33,9 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findRandomProductBrief(Pageable pageable,
-        RandomProductRequest request) {
+        List<Integer> categoryIdList) {
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
-            request.categoryIdList());
+            categoryIdList);
         return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList);
     }
 
