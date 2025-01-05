@@ -1,5 +1,6 @@
 package groom.him.domain.order.models.entity;
 
+import groom.him.domain.order.models.enums.OrderStatus;
 import groom.him.domain.product.models.entity.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,4 +41,12 @@ public class OrderDetailEntity {
     @NotNull
     @Column(name = "quantity")
     private Integer quantity;
+
+    @NotNull
+    @Column(name = "reward_point")
+    private Integer rewardPoint;
+
+    @NotNull
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
 }

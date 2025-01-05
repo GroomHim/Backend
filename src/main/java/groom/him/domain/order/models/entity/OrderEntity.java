@@ -18,23 +18,42 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "ORDER")
+@Table(name = "ORDERS")
 @Entity
 public class OrderEntity extends RegisterDateFields {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Integer orderId;
+    private String orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
     @NotNull
-    @Column(name = "price")
-    private Integer price;
+    @Column(name = "total_price")
+    private Integer totalPrice;
 
     @NotNull
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "total_quantity")
+    private Integer totalQuantity;
+
+    @NotNull
+    @Column(name = "receiver_name")
+    private String receiverName;
+
+    @NotNull
+    @Column(name = "receiver_phone_number")
+    private String receiverPhoneNumber;
+
+    @NotNull
+    @Column(name = "receiver_address")
+    private String receiverAddress;
+
+    @NotNull
+    @Column(name = "receiver_address_detail")
+    private String receiverAddressDetail;
+
+    @NotNull
+    @Column(name = "delivery_request")
+    private String delivery_request;
 }
