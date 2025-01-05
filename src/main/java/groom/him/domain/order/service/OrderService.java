@@ -5,7 +5,8 @@ import groom.him.domain.member.service.MemberService;
 import groom.him.domain.order.exception.OrderErrorCode;
 import groom.him.domain.order.exception.OrderException;
 import groom.him.domain.order.models.dto.request.AddOrderRequest;
-import groom.him.domain.order.models.dto.request.OrderProductInfo;
+import groom.him.domain.order.models.dto.request.AddOrderProductInfo;
+import groom.him.domain.order.models.dto.response.OrderBriefResponse;
 import groom.him.domain.order.models.entity.OrderDetailEntity;
 import groom.him.domain.order.models.entity.OrderEntity;
 import groom.him.domain.order.repository.OrderDetailRepository;
@@ -63,7 +64,7 @@ public class OrderService {
         OrderEntity savedOrder = orderRepository.save(order);
 
         // 주문 디테일 테이블 생성
-        for (OrderProductInfo info : request.products()) {
+        for (AddOrderProductInfo info : request.products()) {
             ProductEntity product = productService.findProductById(info.productId());
 
             OrderDetailEntity entity = new OrderDetailEntity(

@@ -45,7 +45,7 @@ public class OrderDetailEntity extends AuditingFields {
 
     @NotNull
     @Column(name = "order_data")
-    private String orderData;
+    private String orderDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -53,13 +53,13 @@ public class OrderDetailEntity extends AuditingFields {
     private OrderStatus orderStatus = OrderStatus.ORDER_COMPLETED;
 
     public OrderDetailEntity(ProductEntity product, OrderEntity order, Integer price,
-                             Integer quantity, String productImgUrl, Integer rewardPoint, String orderData) {
+                             Integer quantity, String productImgUrl, Integer rewardPoint, String orderDate) {
         this.product = product;
         this.order = order;
         this.price = price;
         this.quantity = quantity;
         this.productImgUrl = productImgUrl;
         this.rewardPoint = rewardPoint;
-        this.orderData = orderData;
+        this.orderDate = orderDate;
     }
 }

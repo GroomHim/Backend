@@ -8,7 +8,7 @@ import java.util.List;
 
 public record AddOrderRequest(
     String orderId,
-    List<OrderProductInfo> products,
+    List<AddOrderProductInfo> products,
     Integer usedPoint,
     String receiverName,
     String receiverPhoneNumber,
@@ -33,11 +33,11 @@ public record AddOrderRequest(
         );
     }
 
-    private static Pair<Integer, Integer> getTotalPriceAndQuantity(List<OrderProductInfo> products) {
+    private static Pair<Integer, Integer> getTotalPriceAndQuantity(List<AddOrderProductInfo> products) {
         int totalPrice = 0;
         int totalQuantity = 0;
 
-        for (OrderProductInfo product : products) {
+        for (AddOrderProductInfo product : products) {
             totalPrice += product.price();
             totalQuantity += product.quantity();
         }
