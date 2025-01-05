@@ -8,5 +8,5 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<OrderEntity, String> {
     boolean existsByOrderId(String orderId);
 
-    List<OrderEntity> findByMember_memberId(Integer memberId);
+    List<OrderEntity> findByMember_memberIdOrderByOrderIdDesc(Integer memberId);
 }

@@ -65,7 +65,7 @@ public class OrderService {
     }
 
     public List<OrderBriefResponse> findMemberOrderBriefs(Integer memberId) {
-        List<OrderEntity> orders = orderRepository.findByMember_memberId(memberId);
+        List<OrderEntity> orders = orderRepository.findByMember_memberIdOrderByOrderIdDesc(memberId);
 
         List<OrderBriefResponse> response = new ArrayList<>();
 
