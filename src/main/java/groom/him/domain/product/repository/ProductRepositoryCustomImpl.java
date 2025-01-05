@@ -127,7 +127,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .join(productSkinTypeLink)
             .on(productSkinTypeLink.product.productId.eq(product.productId))
-            .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .leftJoin(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(productSkinTypeLink.skinType.skinTypeId.eq(skinType))
             .groupBy(product.productId)
