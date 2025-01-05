@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/v1/orders")
 @RequiredArgsConstructor
 @RestController
@@ -18,6 +20,12 @@ public class OrderController {
     @GetMapping("{orderId}")
     public Response<OrderBriefResponse> findOrderBrief(@PathVariable String orderId) {
         var response = orderService.findOrderBrief(orderId);
+        return Response.success(response);
+    }
+
+    @GetMapping()
+    public Response<List<OrderBriefResponse>> findMemberOrderBriefs(@AuthenticationPrincipal MemberEntity member) {
+        var response = orderService.findMemberOrderBriefs(member.getMemberId());
         return Response.success(response);
     }
 

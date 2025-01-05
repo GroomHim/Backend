@@ -64,6 +64,19 @@ public class OrderService {
         return new OrderBriefResponse(order.getOrderId(), productInfos);
     }
 
+    public List<OrderBriefResponse> findMemberOrderBriefs(Integer memberId) {
+        List<OrderEntity> orders = orderRepository.findByMember_memberId(memberId);
+
+        List<OrderBriefResponse> response = new ArrayList<>();
+
+        orders.forEach(order -> {
+            OrderBriefResponse orderBrief = findOrderBrief(order.getOrderId());
+            response.add(orderBrief);
+        });
+
+        return response;
+    }
+
     public OrderEntity findOrder(String orderId) {
         return orderRepository.findById(orderId).orElseThrow(
             () -> new OrderException(OrderErrorCode.ORDER_ID_NOT_FOUND)
