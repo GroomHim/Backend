@@ -40,16 +40,20 @@ public class OrderDetailEntity extends AuditingFields {
     private Integer rewardPoint;
 
     @NotNull
+    @Column(name = "order_data")
+    private String orderData;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus = OrderStatus.ORDER_COMPLETED;
 
-    public OrderDetailEntity(ProductEntity product, OrderEntity order,
-                             Integer price, Integer quantity, Integer rewardPoint) {
+    public OrderDetailEntity(ProductEntity product, OrderEntity order, Integer price, Integer quantity, Integer rewardPoint, String orderData) {
         this.product = product;
         this.order = order;
         this.price = price;
         this.quantity = quantity;
         this.rewardPoint = rewardPoint;
+        this.orderData = orderData;
     }
 }

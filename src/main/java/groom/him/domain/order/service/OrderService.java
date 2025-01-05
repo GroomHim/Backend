@@ -67,7 +67,8 @@ public class OrderService {
                 savedOrder,
                 info.price(),
                 info.quantity(),
-                (int) (info.price() * REWORD_RATE)
+                (int) (info.price() * REWORD_RATE),
+                getTodayDate()
             );
 
             orderDetailRepository.save(entity);
