@@ -2,15 +2,7 @@ package groom.him.domain.order.models.entity;
 
 import groom.him.common.models.entity.RegisterDateFields;
 import groom.him.domain.member.models.entity.MemberEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -55,5 +47,18 @@ public class OrderEntity extends RegisterDateFields {
 
     @NotNull
     @Column(name = "delivery_request")
-    private String delivery_request;
+    private String deliveryRequest;
+
+    public OrderEntity(String orderId, MemberEntity member, Integer totalPrice, Integer totalQuantity, String receiverName,
+                       String receiverPhoneNumber, String receiverAddress, String receiverAddressDetail, String deliveryRequest) {
+        this.orderId = orderId;
+        this.member = member;
+        this.totalPrice = totalPrice;
+        this.totalQuantity = totalQuantity;
+        this.receiverName = receiverName;
+        this.receiverPhoneNumber = receiverPhoneNumber;
+        this.receiverAddress = receiverAddress;
+        this.receiverAddressDetail = receiverAddressDetail;
+        this.deliveryRequest = deliveryRequest;
+    }
 }
