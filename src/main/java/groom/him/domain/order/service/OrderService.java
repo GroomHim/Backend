@@ -54,6 +54,10 @@ public class OrderService {
         MemberEntity member = memberService.findById(memberId);
         changeMemberPoint(request, member);
 
+        if (orderRepository.existsByOrderId(request.orderId())) {
+            throw new OrderException(OrderErrorCode.DUPLICATED_ORDER_ID);
+        }
+
         // 주문 테이블 생성
         OrderEntity order = AddOrderRequest.of(request, member);
         OrderEntity savedOrder = orderRepository.save(order);
@@ -67,6 +71,7 @@ public class OrderService {
                 savedOrder,
                 info.price(),
                 info.quantity(),
+                info.productImgUrl(),
                 (int) (info.price() * REWORD_RATE),
                 getTodayDate()
             );
