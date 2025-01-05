@@ -8,7 +8,8 @@ public record OrderProductInfo(
     Integer price,
     Integer quantity,
     String productImgUrl,
-    OrderStatus orderStatus
+    OrderStatus orderStatus,
+    String orderDate
 ) {
 
     public static OrderProductInfo from(OrderDetailEntity entity) {
@@ -17,7 +18,8 @@ public record OrderProductInfo(
             entity.getPrice(),
             entity.getQuantity(),
             entity.getProductImgUrl(),
-            entity.getOrderStatus()
+            entity.getOrderStatus(),
+            entity.getOrderDate()
         );
     }
 }
