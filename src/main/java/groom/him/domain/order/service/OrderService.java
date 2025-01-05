@@ -72,10 +72,9 @@ public class OrderService {
 
             orderDetailRepository.save(entity);
         }
-
     }
 
-    private static void changeMemberPoint(AddOrderRequest request, MemberEntity member) {
+    private void changeMemberPoint(AddOrderRequest request, MemberEntity member) {
         // 포인트 처리
         if (member.getPoint() < request.usedPoint()) {
             throw new OrderException(OrderErrorCode.NOT_ENOUGH_POINTS);

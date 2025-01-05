@@ -16,11 +16,6 @@ public enum OrderStatus {
         this.code = code;
     }
 
-    @JsonValue
-    public String getCode() {
-        return code;
-    }
-
     @JsonCreator
     public static OrderStatus fromCode(String code) {
         return Arrays.stream(OrderStatus.values())
@@ -28,5 +23,10 @@ public enum OrderStatus {
             .findAny()
             .orElseThrow(
                 () -> new IllegalArgumentException(String.format("주문 상태에 %s가 존재하지 않습니다.", code)));
+    }
+
+    @JsonValue
+    public String getCode() {
+        return code;
     }
 }
