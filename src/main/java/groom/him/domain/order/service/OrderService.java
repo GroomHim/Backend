@@ -4,8 +4,9 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import groom.him.domain.order.exception.OrderErrorCode;
 import groom.him.domain.order.exception.OrderException;
-import groom.him.domain.order.models.dto.request.AddOrderRequest;
 import groom.him.domain.order.models.dto.request.AddOrderProductInfo;
+import groom.him.domain.order.models.dto.request.AddOrderRequest;
+import groom.him.domain.order.models.dto.request.OrderProductInfo;
 import groom.him.domain.order.models.dto.response.OrderBriefResponse;
 import groom.him.domain.order.models.entity.OrderDetailEntity;
 import groom.him.domain.order.models.entity.OrderEntity;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,6 +48,26 @@ public class OrderService {
     private String getTodayDate() {
         LocalDate currentDate = LocalDate.now();
         return currentDate.format(DATE_TIME_FORMATTER);
+    }
+
+    public OrderBriefResponse findOrderBrief(String orderId) {
+        OrderEntity order = findOrder(orderId);
+        List<OrderDetailEntity> orderDetails = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
+
+        List<OrderProductInfo> productInfos = new ArrayList<>();
+
+        orderDetails.forEach(entity -> {
+            OrderProductInfo info = OrderProductInfo.from(entity);
+            productInfos.add(info);
+        });
+
+        return new OrderBriefResponse(order.getOrderId(), productInfos);
+    }
+
+    public OrderEntity findOrder(String orderId) {
+        return orderRepository.findById(orderId).orElseThrow(
+            () -> new OrderException(OrderErrorCode.ORDER_ID_NOT_FOUND)
+        );
     }
 
     @Transactional
