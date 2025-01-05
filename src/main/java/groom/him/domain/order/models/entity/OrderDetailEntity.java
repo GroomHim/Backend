@@ -36,6 +36,10 @@ public class OrderDetailEntity extends AuditingFields {
     private Integer quantity;
 
     @NotNull
+    @Column(name = "productImgUrl")
+    private String productImgUrl;
+
+    @NotNull
     @Column(name = "reward_point")
     private Integer rewardPoint;
 
@@ -48,11 +52,13 @@ public class OrderDetailEntity extends AuditingFields {
     @Column(name = "order_status")
     private OrderStatus orderStatus = OrderStatus.ORDER_COMPLETED;
 
-    public OrderDetailEntity(ProductEntity product, OrderEntity order, Integer price, Integer quantity, Integer rewardPoint, String orderData) {
+    public OrderDetailEntity(ProductEntity product, OrderEntity order, Integer price,
+                             Integer quantity, String productImgUrl, Integer rewardPoint, String orderData) {
         this.product = product;
         this.order = order;
         this.price = price;
         this.quantity = quantity;
+        this.productImgUrl = productImgUrl;
         this.rewardPoint = rewardPoint;
         this.orderData = orderData;
     }
