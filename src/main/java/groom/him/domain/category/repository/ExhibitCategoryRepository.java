@@ -27,7 +27,6 @@ public interface ExhibitCategoryRepository extends JpaRepository<ExhibitCategory
          """, nativeQuery = true)
     List<Integer> getLeafCategoryIdByTargetCategoryId(@Param("target") List<Integer> target);
 
-    //    @EntityGraph(attributePaths = {"children"})
     @Query("SELECT c FROM ExhibitCategoryEntity c LEFT JOIN FETCH c.children WHERE c.parentExhibitCategory IS NULL")
     List<ExhibitCategoryEntity> findAllByParentExhibitCategoryIsNull();
 }
