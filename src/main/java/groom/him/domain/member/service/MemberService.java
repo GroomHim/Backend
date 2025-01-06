@@ -4,9 +4,10 @@ import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
+import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.dto.response.MemberResponse;
-import groom.him.domain.product.models.dto.response.ProductBriefResponse;
-import groom.him.domain.product.models.entity.ProductEntity;
+import groom.him.domain.member.repository.WishRepository;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
@@ -20,12 +21,10 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +34,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final QaRepository qaRepository;
+    private final WishRepository wishRepository;
 
     public MemberResponse findMyInfo(Integer memberId) {
         MemberEntity member = findById(memberId);
@@ -57,7 +57,7 @@ public class MemberService {
         member.changePassword(password);
     }
 
-    private MemberEntity findById(Integer memberId) {
+    public MemberEntity findById(Integer memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
     }
@@ -71,15 +71,19 @@ public class MemberService {
         }
     }
 
-    public Slice<ProductBriefResponse> findMemberWishList(Integer memberId, Boolean isSkinType,
+    public Slice<ProductWithWishResponse> findMemberWishList(Integer memberId, Boolean isSkinType,
         Pageable pageable) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
-            pageable).map(ProductBriefResponse::of);
+            pageable);
     }
 
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
-                                             LocalDate startDate, LocalDate endDate) {
+        LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
+    }
+
+    public CountResponse findMemberWishCount(Integer memberId) {
+        return new CountResponse(wishRepository.countDistinctByMember_MemberId(memberId));
     }
 }

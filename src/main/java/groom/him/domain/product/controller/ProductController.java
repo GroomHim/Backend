@@ -3,8 +3,8 @@ package groom.him.domain.product.controller;
 import groom.him.common.service.SkinTypeService;
 import groom.him.core.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
-import groom.him.domain.product.models.dto.request.RandomProductRequest;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,13 +25,13 @@ public class ProductController {
     private final SkinTypeService skinTypeService;
 
     @GetMapping("/recommend/random")
-    public Response<Slice<ProductBriefResponse>> findRandomProductBrief(Pageable pageable,
-        @RequestBody RandomProductRequest request) {
-        return Response.success(productService.findRandomProductBrief(pageable, request));
+    public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
+        @RequestParam(value = "categoryId") List<Integer> categoryIdList) {
+        return Response.success(productService.findRandomProductBrief(pageable, categoryIdList));
     }
 
     @GetMapping("/recommend/skin-type")
-    public Response<Slice<ProductBriefResponse>> findRecommendProductBriefBySkinType(
+    public Response<Slice<ProductWithWishResponse>> findRecommendProductBriefBySkinType(
         @AuthenticationPrincipal MemberEntity member,
         Pageable pageable
     ) {
@@ -43,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/price")
-    public Response<Slice<ProductBriefResponse>> findProductBriefByCost(
+    public Response<Slice<ProductWithWishResponse>> findProductBriefByCost(
         @RequestParam(value = "min-price") Integer minPrice,
         @RequestParam(value = "max-price") Integer maxPrice,
         Pageable pageable
@@ -53,8 +52,8 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    public Response<List<ProductBriefResponse>> findSearchProductIndex(@AuthenticationPrincipal MemberEntity member, @RequestParam String word){
+    public Response<List<ProductBriefResponse>> findSearchProductIndex(
+        @AuthenticationPrincipal MemberEntity member, @RequestParam String word) {
         return Response.success(productService.findSearchProductIndex(word, member));
     }
 }
-
