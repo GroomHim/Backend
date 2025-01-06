@@ -2,15 +2,7 @@ package groom.him.domain.product.models.entity;
 
 import groom.him.common.models.entity.AuditingFields;
 import groom.him.domain.category.models.entity.CategoryEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,9 +18,9 @@ public class ProductEntity extends AuditingFields {
     @Column(name = "product_id")
     private Integer productId;
 
-    // TODO: BRAND Entity 매핑
-    @Column(name = "brand_id")
-    private Integer brandId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "brand_id")
+    private BrandEntity brand;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
