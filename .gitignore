@@ -203,6 +203,7 @@ gradle-app.setting
 
 ### QueryDSL ###
 /src/main/generated/querydsl/
+/src/main/generated/
 
 #
 bin
