@@ -4,7 +4,6 @@ import groom.him.common.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.RefreshTokenResponse;
 import groom.him.core.auth.dto.response.SignInResponse;
-import groom.him.core.auth.util.CookieUtils;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.exception.CommonErrorCode;
 import groom.him.core.exception.CommonException;
@@ -43,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class AuthService implements UserDetailsService {
-
     private final MemberRepository memberRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -66,8 +64,6 @@ public class AuthService implements UserDetailsService {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_EXIST);
         String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
-        CookieUtils.addRememberMeCookie(httpRes, URLEncoder.encode("Bearer " + accessToken, StandardCharsets.UTF_8));
-
         member.changeRefreshToken(refreshToken);
         return new SignInResponse(accessToken, refreshToken);
     }
@@ -77,7 +73,6 @@ public class AuthService implements UserDetailsService {
         final String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()));
         Optional<MemberEntity> optionalUser = memberRepository.findById(member.getMemberId());
         optionalUser.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(refreshToken);
-        CookieUtils.addRememberMeCookie(httpRes, URLEncoder.encode("Bearer " + accessToken, StandardCharsets.UTF_8));
         return new RefreshTokenResponse(accessToken, refreshToken);
     }
 

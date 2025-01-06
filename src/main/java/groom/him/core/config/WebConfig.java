@@ -2,7 +2,6 @@ package groom.him.core.config;
 
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.auth.util.JwtTokenProvider;
-import groom.him.core.auth.util.interceptor.AutoLoginInterceptor;
 import groom.him.core.auth.util.interceptor.RefreshValidateInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,5 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry){
     registry.addInterceptor(new RefreshValidateInterceptor(jwtTokenProvider, authService)).addPathPatterns("/v1/auth/refresh-token");
-    registry.addInterceptor(new AutoLoginInterceptor(jwtTokenProvider, authService)).addPathPatterns("/v1/auth/sign-in");
-
   }
 }

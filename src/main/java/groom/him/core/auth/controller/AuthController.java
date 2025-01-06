@@ -1,14 +1,12 @@
 package groom.him.core.auth.controller;
 
 import groom.him.core.auth.dto.request.FindLoginIdRequest;
-import groom.him.core.auth.dto.request.RefreshTokenRequest;
 import groom.him.core.auth.dto.request.SignInRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.FindLoginIdResponse;
 import groom.him.core.auth.dto.response.RefreshTokenResponse;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
-import groom.him.core.auth.util.CookieUtils;
 import groom.him.core.dto.Response;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;

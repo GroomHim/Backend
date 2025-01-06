@@ -203,6 +203,5 @@ gradle-app.setting
 
 ### QueryDSL ###
 src/main/generated/**
-
 bin
 # End of https://www.toptal.com/developers/gitignore/api/macos,intellij,java,gradle
