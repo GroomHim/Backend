@@ -21,6 +21,10 @@ public class BrandEntity extends AuditingFields {
     @Column(name = "brand_name")
     String brandName;
 
+    @NotNull
+    @Column(name = "en_brand_name")
+    String enBrandName;
+
     public BrandEntity(String brandName) {
         this.brandName = brandName;
     }
