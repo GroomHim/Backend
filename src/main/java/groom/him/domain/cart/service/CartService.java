@@ -66,6 +66,13 @@ public class CartService {
     }
 
     @Transactional
+    public void deleteCarts(Integer memberId, List<Integer> cartIds) {
+        for (Integer cartId : cartIds) {
+            deleteCart(memberId, cartId);
+        }
+    }
+
+    @Transactional
     public List<CartResponse> modifyCartsCount(Integer memberId,
                                                List<ModifyCartCountRequest> request) {
         List<CartResponse> response = new ArrayList<>();

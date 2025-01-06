@@ -47,6 +47,13 @@ public class CartController {
         return new Response<>(HttpStatus.NO_CONTENT.value());
     }
 
+    @DeleteMapping("/selected-items")
+    public Response<Integer> deleteCarts(@AuthenticationPrincipal MemberEntity member,
+                                        @RequestParam List<Integer> cartIds) {
+        cartService.deleteCarts(member.getMemberId(), cartIds);
+        return Response.success();
+    }
+
     @GetMapping("/count")
     public Response<CountResponse> findMemberCartCount(
         @AuthenticationPrincipal MemberEntity member) {
