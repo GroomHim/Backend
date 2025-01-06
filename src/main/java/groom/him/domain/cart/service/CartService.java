@@ -14,14 +14,13 @@ import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.service.ProductService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +34,7 @@ public class CartService {
 
         return cartRepository.findAllByMemberOrderByRegDt(member).stream()
             .map(cart -> new CartsResponse(
+                cart.getCartId(),
                 ProductBriefResponse.of(cart.getProduct()),
                 cart.getCount()))
             .toList();
@@ -67,7 +67,7 @@ public class CartService {
 
     @Transactional
     public List<CartResponse> modifyCartsCount(Integer memberId,
-        List<ModifyCartCountRequest> request) {
+                                               List<ModifyCartCountRequest> request) {
         List<CartResponse> response = new ArrayList<>();
 
         request.forEach(item -> {
