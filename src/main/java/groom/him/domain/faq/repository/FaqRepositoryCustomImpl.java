@@ -23,7 +23,7 @@ public class FaqRepositoryCustomImpl implements FaqRepositoryCustom {
                 Projections.constructor(
                     FaqResponse.class,
                     faq.faqId, faqCategory.faqCategoryName, faq.question, faq.answer,
-                    faq.prio, faq.isPublic, faq.regDt, faq.updDt
+                    faq.prio, faq.isPublic, faq.regDt, faq.udtDt
                 )
             )
             .from(faq)
