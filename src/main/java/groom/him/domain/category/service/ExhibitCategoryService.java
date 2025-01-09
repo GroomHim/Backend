@@ -1,5 +1,7 @@
 package groom.him.domain.category.service;
 
+import groom.him.domain.category.enums.CategoryErrorCode;
+import groom.him.domain.category.exception.ExhibitCategoryException;
 import groom.him.domain.category.models.dto.response.ExhibitCategoryResponse;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import jakarta.transaction.Transactional;
@@ -19,5 +21,11 @@ public class ExhibitCategoryService {
         exhibitCategoryRepository.findAllByParentExhibitCategoryIsNull()
             .forEach(exhibitCategory -> result.add(ExhibitCategoryResponse.of(exhibitCategory)));
         return result;
+    }
+
+    public void checkExhibitCategoryIsLeaf(Integer categoryId) {
+        if (!exhibitCategoryRepository.existsByExhibitCategoryIdAndIsLeafTrue(categoryId)) {
+            throw new ExhibitCategoryException(CategoryErrorCode.CATEGORY_IS_NOT_LEAF);
+        }
     }
 }

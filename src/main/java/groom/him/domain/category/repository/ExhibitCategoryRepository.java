@@ -29,4 +29,6 @@ public interface ExhibitCategoryRepository extends JpaRepository<ExhibitCategory
 
     @Query("SELECT c FROM ExhibitCategoryEntity c LEFT JOIN FETCH c.children WHERE c.parentExhibitCategory IS NULL")
     List<ExhibitCategoryEntity> findAllByParentExhibitCategoryIsNull();
+
+    Boolean existsByExhibitCategoryIdAndIsLeafTrue(Integer categoryId);
 }
