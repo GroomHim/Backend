@@ -11,6 +11,6 @@ public record FaqResponse(
     String prio,
     IsPublic isPublic,
     LocalDateTime regDt,
-    LocalDateTime updDt
+    LocalDateTime uptDt
 ) {
 }
