@@ -1,5 +1,6 @@
 package groom.him.domain.product.service;
 
+import groom.him.domain.category.enums.SortType;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
@@ -61,5 +62,11 @@ public class ProductService {
         productRepository.findSearchProductIndex(word).stream()
             .map(ProductBriefResponse::of).forEach(list::add);
         return list;
+    }
+
+    public Slice<ProductWithWishResponse> findProductListByCategory(Pageable pageable,
+        Integer categoryId, SortType sortType, Integer memberId) {
+        return productRepository.findProductListByCategoryId(pageable, categoryId, sortType,
+            memberId);
     }
 }

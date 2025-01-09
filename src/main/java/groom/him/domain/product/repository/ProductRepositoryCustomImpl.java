@@ -7,6 +7,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import groom.him.domain.category.enums.SortType;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.order.models.entity.QOrderDetailEntity;
@@ -24,7 +25,7 @@ import org.springframework.data.domain.SliceImpl;
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
-    private static QProductEntity product = QProductEntity.productEntity;
+
     @Override
     public Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,
         Boolean isSkinType, Pageable pageable) {
@@ -96,6 +97,42 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(productExhibitCategoryLink.product.productId.in(target))
             .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+            .offset(pageable.getOffset())
+            .limit(limit)
+            .fetch();
+
+        boolean hasNext = isHasNext(pageable, content);
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
+    public Slice<ProductWithWishResponse> findProductListByCategoryId(Pageable pageable,
+        Integer categoryId, SortType sortType, Integer memberId) {
+        QProductEntity product = QProductEntity.productEntity;
+        QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
+        QWishEntity wish = QWishEntity.wishEntity;
+        QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
+
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductWithWishResponse> content = jpaQueryFactory
+            .select(Projections.constructor(
+                ProductWithWishResponse.class,
+                Projections.constructor(
+                    ProductBriefResponse.class,
+                    product.productId, product.productName, product.price, product.discountRate,
+                    product.discountedPrice, product.imgUrl
+                ), isProductWished(wish)
+            ))
+            .from(product)
+            .leftJoin(productExhibitCategoryLink)
+            .on(product.productId.eq(productExhibitCategoryLink.product.productId))
+            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
+            .leftJoin(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.eq(categoryId))
+            .groupBy(product.productId)
+            .orderBy(orderBySortType(sortType, orderDetail, wish, product))
             .offset(pageable.getOffset())
             .limit(limit)
             .fetch();
@@ -189,5 +226,32 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     private OrderSpecifier<Integer> orderBySaleQuantity(QOrderDetailEntity orderDetail) {
         return orderDetail.quantity.sum().desc();
+    }
+
+    private OrderSpecifier<Integer> orderByHighPrice(QProductEntity product) {
+        return product.discountedPrice.desc();
+    }
+
+    private OrderSpecifier<Integer> orderByLowPrice(QProductEntity product) {
+        return product.discountedPrice.asc();
+    }
+
+    private OrderSpecifier<Float> orderByDiscountRate(QProductEntity product) {
+        return product.discountRate.desc();
+    }
+
+    private OrderSpecifier<Long> orderByWish(QWishEntity wish) {
+        return wish.count().desc();
+    }
+    
+    private OrderSpecifier<?> orderBySortType(SortType sortType,
+        QOrderDetailEntity orderDetail, QWishEntity wish, QProductEntity product) {
+        return switch (sortType) {
+            case SALE -> orderBySaleQuantity(orderDetail);
+            case WISH -> orderByWish(wish);
+            case HIGH_PRICE -> orderByHighPrice(product);
+            case LOW_PRICE -> orderByLowPrice(product);
+            case DISCOUNT_RATE -> orderByDiscountRate(product);
+        };
     }
 }
