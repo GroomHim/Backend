@@ -36,7 +36,7 @@ public class MemberService {
     private final QaRepository qaRepository;
     private final WishRepository wishRepository;
 
-
+    @Transactional
     public MemberResponse findMyInfo(Integer memberId) {
         MemberEntity member = findById(memberId);
         return MemberResponse.from(member);
