@@ -6,17 +6,7 @@ import groom.him.common.models.entity.AuditingFields;
 import groom.him.common.models.entity.SkinTypeEntity;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.data.Password;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Arrays;
@@ -42,7 +32,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "member_id")
     private Integer memberId;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skin_type_id")
     private SkinTypeEntity skinTypeEntity;
 
