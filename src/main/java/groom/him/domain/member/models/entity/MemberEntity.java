@@ -101,6 +101,9 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "role")
     private Role role;
 
+    @Column(name = "point")
+    private Integer point;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(role.toString().split(","))

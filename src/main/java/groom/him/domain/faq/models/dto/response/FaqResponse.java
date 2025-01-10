@@ -4,14 +4,13 @@ import groom.him.core.common.enums.IsPublic;
 import java.time.LocalDateTime;
 
 public record FaqResponse(
-    Long faqId,
+    Integer faqId,
     String category,
     String question,
     String answer,
     String prio,
     IsPublic isPublic,
     LocalDateTime regDt,
-    LocalDateTime udtDt
+    LocalDateTime uptDt
 ) {
-
 }

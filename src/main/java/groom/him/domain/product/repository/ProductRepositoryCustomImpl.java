@@ -1,6 +1,7 @@
 package groom.him.domain.product.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -15,19 +16,20 @@ import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
-    private static QProductEntity product = QProductEntity.productEntity;
+
     @Override
     public Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,
-        Boolean isSkinType, Pageable pageable) {
+                                                                               Boolean isSkinType, Pageable pageable) {
         QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;
         QMemberEntity member = QMemberEntity.memberEntity;
@@ -51,14 +53,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         }
 
         List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(Projections.constructor(
-                ProductWithWishResponse.class,
-                Projections.constructor(
-                    ProductBriefResponse.class,
-                    product.productId, product.productName, product.price, product.discountRate,
-                    product.discountedPrice, product.imgUrl
-                ), isProductWished(wish)
-            ))
+            .select(getProductWithWishResponseConstructor(product, wish))
             .from(wish)
             .leftJoin(wish.product, product)
             .where(builder)
@@ -74,7 +69,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
-        List<Integer> target) {
+                                                                        List<Integer> target) {
         QProductEntity product = QProductEntity.productEntity;
         QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
         QWishEntity wish = QWishEntity.wishEntity;
@@ -82,14 +77,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         int limit = pageable.getPageSize() + 1;
 
         List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(Projections.constructor(
-                ProductWithWishResponse.class,
-                Projections.constructor(
-                    ProductBriefResponse.class,
-                    product.productId, product.productName, product.price, product.discountRate,
-                    product.discountedPrice, product.imgUrl
-                ), isProductWished(wish)
-            ))
+            .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
@@ -116,14 +104,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         int limit = pageable.getPageSize() + 1;
 
         List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(Projections.constructor(
-                ProductWithWishResponse.class,
-                Projections.constructor(
-                    ProductBriefResponse.class,
-                    product.productId, product.productName, product.price, product.discountRate,
-                    product.discountedPrice, product.imgUrl
-                ), isProductWished(wish)
-            ))
+            .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
             .join(productSkinTypeLink)
             .on(productSkinTypeLink.product.productId.eq(product.productId))
@@ -143,7 +124,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable,
-        Integer minPrice, Integer maxPrice) {
+                                                                      Integer minPrice, Integer maxPrice) {
         QProductEntity product = QProductEntity.productEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
         QWishEntity wish = QWishEntity.wishEntity;
@@ -151,14 +132,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         int limit = pageable.getPageSize() + 1;
 
         List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(Projections.constructor(
-                ProductWithWishResponse.class,
-                Projections.constructor(
-                    ProductBriefResponse.class,
-                    product.productId, product.productName, product.price, product.discountRate,
-                    product.discountedPrice, product.imgUrl
-                ), isProductWished(wish)
-            ))
+            .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
             .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
@@ -189,5 +163,20 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     private OrderSpecifier<Integer> orderBySaleQuantity(QOrderDetailEntity orderDetail) {
         return orderDetail.quantity.sum().desc();
+    }
+
+    private ConstructorExpression<ProductWithWishResponse> getProductWithWishResponseConstructor(QProductEntity product, QWishEntity wish) {
+        return Projections.constructor(
+            ProductWithWishResponse.class,
+            getProductBriefResponseConstructor(product), isProductWished(wish)
+        );
+    }
+
+    private ConstructorExpression<ProductBriefResponse> getProductBriefResponseConstructor(QProductEntity product) {
+        return Projections.constructor(
+            ProductBriefResponse.class,
+            product.productId, product.productName, product.brand.brandName, product.price, product.discountRate,
+            product.discountedPrice, product.imgUrl
+        );
     }
 }
