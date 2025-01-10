@@ -1,8 +1,5 @@
 package groom.him.domain.point.service;
 
-import groom.him.core.model.member.exception.MemberErrorCode;
-import groom.him.core.model.member.exception.MemberException;
-import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import groom.him.domain.point.exception.PointException;
@@ -15,8 +12,7 @@ import groom.him.domain.point.repository.PointRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,25 +44,25 @@ public class PointService {
             () -> new PointException(PointErrorCode.POINT_HISTORY_NOT_EXIST)
         );
 
-    final Long[] points = calPoint(pointHistory);
+    final Integer[] points = calPoint(pointHistory);
     return new PointResponse(member.getPoint(), points[0], points[1]);
   }
 
 
-  public Long[] calPoint(final List<PointHistoryEntity> list) {
+  public Integer[] calPoint(final List<PointHistoryEntity> list) {
     synchronized (list) {
-      AtomicLong tbdPoint = new AtomicLong(0L); // 적립 예정
-      AtomicLong tbePoint = new AtomicLong(0L); // 소멸 예정
+      AtomicInteger tbdPoint = new AtomicInteger(0);
+      AtomicInteger tbePoint = new AtomicInteger(0);
 
       list.forEach(each -> {
-        if (!each.getIsApplied()) { // isApplied가 false일 때
+        if (!each.getIsApplied()) {
           tbdPoint.addAndGet(each.getPoint());
         }
         if (each.getValidToDt().isBefore(LocalDateTime.now().plusDays(30))) {
           tbePoint.addAndGet(each.getPoint());
         }
       });
-      return new Long[]{tbdPoint.get(), tbePoint.get()};
+      return new Integer[]{tbdPoint.get(), tbePoint.get()};
     }
   }
 }

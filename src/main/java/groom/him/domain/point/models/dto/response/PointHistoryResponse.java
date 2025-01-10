@@ -5,7 +5,7 @@ import groom.him.domain.point.models.enums.PointHistoryType;
 import java.time.LocalDateTime;
 
 public record PointHistoryResponse (
- Long point,
+ Integer point,
  Integer memberId,
  PointHistoryType pointHistoryType,
  LocalDateTime regDt,

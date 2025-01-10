@@ -28,7 +28,7 @@ public class PointHistoryEntity {
   private Integer pointHistoryId;
 
   @Column(name = "point")
-  private Long point;
+  private Integer point;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")

@@ -102,7 +102,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private Role role;
 
     @Column(name = "point")
-    private Long point;
+    private Integer point;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
