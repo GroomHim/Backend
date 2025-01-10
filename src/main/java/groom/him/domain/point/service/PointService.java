@@ -4,6 +4,7 @@ import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
+import groom.him.domain.member.service.MemberService;
 import groom.him.domain.point.exception.PointException;
 import groom.him.domain.point.models.dto.response.PointHistoryResponse;
 import groom.him.domain.point.models.dto.response.PointResponse;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PointService {
   private final PointRepository pointRepository;
-  private final MemberRepository memberRepository;
+  private final MemberService memberService;
 
   public List<PointHistoryResponse> findPointHistory(final Integer memberId) {
     List<PointHistoryEntity> allByMemberMemberIdTop15 = pointRepository.findTop15ByMemberMemberIdOrderByRegDtDesc(
@@ -40,8 +41,7 @@ public class PointService {
 
   @Transactional(readOnly = true)
   public PointResponse getPoint(final Integer memberId){
-    MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new MemberException(
-        MemberErrorCode.MEMBER_NOT_EXIST));
+    MemberEntity member = memberService.findById(memberId);
     final List<PointHistoryEntity> pointHistory = pointRepository
         .findImmutableByMemberMemberIdAndPointHistoryTypeEquals(memberId, PointHistoryType.SAVE)
         .orElseThrow(
