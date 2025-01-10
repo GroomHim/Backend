@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public record PointHistoryResponse (
  Integer point,
  Integer memberId,
+ String productName,
  PointHistoryType pointHistoryType,
  LocalDateTime regDt,
  LocalDateTime validFromDt,
@@ -17,6 +18,7 @@ public record PointHistoryResponse (
     return new PointHistoryResponse(
         entity.getPoint(),
         entity.getMember().getMemberId(),
+        entity.getProductName(),
         entity.getPointHistoryType(),
         entity.getRegDt(),
         entity.getValidFromDt(),

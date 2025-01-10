@@ -51,4 +51,10 @@ public class PointHistoryEntity extends AuditingFields {
 
   @Column(name = "is_applied")
   private Boolean isApplied;
+
+  @Column(name = "product_name")
+  private String productName;
+
+  @Column(name = "product_id")
+  private Integer productId;
 }
