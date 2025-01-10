@@ -1,9 +1,11 @@
 package groom.him.domain.point.models.entity;
 
+import groom.him.common.models.entity.AuditingFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.point.models.enums.PointHistoryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PointHistoryEntity {
+public class PointHistoryEntity extends AuditingFields {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "point_history_id")
@@ -35,7 +37,7 @@ public class PointHistoryEntity {
   private MemberEntity member;
 
   @Column(name = "point_history_type")
-  @Enumerated
+  @Enumerated(EnumType.STRING)
   private PointHistoryType pointHistoryType;
 
   @Column(name = "reg_dt")
