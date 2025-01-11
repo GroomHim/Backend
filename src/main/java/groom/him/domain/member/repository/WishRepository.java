@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface WishRepository extends JpaRepository<WishEntity, Integer> {
     Integer countDistinctByMember_MemberId(Integer memberId);
 
+    boolean existsByMember_MemberIdAndProduct_ProductId(Integer memberId, Integer productId);
+
     void deleteByMember_MemberIdAndProduct_ProductId(Integer memberId, Integer productId);
 }

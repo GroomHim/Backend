@@ -1,5 +1,7 @@
 package groom.him.domain.member.service;
 
+import groom.him.domain.member.exception.WishErrorCode;
+import groom.him.domain.member.exception.WishException;
 import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.WishEntity;
@@ -34,6 +36,12 @@ public class WishService {
     public void addWish(Integer memberId, Integer productId) {
         MemberEntity member = memberService.findById(memberId);
         ProductEntity product = productService.findById(productId);
+
+        boolean isExisted = wishRepository.existsByMember_MemberIdAndProduct_ProductId(memberId, productId);
+
+        if (isExisted) {
+            throw new WishException(WishErrorCode.ALREADY_EXISTED_WISH);
+        }
 
         WishEntity entity = new WishEntity(
             member,
