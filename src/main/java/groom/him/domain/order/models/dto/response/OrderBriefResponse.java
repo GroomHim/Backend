@@ -6,6 +6,6 @@ import java.util.List;
 
 public record OrderBriefResponse(
     String orderId,
-    List<OrderProductInfo> productInfos
+    List<OrderProductInfo> products
 ) {
 }

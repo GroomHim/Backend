@@ -2,22 +2,29 @@ package groom.him.domain.order.models.dto.request;
 
 import groom.him.domain.order.models.entity.OrderDetailEntity;
 import groom.him.domain.order.models.enums.OrderStatus;
+import groom.him.domain.product.models.entity.ProductEntity;
 
 public record OrderProductInfo(
     Integer productId,
+    String productName,
+    String brandName,
+    String productImgUrl,
     Integer price,
     Integer quantity,
-    String productImgUrl,
     OrderStatus orderStatus,
     String orderDate
 ) {
 
-    public static OrderProductInfo from(OrderDetailEntity entity) {
+    public static OrderProductInfo of(OrderDetailEntity entity) {
+        ProductEntity product = entity.getProduct();
+
         return new OrderProductInfo(
-            entity.getProduct().getProductId(),
+            product.getProductId(),
+            product.getProductName(),
+            product.getBrand().getBrandName(),
+            product.getImgUrl(),
             entity.getPrice(),
             entity.getQuantity(),
-            entity.getProductImgUrl(),
             entity.getOrderStatus(),
             entity.getOrderDate()
         );

@@ -50,6 +50,7 @@ public class OrderService {
         return currentDate.format(DATE_TIME_FORMATTER);
     }
 
+    @Transactional
     public OrderBriefResponse findOrderBrief(String orderId) {
         OrderEntity order = findOrder(orderId);
         List<OrderDetailEntity> orderDetails = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
@@ -57,13 +58,14 @@ public class OrderService {
         List<OrderProductInfo> productInfos = new ArrayList<>();
 
         orderDetails.forEach(entity -> {
-            OrderProductInfo info = OrderProductInfo.from(entity);
+            OrderProductInfo info = OrderProductInfo.of(entity);
             productInfos.add(info);
         });
 
         return new OrderBriefResponse(order.getOrderId(), productInfos);
     }
 
+    @Transactional
     public List<OrderBriefResponse> findMemberOrderBriefs(Integer memberId) {
         List<OrderEntity> orders = orderRepository.findByMember_memberIdOrderByOrderIdDesc(memberId);
 
@@ -108,7 +110,6 @@ public class OrderService {
                 savedOrder,
                 info.price(),
                 info.quantity(),
-                info.productImgUrl(),
                 (int) (info.price() * REWORD_RATE),
                 getTodayDate()
             );
