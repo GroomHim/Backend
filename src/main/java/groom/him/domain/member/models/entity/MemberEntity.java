@@ -91,7 +91,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private Role role;
 
     @Column(name = "point")
-    private Integer point;
+    private Integer point = 0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
