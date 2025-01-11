@@ -2,6 +2,8 @@ package groom.him.domain.product.controller;
 
 import groom.him.common.service.SkinTypeService;
 import groom.him.core.dto.Response;
+import groom.him.domain.category.enums.SortType;
+import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
     private final ProductService productService;
     private final SkinTypeService skinTypeService;
+    private final ExhibitCategoryService exhibitCategoryService;
 
     @GetMapping("/recommend/random")
     public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
@@ -55,5 +58,21 @@ public class ProductController {
     public Response<List<ProductBriefResponse>> findSearchProductIndex(
         @AuthenticationPrincipal MemberEntity member, @RequestParam String word) {
         return Response.success(productService.findSearchProductIndex(word, member));
+    }
+
+    @GetMapping()
+    public Response<Slice<ProductWithWishResponse>> findProductListByCategory(
+        @AuthenticationPrincipal MemberEntity member,
+        @RequestParam(value = "category") Integer categoryId,
+        @RequestParam(value = "sort", required = false) SortType sortType,
+        Pageable pageable
+    ) {
+        exhibitCategoryService.checkExhibitCategoryIsLeaf(categoryId);
+
+        sortType = sortType == null ? SortType.SALE : sortType;
+        
+        return Response.success(
+            productService.findProductListByCategory(pageable, categoryId, sortType,
+                member.getMemberId()));
     }
 }
