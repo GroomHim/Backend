@@ -1,15 +1,9 @@
 package groom.him.domain.order.models.entity;
 
+import groom.him.common.models.entity.AuditingFields;
+import groom.him.domain.order.models.enums.OrderStatus;
 import groom.him.domain.product.models.entity.ProductEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ORDER_DETAIL")
 @Entity
-public class OrderDetailEntity {
+public class OrderDetailEntity extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_detail_id")
@@ -40,4 +34,32 @@ public class OrderDetailEntity {
     @NotNull
     @Column(name = "quantity")
     private Integer quantity;
+
+    @NotNull
+    @Column(name = "productImgUrl")
+    private String productImgUrl;
+
+    @NotNull
+    @Column(name = "reward_point")
+    private Integer rewardPoint;
+
+    @NotNull
+    @Column(name = "order_data")
+    private String orderDate;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_status")
+    private OrderStatus orderStatus = OrderStatus.ORDER_COMPLETED;
+
+    public OrderDetailEntity(ProductEntity product, OrderEntity order, Integer price,
+                             Integer quantity, String productImgUrl, Integer rewardPoint, String orderDate) {
+        this.product = product;
+        this.order = order;
+        this.price = price;
+        this.quantity = quantity;
+        this.productImgUrl = productImgUrl;
+        this.rewardPoint = rewardPoint;
+        this.orderDate = orderDate;
+    }
 }

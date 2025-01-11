@@ -1,11 +1,14 @@
 package groom.him.domain.member.service;
 
+import groom.him.core.auth.service.AuthService;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
 import groom.him.core.model.member.repository.MemberRepository;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.dto.response.MemberResponse;
+import groom.him.domain.member.models.entity.MemberEntity;
+import groom.him.domain.member.models.entity.data.Password;
 import groom.him.domain.member.repository.WishRepository;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.repository.ProductRepository;
@@ -13,19 +16,13 @@ import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 import groom.him.domain.qa.repository.QaRepository;
 import jakarta.transaction.Transactional;
-
-import java.time.LocalDate;
-
-import groom.him.core.auth.service.AuthService;
-import groom.him.domain.member.models.entity.MemberEntity;
-import groom.him.domain.member.models.entity.data.Password;
-
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -72,13 +69,13 @@ public class MemberService {
     }
 
     public Slice<ProductWithWishResponse> findMemberWishList(Integer memberId, Boolean isSkinType,
-        Pageable pageable) {
+                                                             Pageable pageable) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
             pageable);
     }
 
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
-        LocalDate startDate, LocalDate endDate) {
+                                             LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
     }
