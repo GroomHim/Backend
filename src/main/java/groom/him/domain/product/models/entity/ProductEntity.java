@@ -20,6 +20,7 @@ public class ProductEntity extends AuditingFields {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id")
+    @NotNull
     private BrandEntity brand;
 
     @ManyToOne(fetch = FetchType.LAZY)
