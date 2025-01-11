@@ -68,9 +68,9 @@ public class ProductController {
         Pageable pageable
     ) {
         exhibitCategoryService.checkExhibitCategoryIsLeaf(categoryId);
-        if (sortType == null) {
-            sortType = SortType.SALE;
-        }
+
+        sortType = sortType == null ? SortType.SALE : sortType;
+        
         return Response.success(
             productService.findProductListByCategory(pageable, categoryId, sortType,
                 member.getMemberId()));
