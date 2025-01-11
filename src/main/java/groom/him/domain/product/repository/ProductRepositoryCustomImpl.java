@@ -12,10 +12,14 @@ import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.order.models.entity.QOrderDetailEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
+import groom.him.domain.product.models.dto.response.ProductResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductExhibitCategoryLinkEntity;
+import groom.him.domain.product.models.entity.QProductImgEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
+import groom.him.domain.product.models.enums.ImgType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -29,7 +33,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,
-                                                                               Boolean isSkinType, Pageable pageable) {
+        Boolean isSkinType, Pageable pageable) {
         QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;
         QMemberEntity member = QMemberEntity.memberEntity;
@@ -69,7 +73,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
-                                                                        List<Integer> target) {
+        List<Integer> target) {
         QProductEntity product = QProductEntity.productEntity;
         QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
         QWishEntity wish = QWishEntity.wishEntity;
@@ -91,6 +95,24 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
+    public ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId) {
+        QProductEntity product = QProductEntity.productEntity;
+
+        ProductResponse productResponse = jpaQueryFactory
+            .select(getProductResponseConstructor(product))
+            .from(product)
+            .where(product.productId.eq(productId))
+            .fetchOne();
+        System.out.println(productResponse);
+        Boolean isWish = IsWishByMemberIdAndProductId(memberId, productId);
+
+        List<String> mainImageList = getProductImageListByImgType(productId, ImgType.MAIN);
+        List<String> contentImageList = getProductImageListByImgType(productId, ImgType.CONTENT);
+
+        return new ProductDetailResponse(productResponse, isWish, mainImageList, contentImageList);
     }
 
     @Override
@@ -124,7 +146,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable,
-                                                                      Integer minPrice, Integer maxPrice) {
+        Integer minPrice, Integer maxPrice) {
         QProductEntity product = QProductEntity.productEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
         QWishEntity wish = QWishEntity.wishEntity;
@@ -165,18 +187,52 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return orderDetail.quantity.sum().desc();
     }
 
-    private ConstructorExpression<ProductWithWishResponse> getProductWithWishResponseConstructor(QProductEntity product, QWishEntity wish) {
+    private ConstructorExpression<ProductWithWishResponse> getProductWithWishResponseConstructor(
+        QProductEntity product, QWishEntity wish) {
         return Projections.constructor(
             ProductWithWishResponse.class,
             getProductBriefResponseConstructor(product), isProductWished(wish)
         );
     }
 
-    private ConstructorExpression<ProductBriefResponse> getProductBriefResponseConstructor(QProductEntity product) {
+    private ConstructorExpression<ProductBriefResponse> getProductBriefResponseConstructor(
+        QProductEntity product) {
         return Projections.constructor(
             ProductBriefResponse.class,
-            product.productId, product.productName, product.brand.brandName, product.price, product.discountRate,
-            product.discountedPrice, product.imgUrl
+            product.productId, product.productName, product.brand.brandName, product.price,
+            product.discountRate, product.discountedPrice, product.imgUrl
         );
     }
+
+    private ConstructorExpression<ProductResponse> getProductResponseConstructor(
+        QProductEntity product) {
+        return Projections.constructor(
+            ProductResponse.class,
+            product.productId, product.productName, product.price, product.discountRate,
+            product.discountedPrice, product.brand.brandName, product.ingredients,
+            product.deliveryInfo
+        );
+    }
+
+    private List<String> getProductImageListByImgType(Integer productId, ImgType imgType) {
+        QProductImgEntity productImg = QProductImgEntity.productImgEntity;
+
+        return jpaQueryFactory
+            .select(productImg.imgUrl)
+            .from(productImg)
+            .where(productImg.product.productId.eq(productId).and(productImg.type.eq(imgType)))
+            .orderBy(productImg.prio.asc())
+            .fetch();
+    }
+
+    private Boolean IsWishByMemberIdAndProductId(Integer memberId, Integer productId) {
+        QWishEntity wish = QWishEntity.wishEntity;
+
+        return jpaQueryFactory
+            .selectOne()
+            .from(wish)
+            .where(wish.product.productId.eq(productId).and(wish.member.memberId.eq(memberId)))
+            .fetchFirst() != null;
+    }
+
 }

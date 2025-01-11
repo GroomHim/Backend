@@ -1,5 +1,6 @@
 package groom.him.domain.product.repository;
 
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface ProductRepositoryCustom {
 
     Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
         List<Integer> target);
+
+    ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId);
 }
