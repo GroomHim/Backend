@@ -8,6 +8,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import groom.him.domain.category.enums.SortType;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
 import groom.him.domain.order.models.entity.QOrderDetailEntity;
@@ -115,6 +116,34 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return new ProductDetailResponse(productResponse, isWish, mainImageList, contentImageList);
     }
 
+    public Slice<ProductWithWishResponse> findProductListByCategoryId(Pageable pageable,
+        Integer categoryId, SortType sortType, Integer memberId) {
+        QProductEntity product = QProductEntity.productEntity;
+        QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
+        QWishEntity wish = QWishEntity.wishEntity;
+        QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
+
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductWithWishResponse> content = jpaQueryFactory
+            .select(getProductWithWishResponseConstructor(product, wish))
+            .from(product)
+            .leftJoin(productExhibitCategoryLink)
+            .on(product.productId.eq(productExhibitCategoryLink.product.productId))
+            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
+            .leftJoin(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.eq(categoryId))
+            .groupBy(product.productId)
+            .orderBy(orderBySortType(sortType, orderDetail, wish, product))
+            .offset(pageable.getOffset())
+            .limit(limit)
+            .fetch();
+
+        boolean hasNext = isHasNext(pageable, content);
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
     @Override
     public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
         Pageable pageable, Integer skinType) {
@@ -187,6 +216,33 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return orderDetail.quantity.sum().desc();
     }
 
+    private OrderSpecifier<Integer> orderByHighPrice(QProductEntity product) {
+        return product.discountedPrice.desc();
+    }
+
+    private OrderSpecifier<Integer> orderByLowPrice(QProductEntity product) {
+        return product.discountedPrice.asc();
+    }
+
+    private OrderSpecifier<Float> orderByDiscountRate(QProductEntity product) {
+        return product.discountRate.desc();
+    }
+
+    private OrderSpecifier<Long> orderByWish(QWishEntity wish) {
+        return wish.count().desc();
+    }
+
+    private OrderSpecifier<?> orderBySortType(SortType sortType,
+        QOrderDetailEntity orderDetail, QWishEntity wish, QProductEntity product) {
+        return switch (sortType) {
+            case SALE -> orderBySaleQuantity(orderDetail);
+            case WISH -> orderByWish(wish);
+            case HIGH_PRICE -> orderByHighPrice(product);
+            case LOW_PRICE -> orderByLowPrice(product);
+            case DISCOUNT_RATE -> orderByDiscountRate(product);
+        };
+    }
+
     private ConstructorExpression<ProductWithWishResponse> getProductWithWishResponseConstructor(
         QProductEntity product, QWishEntity wish) {
         return Projections.constructor(
@@ -234,5 +290,4 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .where(wish.product.productId.eq(productId).and(wish.member.memberId.eq(memberId)))
             .fetchFirst() != null;
     }
-
 }

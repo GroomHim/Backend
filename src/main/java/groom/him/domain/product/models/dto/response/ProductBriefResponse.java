@@ -1,9 +1,6 @@
 package groom.him.domain.product.models.dto.response;
 
-import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Projections;
 import groom.him.domain.product.models.entity.ProductEntity;
-import groom.him.domain.product.models.entity.QProductEntity;
 
 public record ProductBriefResponse(
     Integer productId,

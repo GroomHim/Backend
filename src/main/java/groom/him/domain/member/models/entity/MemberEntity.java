@@ -31,7 +31,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "member_id")
     private Integer memberId;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skin_type_id")
     private SkinTypeEntity skinTypeEntity;
 
@@ -91,7 +91,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private Role role;
 
     @Column(name = "point")
-    private Integer point;
+    private Integer point = 0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

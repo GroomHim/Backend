@@ -1,7 +1,9 @@
 package groom.him.domain.category.repository;
 
 import groom.him.domain.category.models.entity.ExhibitCategoryEntity;
+import groom.him.domain.qa.models.entity.QaCategoryEntity;
 import java.util.List;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,9 @@ public interface ExhibitCategoryRepository extends JpaRepository<ExhibitCategory
         WHERE is_leaf = 1;
          """, nativeQuery = true)
     List<Integer> getLeafCategoryIdByTargetCategoryId(@Param("target") List<Integer> target);
+
+    @Query("SELECT c FROM ExhibitCategoryEntity c LEFT JOIN FETCH c.children WHERE c.parentExhibitCategory IS NULL")
+    List<ExhibitCategoryEntity> findAllByParentExhibitCategoryIsNull();
+
+    Boolean existsByExhibitCategoryIdAndIsLeafTrue(Integer categoryId);
 }
