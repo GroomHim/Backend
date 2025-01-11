@@ -6,10 +6,12 @@ import groom.him.domain.order.exception.OrderErrorCode;
 import groom.him.domain.order.exception.OrderException;
 import groom.him.domain.order.models.dto.request.AddOrderProductInfo;
 import groom.him.domain.order.models.dto.request.AddOrderRequest;
-import groom.him.domain.order.models.dto.request.OrderProductInfo;
+import groom.him.domain.order.models.dto.request.ModifyOrderDetailStatusRequest;
 import groom.him.domain.order.models.dto.response.OrderBriefResponse;
+import groom.him.domain.order.models.dto.response.OrderDetailResponse;
 import groom.him.domain.order.models.entity.OrderDetailEntity;
 import groom.him.domain.order.models.entity.OrderEntity;
+import groom.him.domain.order.models.enums.OrderStatus;
 import groom.him.domain.order.repository.OrderDetailRepository;
 import groom.him.domain.order.repository.OrderRepository;
 import groom.him.domain.product.models.entity.ProductEntity;
@@ -22,6 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -52,13 +55,13 @@ public class OrderService {
 
     @Transactional
     public OrderBriefResponse findOrderBrief(String orderId) {
-        OrderEntity order = findOrder(orderId);
+        OrderEntity order = findById(orderId);
         List<OrderDetailEntity> orderDetails = orderDetailRepository.findByOrder_OrderId(order.getOrderId());
 
-        List<OrderProductInfo> productInfos = new ArrayList<>();
+        List<OrderDetailResponse> productInfos = new ArrayList<>();
 
         orderDetails.forEach(entity -> {
-            OrderProductInfo info = OrderProductInfo.of(entity);
+            OrderDetailResponse info = OrderDetailResponse.of(entity);
             productInfos.add(info);
         });
 
@@ -79,7 +82,7 @@ public class OrderService {
         return response;
     }
 
-    public OrderEntity findOrder(String orderId) {
+    public OrderEntity findById(String orderId) {
         return orderRepository.findById(orderId).orElseThrow(
             () -> new OrderException(OrderErrorCode.ORDER_ID_NOT_FOUND)
         );
@@ -118,8 +121,38 @@ public class OrderService {
         }
     }
 
+    @Transactional
+    public OrderDetailResponse modifyOrderDetailStatus(Integer memberId, ModifyOrderDetailStatusRequest request) {
+        validateOrder(memberId, request);
+
+        OrderDetailEntity orderDetail = findOrderDetailsById(request.orderDetailsId());
+
+        // Todo : 포인트 처리 로직 구현 필요
+        if (request.orderStatus() == OrderStatus.PURCHASE_CONFIRMED) {
+            // Todo : 포인트 업데이트 로직 구현 필요
+        }
+
+        orderDetail.changeOrderStatus(request.orderStatus());
+        return OrderDetailResponse.of(orderDetail);
+    }
+
+    private void validateOrder(Integer memberId, ModifyOrderDetailStatusRequest request) {
+        OrderEntity order = findById(request.orderId());
+        Integer memberIdByOrder = order.getMember().getMemberId();
+
+        if (!Objects.equals(memberIdByOrder, memberId)) {
+            throw new OrderException(OrderErrorCode.UNAUTHORIZED_ORDER_MODIFY);
+        }
+    }
+
+    private OrderDetailEntity findOrderDetailsById(Integer orderDetailId) {
+        return orderDetailRepository.findById(orderDetailId)
+            .orElseThrow(() -> new OrderException(OrderErrorCode.ORDER_DETAIL_ID_NOT_FOUND));
+    }
+
+    //
     private void changeMemberPoint(AddOrderRequest request, MemberEntity member) {
-        // 포인트 처리
+        // 포인트 처리 no
         if (member.getPoint() < request.usedPoint()) {
             throw new OrderException(OrderErrorCode.NOT_ENOUGH_POINTS);
         }
