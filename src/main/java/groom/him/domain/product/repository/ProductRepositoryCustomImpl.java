@@ -107,7 +107,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .where(product.productId.eq(productId))
             .fetchOne();
-        System.out.println(productResponse);
+        
         Boolean isWish = IsWishByMemberIdAndProductId(memberId, productId);
 
         List<String> mainImageList = getProductImageListByImgType(productId, ImgType.MAIN);
