@@ -105,14 +105,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         int limit = pageable.getPageSize() + 1;
 
         List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(Projections.constructor(
-                ProductWithWishResponse.class,
-                Projections.constructor(
-                    ProductBriefResponse.class,
-                    product.productId, product.productName, product.price, product.discountRate,
-                    product.discountedPrice, product.imgUrl
-                ), isProductWished(wish)
-            ))
+            .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
