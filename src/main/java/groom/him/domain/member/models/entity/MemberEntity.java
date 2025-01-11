@@ -91,6 +91,9 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "social_token_id")
     private String socialTokenId;
 
+    @Column(name = "point")
+    private Integer point = 0;
+
     @Column(length = 200, name = "refresh_token")
     private String refreshToken;
 
@@ -173,5 +176,9 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     public void changeNicknameAndEmail(String nickname, String email) {
         this.nickname = nickname;
         this.email = email;
+    }
+
+    public void changePoint(Integer usedPoint) {
+        this.point = usedPoint;
     }
 }
