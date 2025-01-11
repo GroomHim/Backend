@@ -10,7 +10,7 @@ public record ExhibitCategoryResponse(
     Boolean hasSubCategory,
     Integer parentCategoryId,
     Integer depth,
-    List<ExhibitCategoryResponse> categoryList
+    List<ExhibitCategoryResponse> subCategoryList
 ) {
     public static ExhibitCategoryResponse of(ExhibitCategoryEntity exhibitCategory) {
         List<ExhibitCategoryResponse> subCategoryResponses = new ArrayList<>();
