@@ -11,17 +11,17 @@ import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.search.models.entity.SearchEntity;
 import groom.him.domain.search.repository.SearchRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private static final int RECENT_WORD_CNT = 5;
 
     private final ProductRepository productRepository;
@@ -34,19 +34,19 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findRandomProductBrief(Pageable pageable,
-                                                                 List<Integer> categoryIdList) {
+        List<Integer> categoryIdList) {
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
             categoryIdList);
         return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList);
     }
 
     public Slice<ProductWithWishResponse> findRecommendProductBriefBySkinType(Pageable pageable,
-                                                                              Integer skinTypeId) {
+        Integer skinTypeId) {
         return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId);
     }
 
     public Slice<ProductWithWishResponse> findProductBriefByPrice(Pageable pageable,
-                                                                  Integer minPrice, Integer maxPrice) {
+        Integer minPrice, Integer maxPrice) {
         return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice);
     }
 
@@ -65,13 +65,14 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findProductListByCategory(Pageable pageable,
-                                                                    Integer categoryId, SortType sortType, Integer memberId) {
+        Integer categoryId, SortType sortType, Integer memberId) {
         return productRepository.findProductListByCategoryId(pageable, categoryId, sortType,
             memberId);
     }
 
-    public Slice<ProductWithWishResponse> findMemberProductWishList(Integer memberId, Boolean isSkinType,
-                                                             Pageable pageable) {
+    public Slice<ProductWithWishResponse> findMemberProductWishList(Integer memberId,
+        Boolean isSkinType,
+        Pageable pageable) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
             pageable);
     }
