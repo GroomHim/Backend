@@ -36,13 +36,13 @@ public class WishController {
         @RequestParam("skin-type") Boolean isSkinType,
         Pageable pageable) {
         return Response.success(
-            wishService.findMemberProductWishList(member.getMemberId(), isSkinType, pageable));
+            wishService.findWishListByMemberId(member.getMemberId(), isSkinType, pageable));
     }
 
     @GetMapping("/count")
     public Response<CountResponse> findMemberWishCount(
         @AuthenticationPrincipal MemberEntity member) {
-        return Response.success(wishService.findMemberWishCount(member.getMemberId()));
+        return Response.success(wishService.findWishCountByMemberId(member.getMemberId()));
     }
 
     @DeleteMapping

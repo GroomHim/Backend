@@ -24,14 +24,14 @@ public class WishService {
     private final ProductService productService;
     private final WishRepository wishRepository;
 
-    public Slice<ProductWithWishResponse> findMemberProductWishList(Integer memberId,
+    public Slice<ProductWithWishResponse> findWishListByMemberId(Integer memberId,
         Boolean isSkinType,
         Pageable pageable) {
         return productService.findMemberProductWishList(memberId, isSkinType,
             pageable);
     }
 
-    public CountResponse findMemberWishCount(Integer memberId) {
+    public CountResponse findWishCountByMemberId(Integer memberId) {
         return new CountResponse(wishRepository.countDistinctByMember_MemberId(memberId));
     }
 
