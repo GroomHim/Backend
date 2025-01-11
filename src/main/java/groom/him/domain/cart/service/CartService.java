@@ -43,7 +43,7 @@ public class CartService {
     @Transactional
     public CartResponse saveCart(Integer memberId, Integer productId) {
         MemberEntity member = memberService.findById(memberId);
-        ProductEntity product = productService.findProductById(productId);
+        ProductEntity product = productService.findById(productId);
 
         Optional<CartEntity> cartOptional = cartRepository.findByMemberAndProduct(member, product);
 

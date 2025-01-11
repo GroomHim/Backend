@@ -103,7 +103,7 @@ public class OrderService {
 
         // 주문 디테일 테이블 생성
         for (AddOrderProductInfo info : request.products()) {
-            ProductEntity product = productService.findProductById(info.productId());
+            ProductEntity product = productService.findById(info.productId());
 
             OrderDetailEntity entity = new OrderDetailEntity(
                 product,
