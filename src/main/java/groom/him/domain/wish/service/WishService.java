@@ -1,11 +1,12 @@
-package groom.him.domain.member.service;
+package groom.him.domain.wish.service;
 
-import groom.him.domain.member.exception.WishErrorCode;
-import groom.him.domain.member.exception.WishException;
+import groom.him.domain.member.service.MemberService;
+import groom.him.domain.wish.exception.WishErrorCode;
+import groom.him.domain.wish.exception.WishException;
 import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.WishEntity;
-import groom.him.domain.member.repository.WishRepository;
+import groom.him.domain.wish.repository.WishRepository;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.service.ProductService;

@@ -1,4 +1,4 @@
-package groom.him.domain.member.repository;
+package groom.him.domain.wish.repository;
 
 import groom.him.domain.member.models.entity.WishEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

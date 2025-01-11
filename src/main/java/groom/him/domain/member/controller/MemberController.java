@@ -8,7 +8,7 @@ import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.dto.response.MemberResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
-import groom.him.domain.member.service.WishService;
+import groom.him.domain.wish.service.WishService;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
@@ -54,35 +54,6 @@ public class MemberController {
     public Response<Integer> validatePassword(@AuthenticationPrincipal MemberEntity member,
                                               @RequestBody ValidatePasswordRequest request) {
         memberService.validatePassword(member.getMemberId(), request.password());
-        return Response.success();
-    }
-
-    @PostMapping("wish")
-    public Response<Integer> addWish(@AuthenticationPrincipal MemberEntity member,
-                                  @RequestParam Integer productId) {
-        wishService.addWish(member.getMemberId(), productId);
-        return Response.success();
-    }
-
-    @GetMapping("/wish")
-    public Response<Slice<ProductWithWishResponse>> findMemberWishList(
-        @AuthenticationPrincipal MemberEntity member,
-        @RequestParam("skin-type") Boolean isSkinType,
-        Pageable pageable) {
-        return Response.success(
-            wishService.findMemberProductWishList(member.getMemberId(), isSkinType, pageable));
-    }
-
-    @GetMapping("/wish/count")
-    public Response<CountResponse> findMemberWishCount(
-        @AuthenticationPrincipal MemberEntity member) {
-        return Response.success(wishService.findMemberWishCount(member.getMemberId()));
-    }
-
-    @DeleteMapping("wish")
-    public Response<Integer> deleteWish(@AuthenticationPrincipal MemberEntity member,
-                                        @RequestParam  Integer productId) {
-        wishService.deleteWish(member.getMemberId(), productId);
         return Response.success();
     }
 

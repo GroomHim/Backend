@@ -1,4 +1,4 @@
-package groom.him.domain.member.exception;
+package groom.him.domain.wish.exception;
 
 import groom.him.core.exception.BusinessException;
 import groom.him.core.exception.HttpErrorCode;
