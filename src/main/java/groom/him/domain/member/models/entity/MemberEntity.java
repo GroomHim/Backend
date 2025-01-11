@@ -6,23 +6,8 @@ import groom.him.common.models.entity.AuditingFields;
 import groom.him.common.models.entity.SkinTypeEntity;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.data.Password;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +15,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -90,9 +79,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
 
     @Column(name = "social_token_id")
     private String socialTokenId;
-
-    @Column(name = "point")
-    private Integer point = 0;
 
     @Column(length = 200, name = "refresh_token")
     private String refreshToken;
