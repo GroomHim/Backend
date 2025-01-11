@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/category")
+@RequestMapping("/v1/categories")
 public class ExhibitCategoryController {
     private final ExhibitCategoryService exhibitCategoryService;
 
