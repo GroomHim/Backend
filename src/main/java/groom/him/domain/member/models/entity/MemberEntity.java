@@ -31,7 +31,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "member_id")
     private Integer memberId;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skin_type_id")
     private SkinTypeEntity skinTypeEntity;
 
