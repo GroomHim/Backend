@@ -18,26 +18,12 @@ public record MemberResponse(
     String birth,
     String email
 ) {
-    public static MemberResponse from(MemberEntity member) {
-        if (member.getSkinTypeEntity() != null) {
-            return new MemberResponse(
-                member.getLoginId(),
-                member.getName(),
-                member.getSkinTypeEntity().getSkinTypeId(),
-                member.getSkinTypeEntity().getSkinTypeName(),
-                member.getPhoneNumber(),
-                member.getGender(),
-                member.getNickname(),
-                member.getBirth(),
-                member.getEmail()
-            );
-        }
-
+    public static MemberResponse of(MemberEntity member) {
         return new MemberResponse(
             member.getLoginId(),
             member.getName(),
-            null,
-            null,
+            member.getSkinTypeEntity() != null ? member.getSkinTypeEntity().getSkinTypeId() : null,
+            member.getSkinTypeEntity() != null ? member.getSkinTypeEntity().getSkinTypeName() : null,
             member.getPhoneNumber(),
             member.getGender(),
             member.getNickname(),

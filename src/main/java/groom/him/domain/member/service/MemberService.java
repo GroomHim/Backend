@@ -39,7 +39,7 @@ public class MemberService {
     @Transactional
     public MemberResponse findMyInfo(Integer memberId) {
         MemberEntity member = findById(memberId);
-        return MemberResponse.from(member);
+        return MemberResponse.of(member);
     }
 
     @Transactional
@@ -48,7 +48,7 @@ public class MemberService {
 
         MemberEntity member = findById(memberId);
         member.changeNicknameAndEmail(request.nickname(), request.email());
-        return MemberResponse.from(member);
+        return MemberResponse.of(member);
     }
 
     @Transactional
