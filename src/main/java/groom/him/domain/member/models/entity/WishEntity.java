@@ -32,4 +32,9 @@ public class WishEntity extends RegisterDateFields {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
+
+    public WishEntity(MemberEntity member, ProductEntity product) {
+        this.member = member;
+        this.product = product;
+    }
 }
