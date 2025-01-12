@@ -1,6 +1,6 @@
 package groom.him.common.models.dto.request;
 
-public record ModifyUserSkinTypeRequest(
+public record ModifyMemberSkinTypeRequest(
     Integer skinTypeId
 ) {
 }

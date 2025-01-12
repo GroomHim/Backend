@@ -1,6 +1,6 @@
 package groom.him.common.controller;
 
-import groom.him.common.models.dto.request.ModifyUserSkinTypeRequest;
+import groom.him.common.models.dto.request.ModifyMemberSkinTypeRequest;
 import groom.him.common.models.dto.response.SkinTypeBriefResponse;
 import groom.him.common.models.entity.SkinTypeEntity;
 import groom.him.common.service.SkinTypeService;
@@ -10,7 +10,6 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +31,9 @@ public class SkinTypeController {
     }
 
     @PostMapping
-    public Response<MemberResponse> modifyUserSkinType(@AuthenticationPrincipal MemberEntity member,
-        @RequestBody ModifyUserSkinTypeRequest request) {
+    public Response<MemberResponse> modifyMemberSkinType(
+        @AuthenticationPrincipal MemberEntity member,
+        @RequestBody ModifyMemberSkinTypeRequest request) {
         SkinTypeEntity skinType = skinTypeService.findById(request.skinTypeId());
         return Response.success(memberService.modifySkinType(member.getMemberId(), skinType));
     }
