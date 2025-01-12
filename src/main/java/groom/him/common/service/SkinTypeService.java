@@ -29,7 +29,7 @@ public class SkinTypeService {
         return result;
     }
 
-    public SkinTypeEntity findBySkinTypeId(Integer skinTypeId) {
+    public SkinTypeEntity findById(Integer skinTypeId) {
         return skinTypeRepository.findById(skinTypeId)
             .orElseThrow(() -> new SkinTypeException(SkinTypeErrorCode.SKIN_TYPE_NOT_EXIST));
     }

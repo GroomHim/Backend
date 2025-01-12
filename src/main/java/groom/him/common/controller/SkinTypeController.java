@@ -34,7 +34,7 @@ public class SkinTypeController {
     @PostMapping
     public Response<MemberResponse> modifyUserSkinType(@AuthenticationPrincipal MemberEntity member,
         @RequestBody ModifyUserSkinTypeRequest request) {
-        SkinTypeEntity skinType = skinTypeService.findBySkinTypeId(request.skinTypeId());
+        SkinTypeEntity skinType = skinTypeService.findById(request.skinTypeId());
         return Response.success(memberService.modifySkinType(member.getMemberId(), skinType));
     }
 }
