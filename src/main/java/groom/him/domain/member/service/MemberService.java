@@ -57,9 +57,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void modifySkinType(Integer memberId, SkinTypeEntity skinType) {
+    public MemberResponse modifySkinType(Integer memberId, SkinTypeEntity skinType) {
         MemberEntity member = findById(memberId);
         member.changeSkinType(skinType);
+        return MemberResponse.of(member);
     }
 
     public MemberEntity findById(Integer memberId) {

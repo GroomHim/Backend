@@ -5,6 +5,7 @@ import groom.him.common.models.dto.response.SkinTypeBriefResponse;
 import groom.him.common.models.entity.SkinTypeEntity;
 import groom.him.common.service.SkinTypeService;
 import groom.him.core.dto.Response;
+import groom.him.domain.member.models.dto.response.MemberResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import java.util.List;
@@ -31,10 +32,9 @@ public class SkinTypeController {
     }
 
     @PostMapping
-    public Response<Void> modifyUserSkinType(@AuthenticationPrincipal MemberEntity member,
+    public Response<MemberResponse> modifyUserSkinType(@AuthenticationPrincipal MemberEntity member,
         @RequestBody ModifyUserSkinTypeRequest request) {
         SkinTypeEntity skinType = skinTypeService.findBySkinTypeId(request.skinTypeId());
-        memberService.modifySkinType(member.getMemberId(), skinType);
-        return new Response<>(HttpStatus.NO_CONTENT.value());
+        return Response.success(memberService.modifySkinType(member.getMemberId(), skinType));
     }
 }
