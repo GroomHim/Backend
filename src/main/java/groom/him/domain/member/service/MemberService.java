@@ -1,5 +1,6 @@
 package groom.him.domain.member.service;
 
+import groom.him.common.models.entity.SkinTypeEntity;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.model.member.exception.MemberErrorCode;
 import groom.him.core.model.member.exception.MemberException;
@@ -47,6 +48,13 @@ public class MemberService {
         member.changePassword(password);
     }
 
+    @Transactional
+    public MemberResponse modifySkinType(Integer memberId, SkinTypeEntity skinType) {
+        MemberEntity member = findById(memberId);
+        member.changeSkinType(skinType);
+        return MemberResponse.of(member);
+    }
+
     public MemberEntity findById(Integer memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
@@ -60,9 +68,9 @@ public class MemberService {
             throw new MemberException(MemberErrorCode.MEMBER_INVALID_PASSWORD);
         }
     }
-
+    
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
-                                             LocalDate startDate, LocalDate endDate) {
+        LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
             endDate);
     }
