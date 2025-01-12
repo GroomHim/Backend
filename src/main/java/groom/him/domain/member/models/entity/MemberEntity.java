@@ -167,4 +167,8 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     public void changePoint(Integer usedPoint) {
         this.point = usedPoint;
     }
+
+    public void changeSkinType(SkinTypeEntity skinTypeEntity) {
+        this.skinTypeEntity = skinTypeEntity;
+    }
 }
