@@ -2,6 +2,7 @@ package groom.him.domain.point.models.entity;
 
 import groom.him.common.models.entity.AuditingFields;
 import groom.him.domain.member.models.entity.MemberEntity;
+import groom.him.domain.order.models.entity.OrderEntity;
 import groom.him.domain.point.models.enums.PointHistoryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Table(name = "POINT_HISTORY")
 @Entity
@@ -55,6 +57,23 @@ public class PointHistoryEntity extends AuditingFields {
   @Column(name = "product_name")
   private String productName;
 
-  @Column(name = "product_id")
-  private Integer productId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "order_id")
+  private OrderEntity order;
+
+  public void changePoint(Integer point){
+    this.point = point;
+  }
+
+  public void changeApplied(Boolean isApplied){
+    this.isApplied = isApplied;
+  }
+
+  public void changeValidFromDt(LocalDateTime validFrom){
+    this.validFromDt = validFrom;
+  }
+
+  public void changeValidToDt(LocalDateTime validTo){
+    this.validToDt = validTo;
+  }
 }

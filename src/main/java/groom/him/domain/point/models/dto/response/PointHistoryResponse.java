@@ -8,6 +8,9 @@ public record PointHistoryResponse (
  Integer point,
  Integer memberId,
  String productName,
+
+ String orderId,
+
  PointHistoryType pointHistoryType,
  LocalDateTime regDt,
  LocalDateTime validFromDt,
@@ -19,6 +22,7 @@ public record PointHistoryResponse (
         entity.getPoint(),
         entity.getMember().getMemberId(),
         entity.getProductName(),
+        entity.getOrder().getOrderId(),
         entity.getPointHistoryType(),
         entity.getRegDt(),
         entity.getValidFromDt(),

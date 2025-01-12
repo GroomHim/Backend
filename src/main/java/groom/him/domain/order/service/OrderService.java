@@ -14,9 +14,14 @@ import groom.him.domain.order.models.entity.OrderEntity;
 import groom.him.domain.order.models.enums.OrderStatus;
 import groom.him.domain.order.repository.OrderDetailRepository;
 import groom.him.domain.order.repository.OrderRepository;
+import groom.him.domain.point.exception.PointException;
+import groom.him.domain.point.models.entity.PointHistoryEntity;
+import groom.him.domain.point.models.enums.PointErrorCode;
+import groom.him.domain.point.repository.PointRepository;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.service.ProductService;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +45,7 @@ public class OrderService {
     private final ProductService productService;
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final PointRepository pointRepository;
 
     public String getOrderId() {
         String today = getTodayDate();
@@ -124,12 +130,18 @@ public class OrderService {
     @Transactional
     public OrderDetailResponse modifyOrderDetailStatus(Integer memberId, ModifyOrderDetailStatusRequest request) {
         validateOrder(memberId, request);
-
         OrderDetailEntity orderDetail = findOrderDetailsById(request.orderDetailsId());
 
-        // Todo : 포인트 처리 로직 구현 필요
-        if (request.orderStatus() == OrderStatus.PURCHASE_CONFIRMED) {
-            // Todo : 포인트 업데이트 로직 구현 필요
+        if (request.orderStatus() == OrderStatus.PURCHASE_CONFIRMED) { // 구매확정 시,
+            ProductEntity product = orderDetail.getProduct();
+            PointHistoryEntity pointHistoryEntity = pointRepository.findByMemberMemberIdAndOrderOrderIdAndProductName(
+                    memberId, request.orderId(), product.getProductName())
+                .orElseThrow(() -> new PointException(
+                    PointErrorCode.POINT_HISTORY_NOT_EXIST));
+            pointHistoryEntity.changePoint(pointHistoryEntity.getPoint() + (int) (product.getPrice() * 0.001));
+            pointHistoryEntity.changeApplied(true);
+            pointHistoryEntity.changeValidFromDt(LocalDateTime.now());
+            pointHistoryEntity.changeValidToDt(LocalDateTime.now().plusDays(90));
         }
 
         orderDetail.changeOrderStatus(request.orderStatus());
