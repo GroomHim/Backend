@@ -8,13 +8,10 @@ import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.dto.response.MemberResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
+import groom.him.domain.wish.service.WishService;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
-
-import java.time.LocalDate;
-import java.util.List;
-
 import groom.him.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +19,15 @@ import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/members")
 public class MemberController {
     private final MemberService memberService;
+    private final WishService wishService;
     private final SearchService searchService;
 
     @GetMapping("/info")
@@ -37,38 +38,23 @@ public class MemberController {
 
     @PatchMapping
     public Response<MemberResponse> modifyMyInfo(@AuthenticationPrincipal MemberEntity member,
-        @RequestBody ModifyMyInfoRequest request) {
+                                                 @RequestBody ModifyMyInfoRequest request) {
         var response = memberService.modifyMyInfo(member.getMemberId(), request);
         return Response.success(response);
     }
 
     @PatchMapping("/pwd")
     public Response<Integer> modifyPassword(@AuthenticationPrincipal MemberEntity member,
-        @RequestBody ModifyPasswordRequest request) {
+                                            @RequestBody ModifyPasswordRequest request) {
         memberService.modifyPassword(member.getMemberId(), request.newPassword());
         return Response.success();
     }
 
     @PostMapping("/validate/pwd")
     public Response<Integer> validatePassword(@AuthenticationPrincipal MemberEntity member,
-        @RequestBody ValidatePasswordRequest request) {
+                                              @RequestBody ValidatePasswordRequest request) {
         memberService.validatePassword(member.getMemberId(), request.password());
         return Response.success();
-    }
-
-    @GetMapping("/wish")
-    public Response<Slice<ProductWithWishResponse>> findMemberWishList(
-        @AuthenticationPrincipal MemberEntity member,
-        @RequestParam("skin-type") Boolean isSkinType,
-        Pageable pageable) {
-        return Response.success(
-            memberService.findMemberWishList(member.getMemberId(), isSkinType, pageable));
-    }
-
-    @GetMapping("/wish/count")
-    public Response<CountResponse> findMemberWishCount(
-        @AuthenticationPrincipal MemberEntity member) {
-        return Response.success(memberService.findMemberWishCount(member.getMemberId()));
     }
 
     @GetMapping("/qa")

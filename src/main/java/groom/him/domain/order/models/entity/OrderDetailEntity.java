@@ -57,4 +57,8 @@ public class OrderDetailEntity extends AuditingFields {
         this.rewardPoint = rewardPoint;
         this.orderDate = orderDate;
     }
+
+    public void changeOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

@@ -1,34 +1,34 @@
 package groom.him.domain.product.service;
 
 import groom.him.domain.category.enums.SortType;
+import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
+import groom.him.domain.product.exception.ProductErrorCode;
+import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.search.models.entity.SearchEntity;
 import groom.him.domain.search.repository.SearchRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import groom.him.domain.category.repository.ExhibitCategoryRepository;
-import groom.him.domain.product.exception.ProductErrorCode;
-import groom.him.domain.product.exception.ProductException;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private static final int RECENT_WORD_CNT = 5;
 
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
     private final SearchRepository searchRepository;
 
-    public ProductEntity findProductById(Integer productId) {
+    public ProductEntity findById(Integer productId) {
         return productRepository.findById(productId).orElseThrow(
             () -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
     }
@@ -68,5 +68,12 @@ public class ProductService {
         Integer categoryId, SortType sortType, Integer memberId) {
         return productRepository.findProductListByCategoryId(pageable, categoryId, sortType,
             memberId);
+    }
+
+    public Slice<ProductWithWishResponse> findMemberProductWishList(Integer memberId,
+        Boolean isSkinType,
+        Pageable pageable) {
+        return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
+            pageable);
     }
 }
