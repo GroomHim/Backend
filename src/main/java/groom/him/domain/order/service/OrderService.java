@@ -131,6 +131,7 @@ public class OrderService {
     public OrderDetailResponse modifyOrderDetailStatus(Integer memberId, ModifyOrderDetailStatusRequest request) {
         validateOrder(memberId, request);
         OrderDetailEntity orderDetail = findOrderDetailsById(request.orderDetailsId());
+        orderDetail.changeOrderStatus(request.orderStatus());
 
         if (request.orderStatus() == OrderStatus.PURCHASE_CONFIRMED) { // 구매확정 시,
             ProductEntity product = orderDetail.getProduct();
@@ -138,13 +139,13 @@ public class OrderService {
                     memberId, request.orderId(), product.getProductName())
                 .orElseThrow(() -> new PointException(
                     PointErrorCode.POINT_HISTORY_NOT_EXIST));
-            pointHistoryEntity.changePoint(pointHistoryEntity.getPoint() + (int) (product.getPrice() * 0.001));
+            pointHistoryEntity.changePoint(pointHistoryEntity.getPoint() + (int) (product.getPrice() * 0.01));
             pointHistoryEntity.changeApplied(true);
             pointHistoryEntity.changeValidFromDt(LocalDateTime.now());
             pointHistoryEntity.changeValidToDt(LocalDateTime.now().plusDays(90));
         }
 
-        orderDetail.changeOrderStatus(request.orderStatus());
+
         return OrderDetailResponse.of(orderDetail);
     }
 
@@ -157,7 +158,7 @@ public class OrderService {
         }
     }
 
-    private OrderDetailEntity findOrderDetailsById(Integer orderDetailId) {
+    public OrderDetailEntity findOrderDetailsById(Integer orderDetailId) {
         return orderDetailRepository.findById(orderDetailId)
             .orElseThrow(() -> new OrderException(OrderErrorCode.ORDER_DETAIL_ID_NOT_FOUND));
     }

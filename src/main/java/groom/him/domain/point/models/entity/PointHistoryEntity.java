@@ -25,7 +25,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PointHistoryEntity extends AuditingFields {
+public class PointHistoryEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "point_history_id")
