@@ -32,4 +32,10 @@ public class ProductExhibitCategoryLinkEntity extends RegisterDateFields {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
+
+    public ProductExhibitCategoryLinkEntity(ExhibitCategoryEntity exhibitCategory,
+        ProductEntity product) {
+        this.exhibitCategory = exhibitCategory;
+        this.product = product;
+    }
 }

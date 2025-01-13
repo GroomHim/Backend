@@ -1,15 +1,23 @@
 package groom.him.domain.dummy;
 
+import groom.him.common.models.entity.SkinTypeEntity;
+import groom.him.common.repository.SkinTypeRepository;
 import groom.him.domain.category.repository.CategoryRepository;
+import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.product.models.entity.ProductEntity;
+import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.ProductImgEntity;
+import groom.him.domain.product.models.entity.ProductSkinTypeLinkEntity;
 import groom.him.domain.product.models.enums.ImgType;
 import groom.him.domain.product.repository.BrandRepository;
+import groom.him.domain.product.repository.ProductExhibitCategoryLinkRepository;
 import groom.him.domain.product.repository.ProductImageRepository;
 import groom.him.domain.product.repository.ProductRepository;
+import groom.him.domain.product.repository.ProductSkinTypeLinkRepository;
 import groom.him.domain.s3.service.S3Service;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +30,11 @@ public class DummyDataService {
     private final ProductImageRepository productImageRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+    private final ProductExhibitCategoryLinkRepository productExhibitCategoryLinkRepository;
+
+    private final ProductSkinTypeLinkRepository productSkinTypeLinkRepository;
+    private final ExhibitCategoryRepository exhibitCategoryRepository;
+    private final SkinTypeRepository skinTypeRepository;
 
     @Transactional
     public void createDummyData(
@@ -38,7 +51,7 @@ public class DummyDataService {
 
         int discountedPrice = (int) (request.price() * (1 - request.discountRate()));
 
-        ProductEntity product = new ProductEntity(
+        var product = new ProductEntity(
             brand,
             category,
             request.productName(),
@@ -71,9 +84,41 @@ public class DummyDataService {
             ImgType.CONTENT
         );
 
+        // exhibitCategoryEntity 찾기
+        var exhibitCategoryEntity = exhibitCategoryRepository.findById(category.getCategoryId())
+            .get();
+
+        // product store
+        var savedProduct = productRepository.save(product);
+
         productImageRepository.save(sub1);
         productImageRepository.save(sub2);
         productImageRepository.save(content);
-        productRepository.save(product);
+
+        // exhibitCategoryLink 테이블에 연결
+        productExhibitCategoryLinkRepository.save(
+            new ProductExhibitCategoryLinkEntity(
+                exhibitCategoryEntity,
+                savedProduct
+            )
+        );
+
+        Integer randomSkinTypeId = skinTypeRepository.getRandomSkinTypeId() % 11;
+        SkinTypeEntity skinType1 = skinTypeRepository.findById(12).get();
+        SkinTypeEntity skinType2 = skinTypeRepository.findById(randomSkinTypeId).get();
+
+        // 랜덤한 skinType에 productSkinType 연동
+        productSkinTypeLinkRepository.saveAll(
+            List.of(
+                new ProductSkinTypeLinkEntity(
+                    savedProduct,
+                    skinType1
+                ),
+                new ProductSkinTypeLinkEntity(
+                    savedProduct,
+                    skinType2
+                )
+            )
+        );
     }
 }
