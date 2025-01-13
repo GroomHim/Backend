@@ -36,7 +36,7 @@ public class DummyDataService {
         String subImage2 = s3Service.saveImage(request.subImage2(), memberId, "sub");
         String contentImage = s3Service.saveImage(request.contentImage(), memberId, "content");
 
-        int discountedPrice = (int) (request.price() * request.discountRate());
+        int discountedPrice = (int) (request.price() * (1 - request.discountRate()));
 
         ProductEntity product = new ProductEntity(
             brand,
