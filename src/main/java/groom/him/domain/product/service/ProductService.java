@@ -6,6 +6,7 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
@@ -62,6 +63,10 @@ public class ProductService {
         productRepository.findSearchProductIndex(word).stream()
             .map(ProductBriefResponse::of).forEach(list::add);
         return list;
+    }
+
+    public ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId) {
+        return productRepository.findProductDetailByProductId(memberId, productId);
     }
 
     public Slice<ProductWithWishResponse> findProductListByCategory(Pageable pageable,

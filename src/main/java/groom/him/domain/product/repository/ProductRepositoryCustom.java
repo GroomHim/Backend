@@ -1,5 +1,6 @@
 package groom.him.domain.product.repository;
 
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import java.util.List;
@@ -18,6 +19,8 @@ public interface ProductRepositoryCustom {
 
     Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
         List<Integer> target);
+
+    ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId);
 
     Slice<ProductWithWishResponse> findProductListByCategoryId(Pageable pageable,
         Integer categoryId, SortType sortType, Integer memberId);

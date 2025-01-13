@@ -6,6 +6,7 @@ import groom.him.domain.category.enums.SortType;
 import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +62,14 @@ public class ProductController {
         return Response.success(productService.findSearchProductIndex(word, member));
     }
 
+    @GetMapping("/{product-id}/detail")
+    public Response<ProductDetailResponse> findProductDetail(
+        @AuthenticationPrincipal MemberEntity member,
+        @PathVariable("product-id") Integer productId) {
+        return Response.success(
+            productService.findProductDetailByProductId(member.getMemberId(), productId));
+    }
+
     @GetMapping()
     public Response<Slice<ProductWithWishResponse>> findProductListByCategory(
         @AuthenticationPrincipal MemberEntity member,
@@ -70,7 +80,7 @@ public class ProductController {
         exhibitCategoryService.checkExhibitCategoryIsLeaf(categoryId);
 
         sortType = sortType == null ? SortType.SALE : sortType;
-        
+
         return Response.success(
             productService.findProductListByCategory(pageable, categoryId, sortType,
                 member.getMemberId()));
