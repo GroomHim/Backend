@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "ADDRESS")
 @Entity
 public class AddressEntity extends AuditingFields {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
@@ -44,6 +45,10 @@ public class AddressEntity extends AuditingFields {
     private String alias;
 
     @NotNull
+    @Column(name = "street_number")
+    private String streetNumber;
+
+    @NotNull
     @Column(length = 200, name = "address")
     private String address;
 
@@ -56,12 +61,13 @@ public class AddressEntity extends AuditingFields {
     private Boolean isDefault;
 
     @Builder
-    public AddressEntity(MemberEntity member, String name, String phoneNumber,
-        String alias, String address, String addressDetail, Boolean isDefault) {
+    public AddressEntity(MemberEntity member, String name, String phoneNumber, String alias,
+        String streetNumber, String address, String addressDetail, Boolean isDefault) {
         this.member = member;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.alias = alias;
+        this.streetNumber = streetNumber;
         this.address = address;
         this.addressDetail = addressDetail;
         this.isDefault = isDefault;
@@ -75,6 +81,7 @@ public class AddressEntity extends AuditingFields {
         this.name = request.name();
         this.phoneNumber = request.phoneNumber();
         this.alias = request.alias();
+        this.streetNumber = request.streetNumber();
         this.address = request.address();
         this.addressDetail = request.addressDetail();
         this.isDefault = request.isDefault();
