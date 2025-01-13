@@ -12,7 +12,6 @@ import groom.him.domain.address.repository.AddressRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AddressService {
+
     private final AddressRepository addressRepository;
 
     private static final Integer MAX_ADDRESS_CNT = 10;
@@ -34,8 +34,8 @@ public class AddressService {
             setPreviousDefaultAddressFalse(member.getMemberId());
         }
 
-        AddressEntity address = new AddressEntity(member, request.name(), request.phoneNumber(),
-            request.alias(), request.address(), request.addressDetail(), request.isDefault());
+        AddressEntity address = new AddressEntity(member, request.name(), request.phoneNumber(), request.alias(),
+            request.streetNumber(), request.address(), request.addressDetail(), request.isDefault());
         addressRepository.save(address);
     }
 
