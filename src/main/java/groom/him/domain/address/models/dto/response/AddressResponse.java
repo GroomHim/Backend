@@ -8,6 +8,7 @@ public record AddressResponse(
     String name,
     String phoneNumber,
     String alias,
+    String streetNumber,
     String address,
     String addressDetail,
     Boolean isDefault,
@@ -15,7 +16,7 @@ public record AddressResponse(
 ) {
     public static AddressResponse of(AddressEntity entity) {
         return new AddressResponse(entity.getAddressId(), entity.getName(), entity.getPhoneNumber(),
-            entity.getAlias(), entity.getAddress(), entity.getAddressDetail(),
+            entity.getAlias(), entity.getStreetNumber(), entity.getAddress(), entity.getAddressDetail(),
             entity.getIsDefault(), entity.getRegDt());
     }
 }
