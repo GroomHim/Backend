@@ -7,6 +7,7 @@ public record AddAddressRequest(
     String streetNumber,
     String address,
     String addressDetail,
+    String deliveryInfo,
     Boolean isDefault
 ) {
 }
