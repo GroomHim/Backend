@@ -18,4 +18,6 @@ public record ProductBriefResponse(
             product.getImgUrl()
         );
     }
+
+
 }
