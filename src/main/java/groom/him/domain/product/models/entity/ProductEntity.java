@@ -53,4 +53,19 @@ public class ProductEntity extends AuditingFields {
     @NotNull
     @Column(name = "delivery_info", length = 50)
     private String deliveryInfo;
+
+    public ProductEntity(BrandEntity brand, CategoryEntity category, String productName,
+        Integer price,
+        Float discountRate, Integer discountedPrice, String ingredients, String imgUrl,
+        String deliveryInfo) {
+        this.brand = brand;
+        this.category = category;
+        this.productName = productName;
+        this.price = price;
+        this.discountRate = discountRate;
+        this.discountedPrice = discountedPrice;
+        this.ingredients = ingredients;
+        this.imgUrl = imgUrl;
+        this.deliveryInfo = deliveryInfo;
+    }
 }

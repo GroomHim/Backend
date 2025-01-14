@@ -6,6 +6,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.category.enums.SortType;
@@ -238,6 +239,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     private OrderSpecifier<Integer> orderBySaleQuantity(QOrderDetailEntity orderDetail) {
+        NumberExpression<Integer> sum = orderDetail.quantity.sum();
+        System.out.println("test");
+        System.out.println(sum);
         return orderDetail.quantity.sum().desc();
     }
 
