@@ -4,18 +4,13 @@ import groom.him.core.dto.Response;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.request.ModifyPasswordRequest;
 import groom.him.domain.member.models.dto.request.ValidatePasswordRequest;
-import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.dto.response.MemberResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
-import groom.him.domain.wish.service.WishService;
-import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 import groom.him.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +22,6 @@ import java.util.List;
 @RequestMapping("/v1/members")
 public class MemberController {
     private final MemberService memberService;
-    private final WishService wishService;
     private final SearchService searchService;
 
     @GetMapping("/info")
