@@ -38,21 +38,21 @@ public class MemberController {
 
     @PatchMapping
     public Response<MemberResponse> modifyMyInfo(@AuthenticationPrincipal MemberEntity member,
-                                                 @RequestBody ModifyMyInfoRequest request) {
+        @RequestBody ModifyMyInfoRequest request) {
         var response = memberService.modifyMyInfo(member.getMemberId(), request);
         return Response.success(response);
     }
 
     @PatchMapping("/pwd")
     public Response<Integer> modifyPassword(@AuthenticationPrincipal MemberEntity member,
-                                            @RequestBody ModifyPasswordRequest request) {
+        @RequestBody ModifyPasswordRequest request) {
         memberService.modifyPassword(member.getMemberId(), request.newPassword());
         return Response.success();
     }
 
     @PostMapping("/validate/pwd")
     public Response<Integer> validatePassword(@AuthenticationPrincipal MemberEntity member,
-                                              @RequestBody ValidatePasswordRequest request) {
+        @RequestBody ValidatePasswordRequest request) {
         memberService.validatePassword(member.getMemberId(), request.password());
         return Response.success();
     }
@@ -61,8 +61,8 @@ public class MemberController {
     public Response<List<QaResponse>> findMemberQaList(
         @AuthenticationPrincipal MemberEntity member,
         @RequestParam(value = "status", required = false) QaStatus qaStatus,
-        @RequestParam(value = "start-date", required = false) LocalDate startDate,
-        @RequestParam(value = "end-date", required = false) LocalDate endDate) {
+        @RequestParam(value = "startDate", required = false) LocalDate startDate,
+        @RequestParam(value = "endDate", required = false) LocalDate endDate) {
         return Response.success(
             memberService.findMemberQaList(member.getMemberId(), qaStatus, startDate, endDate));
     }
