@@ -107,7 +107,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .where(product.productId.eq(productId))
             .fetchOne();
-        
+
         Boolean isWish = IsWishByMemberIdAndProductId(memberId, productId);
 
         List<String> mainImageList = getProductImageListByImgType(productId, ImgType.MAIN);
@@ -185,7 +185,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         List<ProductWithWishResponse> content = jpaQueryFactory
             .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
-            .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .leftJoin(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(product.discountedPrice.between(minPrice, maxPrice))
             .groupBy(product.productId)
