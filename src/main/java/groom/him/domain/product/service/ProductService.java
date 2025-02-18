@@ -81,4 +81,9 @@ public class ProductService {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
             pageable);
     }
+
+    public Slice<ProductWithWishResponse> findProductListByBrand(Pageable pageable,
+        String brandName, Integer memberId) {
+        return productRepository.findProductListByBrand(pageable, brandName, memberId);
+    }
 }
