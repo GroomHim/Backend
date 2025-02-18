@@ -33,7 +33,7 @@ public class WishController {
     @GetMapping
     public Response<Slice<ProductWithWishResponse>> findMemberWishList(
         @AuthenticationPrincipal MemberEntity member,
-        @RequestParam("skin-type") Boolean isSkinType,
+        @RequestParam("skinType") Boolean isSkinType,
         Pageable pageable) {
         return Response.success(
             wishService.findWishListByMemberId(member.getMemberId(), isSkinType, pageable));
