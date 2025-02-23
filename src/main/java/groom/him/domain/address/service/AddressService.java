@@ -35,7 +35,7 @@ public class AddressService {
         }
 
         AddressEntity address = new AddressEntity(member, request.name(), request.phoneNumber(), request.alias(),
-            request.streetNumber(), request.address(), request.addressDetail(), request.isDefault());
+            request.streetNumber(), request.address(), request.addressDetail(), request.deliveryInfo(),request.isDefault());
         addressRepository.save(address);
     }
 

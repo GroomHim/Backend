@@ -57,12 +57,17 @@ public class AddressEntity extends AuditingFields {
     private String addressDetail;
 
     @NotNull
+    @Column(name = "delivery_info")
+    private String deliveryInfo;
+
+    @NotNull
     @Column(name = "is_default")
     private Boolean isDefault;
 
     @Builder
     public AddressEntity(MemberEntity member, String name, String phoneNumber, String alias,
-        String streetNumber, String address, String addressDetail, Boolean isDefault) {
+        String streetNumber, String address, String addressDetail, String deliveryInfo,
+        Boolean isDefault) {
         this.member = member;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -70,6 +75,7 @@ public class AddressEntity extends AuditingFields {
         this.streetNumber = streetNumber;
         this.address = address;
         this.addressDetail = addressDetail;
+        this.deliveryInfo = deliveryInfo;
         this.isDefault = isDefault;
     }
 
@@ -84,6 +90,7 @@ public class AddressEntity extends AuditingFields {
         this.streetNumber = request.streetNumber();
         this.address = request.address();
         this.addressDetail = request.addressDetail();
+        this.deliveryInfo = request.deliveryInfo();
         this.isDefault = request.isDefault();
     }
 }
