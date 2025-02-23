@@ -6,7 +6,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.category.enums.SortType;
@@ -22,6 +21,7 @@ import groom.him.domain.product.models.entity.QProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.QProductImgEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
 import groom.him.domain.product.models.enums.ImgType;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -58,8 +58,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             builder.and(wish.member.memberId.eq(memberId));
         }
 
-        List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(getProductWithWishResponseConstructor(product, wish))
+        List<ProductBriefResponse> productBriefList = jpaQueryFactory
+            .select(getProductBriefResponseConstructor(product))
             .from(wish)
             .leftJoin(wish.product, product)
             .where(builder)
@@ -68,6 +68,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
+        List<ProductWithWishResponse> content = getProductWithWishResponses(memberId,
+            productBriefList);
+
         boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
@@ -75,24 +78,27 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
-        List<Integer> subCategoryList) {
+        List<Integer> subCategoryList, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
         QWishEntity wish = QWishEntity.wishEntity;
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(getProductWithWishResponseConstructor(product, wish))
+        List<ProductBriefResponse> productBriefList = jpaQueryFactory
+            .select(getProductBriefResponseConstructor(product))
             .from(product)
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
-            .where(productExhibitCategoryLink.productExhibitCategoryId.in(subCategoryList))
+            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.in(subCategoryList))
             .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
             .offset(pageable.getOffset())
             .limit(limit)
             .fetch();
+
+        List<ProductWithWishResponse> content = getProductWithWishResponses(memberId,
+            productBriefList);
 
         boolean hasNext = isHasNext(pageable, content);
 
@@ -126,8 +132,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(getProductWithWishResponseConstructor(product, wish))
+        List<ProductBriefResponse> productBriefList = jpaQueryFactory
+            .select(getProductBriefResponseConstructor(product))
             .from(product)
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
@@ -140,6 +146,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
+        List<ProductWithWishResponse> content = getProductWithWishResponses(memberId,
+            productBriefList);
+
         boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
@@ -147,7 +156,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
-        Pageable pageable, Integer skinType) {
+        Pageable pageable, Integer skinType, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
@@ -155,8 +164,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(getProductWithWishResponseConstructor(product, wish))
+        List<ProductBriefResponse> productBriefList = jpaQueryFactory
+            .select(getProductBriefResponseConstructor(product))
             .from(product)
             .join(productSkinTypeLink)
             .on(productSkinTypeLink.product.productId.eq(product.productId))
@@ -169,6 +178,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
+        List<ProductWithWishResponse> content = getProductWithWishResponses(memberId,
+            productBriefList);
+
         boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
@@ -176,15 +188,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable,
-        Integer minPrice, Integer maxPrice) {
+        Integer minPrice, Integer maxPrice, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QOrderDetailEntity orderDetail = QOrderDetailEntity.orderDetailEntity;
         QWishEntity wish = QWishEntity.wishEntity;
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductWithWishResponse> content = jpaQueryFactory
-            .select(getProductWithWishResponseConstructor(product, wish))
+        List<ProductBriefResponse> productBriefList = jpaQueryFactory
+            .select(getProductBriefResponseConstructor(product))
             .from(product)
             .leftJoin(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
@@ -195,13 +207,25 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
+        List<ProductWithWishResponse> content = getProductWithWishResponses(memberId,
+            productBriefList);
+
         boolean hasNext = isHasNext(pageable, content);
 
         return new SliceImpl<>(content, pageable, hasNext);
     }
 
-    private Expression<Boolean> isProductWished(QWishEntity wish) {
-        return wish.product.productId.isNotNull();
+    private List<ProductWithWishResponse> getProductWithWishResponses(Integer memberId,
+        List<ProductBriefResponse> productBriefList) {
+        List<Integer> wishProductIdList = getWishProductIdByMemberId(memberId);
+        List<ProductWithWishResponse> content = new ArrayList<>();
+
+        productBriefList.forEach((productBriefResponse) -> {
+            boolean isWished = wishProductIdList.contains(productBriefResponse.productId());
+            content.add(new ProductWithWishResponse(productBriefResponse, isWished));
+        });
+
+        return content;
     }
 
     private boolean isHasNext(Pageable pageable, List<?> content) {
@@ -244,14 +268,6 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         };
     }
 
-    private ConstructorExpression<ProductWithWishResponse> getProductWithWishResponseConstructor(
-        QProductEntity product, QWishEntity wish) {
-        return Projections.constructor(
-            ProductWithWishResponse.class,
-            getProductBriefResponseConstructor(product), isProductWished(wish)
-        );
-    }
-
     private ConstructorExpression<ProductBriefResponse> getProductBriefResponseConstructor(
         QProductEntity product) {
         return Projections.constructor(
@@ -290,5 +306,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(wish)
             .where(wish.product.productId.eq(productId).and(wish.member.memberId.eq(memberId)))
             .fetchFirst() != null;
+    }
+
+    private List<Integer> getWishProductIdByMemberId(Integer memberId) {
+        QWishEntity wish = QWishEntity.wishEntity;
+
+        return jpaQueryFactory
+            .select(wish.product.productId)
+            .from(wish)
+            .where(wish.member.memberId.eq(memberId))
+            .fetch();
     }
 }

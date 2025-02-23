@@ -35,20 +35,23 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findRandomProductBrief(Pageable pageable,
-        List<Integer> categoryIdList) {
+        List<Integer> categoryIdList, Integer memberId) {
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
             categoryIdList);
-        return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList);
+        return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList,
+            memberId);
     }
 
     public Slice<ProductWithWishResponse> findRecommendProductBriefBySkinType(Pageable pageable,
-        Integer skinTypeId) {
-        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId);
+        Integer skinTypeId, Integer memberId) {
+        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId,
+            memberId);
     }
 
     public Slice<ProductWithWishResponse> findProductBriefByPrice(Pageable pageable,
-        Integer minPrice, Integer maxPrice) {
-        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice);
+        Integer minPrice, Integer maxPrice, Integer memberId) {
+        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice,
+            memberId);
     }
 
     public List<ProductBriefResponse> findSearchProductIndex(String word, MemberEntity member) {
@@ -76,8 +79,7 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findMemberProductWishList(Integer memberId,
-        Boolean isSkinType,
-        Pageable pageable) {
+        Boolean isSkinType, Pageable pageable) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
             pageable);
     }

@@ -31,8 +31,10 @@ public class ProductController {
 
     @GetMapping("/recommend/random")
     public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
+        @AuthenticationPrincipal MemberEntity member,
         @RequestParam(value = "categoryId") List<Integer> categoryIdList) {
-        return Response.success(productService.findRandomProductBrief(pageable, categoryIdList));
+        return Response.success(productService.findRandomProductBrief(pageable, categoryIdList,
+            member.getMemberId()));
     }
 
     @GetMapping("/recommend/skin-type")
@@ -43,17 +45,20 @@ public class ProductController {
         Integer skinTypeId = member.getSkinTypeEntity() == null ?
             skinTypeService.getRandomSkinTypeId() : member.getSkinTypeEntity().getSkinTypeId();
         return Response.success(
-            productService.findRecommendProductBriefBySkinType(pageable, skinTypeId));
+            productService.findRecommendProductBriefBySkinType(pageable, skinTypeId,
+                member.getMemberId()));
     }
 
     @GetMapping("/price")
     public Response<Slice<ProductWithWishResponse>> findProductBriefByCost(
+        @AuthenticationPrincipal MemberEntity member,
         @RequestParam(value = "min-price") Integer minPrice,
         @RequestParam(value = "max-price") Integer maxPrice,
         Pageable pageable
     ) {
         return Response.success(
-            productService.findProductBriefByPrice(pageable, minPrice, maxPrice));
+            productService.findProductBriefByPrice(pageable, minPrice, maxPrice,
+                member.getMemberId()));
     }
 
     @PostMapping("/search")
