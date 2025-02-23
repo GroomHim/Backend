@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    public Response<List<ProductBriefResponse>> findSearchProductIndex(
+    public Response<List<ProductWithWishResponse>> findSearchProductIndex(
         @AuthenticationPrincipal MemberEntity member, @RequestParam String word) {
         return Response.success(productService.findSearchProductIndex(word, member));
     }

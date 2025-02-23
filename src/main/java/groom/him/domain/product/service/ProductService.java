@@ -12,6 +12,7 @@ import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.search.models.entity.SearchEntity;
 import groom.him.domain.search.repository.SearchRepository;
+import groom.him.domain.wish.repository.WishRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
     private final SearchRepository searchRepository;
+    private final WishRepository wishRepository;
 
     public ProductEntity findById(Integer productId) {
         return productRepository.findById(productId).orElseThrow(
@@ -54,7 +56,7 @@ public class ProductService {
             memberId);
     }
 
-    public List<ProductBriefResponse> findSearchProductIndex(String word, MemberEntity member) {
+    public List<ProductWithWishResponse> findSearchProductIndex(String word, MemberEntity member) {
         if (searchRepository.countByMember_MemberId(member.getMemberId()) < RECENT_WORD_CNT) {
             SearchEntity search = SearchEntity.builder()
                 .member(member)
@@ -62,9 +64,17 @@ public class ProductService {
                 .build();
             searchRepository.save(search);
         }
-        List<ProductBriefResponse> list = new ArrayList<>();
-        productRepository.findSearchProductIndex(word).stream()
-            .map(ProductBriefResponse::of).forEach(list::add);
+        List<ProductWithWishResponse> list = new ArrayList<>();
+        List<ProductEntity> productList = productRepository.findSearchProductIndex(word);
+
+        for (ProductEntity product : productList) {
+            boolean isWished = wishRepository.existsByMember_MemberIdAndProduct_ProductId(
+                member.getMemberId(), product.getProductId());
+            ProductWithWishResponse productWithWishResponse = new ProductWithWishResponse(
+                ProductBriefResponse.of(product), isWished);
+            list.add(productWithWishResponse);
+        }
+
         return list;
     }
 
