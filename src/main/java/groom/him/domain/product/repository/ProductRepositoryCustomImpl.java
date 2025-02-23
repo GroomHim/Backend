@@ -6,6 +6,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.category.enums.SortType;
@@ -74,7 +75,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
-        List<Integer> target) {
+        List<Integer> subCategoryList) {
         QProductEntity product = QProductEntity.productEntity;
         QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
         QWishEntity wish = QWishEntity.wishEntity;
@@ -87,7 +88,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
-            .where(productExhibitCategoryLink.product.productId.in(target))
+            .where(productExhibitCategoryLink.productExhibitCategoryId.in(subCategoryList))
             .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
             .offset(pageable.getOffset())
             .limit(limit)
@@ -107,7 +108,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .where(product.productId.eq(productId))
             .fetchOne();
-        
+
         Boolean isWish = IsWishByMemberIdAndProductId(memberId, productId);
 
         List<String> mainImageList = getProductImageListByImgType(productId, ImgType.MAIN);
@@ -185,7 +186,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         List<ProductWithWishResponse> content = jpaQueryFactory
             .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
-            .join(orderDetail).on(orderDetail.product.productId.eq(product.productId))
+            .leftJoin(orderDetail).on(orderDetail.product.productId.eq(product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(product.discountedPrice.between(minPrice, maxPrice))
             .groupBy(product.productId)
