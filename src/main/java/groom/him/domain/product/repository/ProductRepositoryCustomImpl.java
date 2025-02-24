@@ -145,6 +145,28 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public Slice<ProductWithWishResponse> findProductListByBrand(Pageable pageable,
+        String brandName, Integer memberId) {
+        QProductEntity product = QProductEntity.productEntity;
+        QWishEntity wish = QWishEntity.wishEntity;
+
+        int limit = pageable.getPageSize() + 1;
+
+        List<ProductWithWishResponse> content = jpaQueryFactory
+            .select(getProductWithWishResponseConstructor(product, wish))
+            .from(product)
+            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
+            .where(product.brand.enBrandName.eq(brandName))
+            .offset(pageable.getOffset())
+            .limit(limit)
+            .fetch();
+
+        boolean hasNext = isHasNext(pageable, content);
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
     public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
         Pageable pageable, Integer skinType) {
         QProductEntity product = QProductEntity.productEntity;
