@@ -31,6 +31,12 @@ public class ProductService {
     private final SearchRepository searchRepository;
     private final WishRepository wishRepository;
 
+    public void checkProductExist(Integer productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST);
+        }
+    }
+
     public ProductEntity findById(Integer productId) {
         return productRepository.findById(productId).orElseThrow(
             () -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
