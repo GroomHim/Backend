@@ -7,6 +7,7 @@ import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
+import groom.him.domain.product.service.BrandService;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ProductController {
     private final ProductService productService;
     private final SkinTypeService skinTypeService;
     private final ExhibitCategoryService exhibitCategoryService;
+    private final BrandService brandService;
 
     @GetMapping("/recommend/random")
     public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
@@ -71,6 +73,7 @@ public class ProductController {
     public Response<ProductDetailResponse> findProductDetail(
         @AuthenticationPrincipal MemberEntity member,
         @PathVariable("productId") Integer productId) {
+        productService.checkProductExist(productId);
         return Response.success(
             productService.findProductDetailByProductId(member.getMemberId(), productId));
     }
@@ -94,9 +97,10 @@ public class ProductController {
     @GetMapping("/brand/{brandName}")
     public Response<Slice<ProductWithWishResponse>> findProductListByBrand(
         @AuthenticationPrincipal MemberEntity member,
-        @PathVariable("brandName") String brandName,
+        @PathVariable("brandName") String enBrandName,
         Pageable pageable) {
+        brandService.checkBrandExistByEnBrandName(enBrandName);
         return Response.success(
-            productService.findProductListByBrand(pageable, brandName, member.getMemberId()));
+            productService.findProductListByBrand(pageable, enBrandName, member.getMemberId()));
     }
 }
