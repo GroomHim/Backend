@@ -259,6 +259,18 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return hasNext;
     }
 
+    private Expression<Boolean> isProductWished(QWishEntity wish) {
+        return wish.product.productId.isNotNull();
+    }
+
+    private ConstructorExpression<ProductWithWishResponse> getProductWithWishResponseConstructor(
+        QProductEntity product, QWishEntity wish) {
+        return Projections.constructor(
+            ProductWithWishResponse.class,
+            getProductBriefResponseConstructor(product), isProductWished(wish)
+        );
+    }
+
     private OrderSpecifier<Integer> orderBySaleQuantity(QOrderDetailEntity orderDetail) {
         return orderDetail.quantity.sum().desc();
     }

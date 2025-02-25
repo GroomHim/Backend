@@ -5,7 +5,6 @@ import groom.him.core.dto.Response;
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;
-import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v1/products")
 public class ProductController {
+
     private final ProductService productService;
     private final SkinTypeService skinTypeService;
     private final ExhibitCategoryService exhibitCategoryService;
@@ -51,6 +51,7 @@ public class ProductController {
 
     @GetMapping("/price")
     public Response<Slice<ProductWithWishResponse>> findProductBriefByCost(
+        @AuthenticationPrincipal MemberEntity member,
         @RequestParam(value = "minPrice") Integer minPrice,
         @RequestParam(value = "maxPrice") Integer maxPrice,
         Pageable pageable
