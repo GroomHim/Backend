@@ -12,6 +12,7 @@ import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.search.models.entity.SearchEntity;
 import groom.him.domain.search.repository.SearchRepository;
+import groom.him.domain.wish.repository.WishRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
     private final SearchRepository searchRepository;
+    private final WishRepository wishRepository;
 
     public ProductEntity findById(Integer productId) {
         return productRepository.findById(productId).orElseThrow(
@@ -35,23 +37,26 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findRandomProductBrief(Pageable pageable,
-        List<Integer> categoryIdList) {
+        List<Integer> categoryIdList, Integer memberId) {
         List<Integer> subCategoryIdList = exhibitCategoryRepository.getLeafCategoryIdByTargetCategoryId(
             categoryIdList);
-        return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList);
+        return productRepository.findRandomProductByCategoryId(pageable, subCategoryIdList,
+            memberId);
     }
 
     public Slice<ProductWithWishResponse> findRecommendProductBriefBySkinType(Pageable pageable,
-        Integer skinTypeId) {
-        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId);
+        Integer skinTypeId, Integer memberId) {
+        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId,
+            memberId);
     }
 
     public Slice<ProductWithWishResponse> findProductBriefByPrice(Pageable pageable,
-        Integer minPrice, Integer maxPrice) {
-        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice);
+        Integer minPrice, Integer maxPrice, Integer memberId) {
+        return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice,
+            memberId);
     }
 
-    public List<ProductBriefResponse> findSearchProductIndex(String word, MemberEntity member) {
+    public List<ProductWithWishResponse> findSearchProductIndex(String word, MemberEntity member) {
         if (searchRepository.countByMember_MemberId(member.getMemberId()) < RECENT_WORD_CNT) {
             SearchEntity search = SearchEntity.builder()
                 .member(member)
@@ -59,9 +64,17 @@ public class ProductService {
                 .build();
             searchRepository.save(search);
         }
-        List<ProductBriefResponse> list = new ArrayList<>();
-        productRepository.findSearchProductIndex(word).stream()
-            .map(ProductBriefResponse::of).forEach(list::add);
+        List<ProductWithWishResponse> list = new ArrayList<>();
+        List<ProductEntity> productList = productRepository.findSearchProductIndex(word);
+
+        for (ProductEntity product : productList) {
+            boolean isWished = wishRepository.existsByMember_MemberIdAndProduct_ProductId(
+                member.getMemberId(), product.getProductId());
+            ProductWithWishResponse productWithWishResponse = new ProductWithWishResponse(
+                ProductBriefResponse.of(product), isWished);
+            list.add(productWithWishResponse);
+        }
+
         return list;
     }
 
@@ -76,8 +89,7 @@ public class ProductService {
     }
 
     public Slice<ProductWithWishResponse> findMemberProductWishList(Integer memberId,
-        Boolean isSkinType,
-        Pageable pageable) {
+        Boolean isSkinType, Pageable pageable) {
         return productRepository.findMemberWishProductBriefBySkinType(memberId, isSkinType,
             pageable);
     }

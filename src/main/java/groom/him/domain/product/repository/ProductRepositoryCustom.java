@@ -9,16 +9,16 @@ import org.springframework.data.domain.Slice;
 
 public interface ProductRepositoryCustom {
     Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
-        Integer skinType);
+        Integer skinType, Integer memberId);
 
     Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable, Integer minPrice,
-        Integer maxPrice);
+        Integer maxPrice, Integer memberId);
 
     Slice<ProductWithWishResponse> findMemberWishProductBriefBySkinType(Integer memberId,
         Boolean isSkinType, Pageable pageable);
 
     Slice<ProductWithWishResponse> findRandomProductByCategoryId(Pageable pageable,
-        List<Integer> target);
+        List<Integer> target, Integer memberId);
 
     ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId);
 
