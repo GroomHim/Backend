@@ -53,4 +53,7 @@ public class ProductEntity extends AuditingFields {
     @NotNull
     @Column(name = "delivery_info", length = 50)
     private String deliveryInfo;
+    
+    @Column(name = "purchase_site_url", length = 2048)
+    private String purchaseSiteUrl;
 }

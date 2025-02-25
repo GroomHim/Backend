@@ -66,10 +66,10 @@ public class ProductController {
         return Response.success(productService.findSearchProductIndex(word, member));
     }
 
-    @GetMapping("/{product-id}/detail")
+    @GetMapping("/{productId}/detail")
     public Response<ProductDetailResponse> findProductDetail(
         @AuthenticationPrincipal MemberEntity member,
-        @PathVariable("product-id") Integer productId) {
+        @PathVariable("productId") Integer productId) {
         return Response.success(
             productService.findProductDetailByProductId(member.getMemberId(), productId));
     }

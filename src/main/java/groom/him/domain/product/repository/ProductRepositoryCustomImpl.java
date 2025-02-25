@@ -305,7 +305,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             ProductResponse.class,
             product.productId, product.productName, product.price, product.discountRate,
             product.discountedPrice, product.brand.brandName, product.ingredients,
-            product.deliveryInfo
+            product.deliveryInfo, product.purchaseSiteUrl
         );
     }
 
