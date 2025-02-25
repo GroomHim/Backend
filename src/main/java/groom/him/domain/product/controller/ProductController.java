@@ -7,6 +7,7 @@ import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
+import groom.him.domain.product.service.BrandService;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ProductController {
     private final ProductService productService;
     private final SkinTypeService skinTypeService;
     private final ExhibitCategoryService exhibitCategoryService;
+    private final BrandService brandService;
 
     @GetMapping("/recommend/random")
     public Response<Slice<ProductWithWishResponse>> findRandomProductBrief(Pageable pageable,
@@ -97,6 +99,7 @@ public class ProductController {
         @AuthenticationPrincipal MemberEntity member,
         @PathVariable("brandName") String brandName,
         Pageable pageable) {
+        brandService.checkBrandExist(brandName);
         return Response.success(
             productService.findProductListByBrand(pageable, brandName, member.getMemberId()));
     }
