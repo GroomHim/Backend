@@ -71,6 +71,7 @@ public class ProductController {
     public Response<ProductDetailResponse> findProductDetail(
         @AuthenticationPrincipal MemberEntity member,
         @PathVariable("productId") Integer productId) {
+        productService.checkProductExist(productId);
         return Response.success(
             productService.findProductDetailByProductId(member.getMemberId(), productId));
     }
