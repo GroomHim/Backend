@@ -97,10 +97,10 @@ public class ProductController {
     @GetMapping("/brand/{brandName}")
     public Response<Slice<ProductWithWishResponse>> findProductListByBrand(
         @AuthenticationPrincipal MemberEntity member,
-        @PathVariable("brandName") String brandName,
+        @PathVariable("brandName") String enBrandName,
         Pageable pageable) {
-        brandService.checkBrandExist(brandName);
+        brandService.checkBrandExistByEnBrandName(enBrandName);
         return Response.success(
-            productService.findProductListByBrand(pageable, brandName, member.getMemberId()));
+            productService.findProductListByBrand(pageable, enBrandName, member.getMemberId()));
     }
 }

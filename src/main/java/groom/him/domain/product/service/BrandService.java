@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class BrandService {
     private final BrandRepository brandRepository;
 
-    public void checkBrandExist(String brandName) {
+    public void checkBrandExistByEnBrandName(String brandName) {
         if (!brandRepository.existsByEnBrandName(brandName)) {
             throw new BrandException(BrandErrorCode.BRAND_NOT_EXIST);
         }
