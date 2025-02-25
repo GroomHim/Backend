@@ -24,4 +24,7 @@ public interface ProductRepositoryCustom {
 
     Slice<ProductWithWishResponse> findProductListByCategoryId(Pageable pageable,
         Integer categoryId, SortType sortType, Integer memberId);
+
+    Slice<ProductWithWishResponse> findProductListByBrand(Pageable pageable, String brandName,
+        Integer memberId);
 }

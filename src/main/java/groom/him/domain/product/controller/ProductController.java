@@ -51,9 +51,8 @@ public class ProductController {
 
     @GetMapping("/price")
     public Response<Slice<ProductWithWishResponse>> findProductBriefByCost(
-        @AuthenticationPrincipal MemberEntity member,
-        @RequestParam(value = "min-price") Integer minPrice,
-        @RequestParam(value = "max-price") Integer maxPrice,
+        @RequestParam(value = "minPrice") Integer minPrice,
+        @RequestParam(value = "maxPrice") Integer maxPrice,
         Pageable pageable
     ) {
         return Response.success(
@@ -89,5 +88,14 @@ public class ProductController {
         return Response.success(
             productService.findProductListByCategory(pageable, categoryId, sortType,
                 member.getMemberId()));
+    }
+
+    @GetMapping("/brand/{brandName}")
+    public Response<Slice<ProductWithWishResponse>> findProductListByBrand(
+        @AuthenticationPrincipal MemberEntity member,
+        @PathVariable("brandName") String brandName,
+        Pageable pageable) {
+        return Response.success(
+            productService.findProductListByBrand(pageable, brandName, member.getMemberId()));
     }
 }
