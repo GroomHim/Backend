@@ -20,4 +20,8 @@ public class SearchService {
         searchRepository.findTop5ByMember_MemberIdOrderByRegDtDesc(member.getMemberId()).forEach(entity -> list.add(entity.getSearchWord()));
         return list;
     }
+
+    public void deleteSearch(Long searchId){
+        searchRepository.deleteById(searchId);
+    }
 }
