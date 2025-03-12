@@ -18,6 +18,6 @@ public class SearchController {
   @DeleteMapping("/{searchId}")
   public Response deleteSearch(@PathVariable Long searchId){
     searchService.deleteSearch(searchId);
-    return Response.success(HttpStatus.CREATED.value());
+    return Response.success(HttpStatus.OK.value());
   }
 }

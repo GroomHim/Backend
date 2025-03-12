@@ -1,8 +1,8 @@
 package groom.him.domain.search.service;
 
 import groom.him.domain.member.models.entity.MemberEntity;
-import groom.him.domain.search.models.dto.SearchResponse;
-import groom.him.domain.search.models.entity.SearchEntity;
+import groom.him.domain.search.exception.SearchException;
+import groom.him.domain.search.models.enums.SearchErrorCode;
 import groom.him.domain.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ public class SearchService {
     }
 
     public void deleteSearch(Long searchId){
-        searchRepository.deleteById(searchId);
+        if(searchRepository.findById(searchId).isEmpty()) throw new SearchException(SearchErrorCode.SEARCH_ID_NOT_EXIST);
+      searchRepository.deleteById(searchId);
     }
 }
