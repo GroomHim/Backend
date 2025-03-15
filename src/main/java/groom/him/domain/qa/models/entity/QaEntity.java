@@ -1,6 +1,6 @@
 package groom.him.domain.qa.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.qa.models.converters.QaStatusConverter;
 import groom.him.domain.qa.models.enums.QaStatus;

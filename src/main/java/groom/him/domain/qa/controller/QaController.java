@@ -1,6 +1,6 @@
 package groom.him.domain.qa.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.qa.models.dto.request.QaRequest;
 import groom.him.domain.qa.models.dto.response.QaCategoryResponse;

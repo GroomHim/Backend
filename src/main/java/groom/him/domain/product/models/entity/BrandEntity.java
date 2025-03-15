@@ -1,6 +1,6 @@
 package groom.him.domain.product.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

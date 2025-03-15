@@ -1,7 +1,7 @@
 package groom.him.domain.product.models.entity;
 
-import groom.him.common.models.entity.RegisterDateFields;
-import groom.him.common.models.entity.SkinTypeEntity;
+import groom.him.core.models.entity.RegisterDateFields;
+import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

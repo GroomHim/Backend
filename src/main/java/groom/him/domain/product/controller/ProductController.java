@@ -1,7 +1,7 @@
 package groom.him.domain.product.controller;
 
-import groom.him.common.service.SkinTypeService;
-import groom.him.core.dto.Response;
+import groom.him.domain.skinType.service.SkinTypeService;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;

@@ -1,6 +1,6 @@
 package groom.him.domain.member.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.request.ModifyPasswordRequest;
 import groom.him.domain.member.models.dto.request.ValidatePasswordRequest;

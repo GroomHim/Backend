@@ -1,0 +1,50 @@
+package groom.him.core.models.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.springframework.data.domain.Slice;
+
+@JsonInclude(Include.NON_NULL)
+public record Response<T>(
+        Integer statusCode,
+        Meta meta,
+        T data
+) {
+    private static final int SUCCESS_HTTP_STATUS = 200;
+
+    public Response(Integer statusCode, T data) {
+        this(statusCode, null, data);
+    }
+
+    public Response(Integer statusCode) {
+        this(statusCode, null, null);
+    }
+
+    public static Response<Integer> success() {
+        return success(SUCCESS_HTTP_STATUS);
+    }
+
+    public static <T> Response<T> success(T data) {
+        return success(SUCCESS_HTTP_STATUS, data);
+    }
+
+    public static <T> Response<T> success(int httpStatus, T data) {
+        if (data instanceof Slice<?>) {
+            Slice<?> slice = (Slice<?>) data;
+
+            Meta meta = new Meta(slice.getPageable().getOffset(), slice.getNumberOfElements(),
+                    slice.isLast(), slice.getSort().isSorted());
+            return new Response<>(httpStatus, meta, (T) slice.getContent());
+        }
+
+        return new Response<>(httpStatus, data);
+    }
+
+    public record Meta(
+            long offset,
+            int numOfElements,
+            boolean last,
+            boolean sorted
+    ) {
+    }
+}

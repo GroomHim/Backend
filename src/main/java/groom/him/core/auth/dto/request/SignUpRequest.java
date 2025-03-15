@@ -1,6 +1,6 @@
 package groom.him.core.auth.dto.request;
 
-import groom.him.common.models.constant.Gender;
+import groom.him.core.models.constant.Gender;
 
 public record SignUpRequest(
         String ci,

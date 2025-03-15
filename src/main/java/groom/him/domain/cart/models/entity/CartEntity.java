@@ -1,6 +1,6 @@
 package groom.him.domain.cart.models.entity;
 
-import groom.him.common.models.entity.RegisterDateFields;
+import groom.him.core.models.entity.RegisterDateFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.entity.ProductEntity;
 import jakarta.persistence.*;

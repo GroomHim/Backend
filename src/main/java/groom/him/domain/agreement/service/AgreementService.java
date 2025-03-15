@@ -1,8 +1,8 @@
 package groom.him.domain.agreement.service;
 
-import groom.him.core.model.member.exception.MemberErrorCode;
-import groom.him.core.model.member.exception.MemberException;
-import groom.him.core.model.member.repository.MemberRepository;
+import groom.him.domain.member.exception.MemberErrorCode;
+import groom.him.domain.member.exception.MemberException;
+import groom.him.domain.member.repository.MemberRepository;
 import groom.him.domain.agreement.models.dto.CreateAgreementRequest;
 import groom.him.domain.agreement.models.entity.AgreementEntity;
 import groom.him.domain.agreement.repository.AgreementRepository;

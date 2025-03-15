@@ -1,7 +1,7 @@
 package groom.him.domain.member.models.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import groom.him.common.models.constant.Gender;
+import groom.him.core.models.constant.Gender;
 import groom.him.domain.member.models.entity.MemberEntity;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;

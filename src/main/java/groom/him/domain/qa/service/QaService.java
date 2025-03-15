@@ -1,8 +1,8 @@
 package groom.him.domain.qa.service;
 
-import groom.him.core.model.member.exception.MemberErrorCode;
-import groom.him.core.model.member.exception.MemberException;
-import groom.him.core.model.member.repository.MemberRepository;
+import groom.him.domain.member.exception.MemberErrorCode;
+import groom.him.domain.member.exception.MemberException;
+import groom.him.domain.member.repository.MemberRepository;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.qa.exception.QaException;
 import groom.him.domain.qa.models.dto.request.QaRequest;

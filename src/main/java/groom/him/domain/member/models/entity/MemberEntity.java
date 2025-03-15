@@ -1,9 +1,9 @@
 package groom.him.domain.member.models.entity;
 
-import groom.him.common.models.constant.Gender;
-import groom.him.common.models.constant.Role;
-import groom.him.common.models.entity.AuditingFields;
-import groom.him.common.models.entity.SkinTypeEntity;
+import groom.him.core.models.constant.Gender;
+import groom.him.core.models.constant.Role;
+import groom.him.core.models.entity.AuditingFields;
+import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.data.Password;
 import jakarta.persistence.*;

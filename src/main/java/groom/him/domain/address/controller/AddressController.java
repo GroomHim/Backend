@@ -1,6 +1,6 @@
 package groom.him.domain.address.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.address.models.dto.request.AddAddressRequest;
 import groom.him.domain.address.models.dto.request.DeleteAddressListRequest;
 import groom.him.domain.address.models.dto.request.ModifyAddressRequest;

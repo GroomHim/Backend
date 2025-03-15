@@ -1,7 +1,7 @@
 package groom.him.domain.qa.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import groom.him.common.models.entity.RegisterDateFields;
+import groom.him.core.models.entity.RegisterDateFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

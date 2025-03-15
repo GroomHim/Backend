@@ -1,6 +1,6 @@
 package groom.him.domain.order.models.entity;
 
-import groom.him.common.models.entity.RegisterDateFields;
+import groom.him.core.models.entity.RegisterDateFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

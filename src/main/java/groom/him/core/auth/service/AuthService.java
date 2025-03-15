@@ -1,14 +1,14 @@
 package groom.him.core.auth.service;
 
-import groom.him.common.models.constant.Role;
+import groom.him.core.models.constant.Role;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.exception.CommonErrorCode;
 import groom.him.core.exception.CommonException;
-import groom.him.core.model.member.exception.MemberErrorCode;
-import groom.him.core.model.member.exception.MemberException;
-import groom.him.core.model.member.repository.MemberRepository;
+import groom.him.domain.member.exception.MemberErrorCode;
+import groom.him.domain.member.exception.MemberException;
+import groom.him.domain.member.repository.MemberRepository;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;

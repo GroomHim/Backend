@@ -1,6 +1,6 @@
 package groom.him.domain.address.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.address.models.dto.request.ModifyAddressRequest;
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;

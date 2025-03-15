@@ -1,7 +1,7 @@
 package groom.him.domain.category.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

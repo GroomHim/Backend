@@ -1,6 +1,6 @@
 package groom.him.domain.faq.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.core.common.converters.IsPublicConverter;
 import groom.him.core.common.enums.IsPublic;
 import jakarta.persistence.*;

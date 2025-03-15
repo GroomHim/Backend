@@ -1,6 +1,6 @@
 package groom.him.domain.search.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

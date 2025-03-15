@@ -1,6 +1,6 @@
 package groom.him.domain.qa.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

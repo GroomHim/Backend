@@ -1,6 +1,6 @@
 package groom.him.domain.order.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.order.models.enums.OrderStatus;
 import groom.him.domain.product.models.entity.ProductEntity;
 import jakarta.persistence.*;

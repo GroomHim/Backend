@@ -1,6 +1,6 @@
 package groom.him.domain.order.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.order.models.dto.request.AddOrderRequest;
 import groom.him.domain.order.models.dto.request.ModifyOrderDetailStatusRequest;

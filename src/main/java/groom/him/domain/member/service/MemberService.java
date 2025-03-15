@@ -1,10 +1,10 @@
 package groom.him.domain.member.service;
 
-import groom.him.common.models.entity.SkinTypeEntity;
+import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import groom.him.core.auth.service.AuthService;
-import groom.him.core.model.member.exception.MemberErrorCode;
-import groom.him.core.model.member.exception.MemberException;
-import groom.him.core.model.member.repository.MemberRepository;
+import groom.him.domain.member.exception.MemberErrorCode;
+import groom.him.domain.member.exception.MemberException;
+import groom.him.domain.member.repository.MemberRepository;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.response.MemberResponse;
 import groom.him.domain.member.models.entity.MemberEntity;

@@ -1,6 +1,6 @@
 package groom.him.domain.point.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.point.models.enums.PointHistoryType;
 import jakarta.persistence.Column;

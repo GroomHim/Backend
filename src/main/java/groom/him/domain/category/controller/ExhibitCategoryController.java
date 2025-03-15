@@ -1,6 +1,6 @@
 package groom.him.domain.category.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.category.models.dto.response.ExhibitCategoryResponse;
 import groom.him.domain.category.service.ExhibitCategoryService;
 import java.util.List;

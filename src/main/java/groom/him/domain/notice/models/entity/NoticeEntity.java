@@ -1,6 +1,6 @@
 package groom.him.domain.notice.models.entity;
 
-import groom.him.common.models.entity.AuditingFields;
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.core.common.converters.IsPublicConverter;
 import groom.him.core.common.enums.IsPublic;
 import groom.him.domain.member.models.entity.MemberEntity;

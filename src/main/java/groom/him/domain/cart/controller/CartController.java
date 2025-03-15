@@ -1,6 +1,6 @@
 package groom.him.domain.cart.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.cart.models.dto.request.ModifyCartCountRequest;
 import groom.him.domain.cart.models.dto.response.CartResponse;
 import groom.him.domain.cart.models.dto.response.CartsResponse;

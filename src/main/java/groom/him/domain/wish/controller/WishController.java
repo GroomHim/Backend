@@ -1,6 +1,6 @@
 package groom.him.domain.wish.controller;
 
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import groom.him.domain.member.models.dto.response.CountResponse;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;

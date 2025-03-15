@@ -2,7 +2,7 @@ package groom.him.domain.faq.controller;
 
 import groom.him.domain.faq.service.FaqService;
 import groom.him.domain.faq.models.dto.response.FaqResponse;
-import groom.him.core.dto.Response;
+import groom.him.core.models.dto.Response;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
