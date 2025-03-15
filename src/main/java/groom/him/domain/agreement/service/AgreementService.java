@@ -19,7 +19,7 @@ public class AgreementService {
     public AgreementEntity addAgreement(CreateAgreementRequest request){
         MemberEntity member = memberRepository.findById(request.memberId()).orElseThrow(() -> new MemberException(
             MemberErrorCode.MEMBER_NOT_EXIST));
-        AgreementEntity agreement = request.from(request);
+        AgreementEntity agreement = CreateAgreementRequest.from(request);
         agreement.modifyMember(member);
         return agreementRepository.save(agreement);
     }
