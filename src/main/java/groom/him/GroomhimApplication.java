@@ -7,8 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GroomhimApplication {
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(GroomhimApplication.class);
-        app.setAdditionalProfiles("dev");
+        var app = new SpringApplication(GroomhimApplication.class);
         app.run(args);
     }
 }
