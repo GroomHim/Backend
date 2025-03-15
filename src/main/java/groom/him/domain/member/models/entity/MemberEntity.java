@@ -48,10 +48,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private String name;
 
     @NotNull
-    @Column(length = 20, name = "phone_number")
-    private String phoneNumber;
-
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 1, name = "gender")
     private Gender gender;
@@ -67,10 +63,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @NotNull
     @Column(length = 50, name = "email")
     private String email;
-
-    @NotNull
-    @Column(name = "ci")
-    private String ci;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -90,28 +82,9 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @Column(name = "point")
-    private Integer point = 0;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(role.toString().split(","))
-            .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password.getEncryptedPassword();
-    }
 
     public String getSalt() {
         return this.password.getSalt();
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
     }
 
     @Builder
@@ -121,12 +94,10 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         String loginId,
         Password password,
         String name,
-        String phoneNumber,
         Gender gender,
         String nickname,
         String birth,
         String email,
-        String ci,
         Provider provider,
         String socialTokenId,
         String refreshToken,
@@ -138,12 +109,10 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
-        this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.nickname = nickname;
         this.birth = birth;
         this.email = email;
-        this.ci = ci;
         this.provider = provider;
         this.socialTokenId = socialTokenId;
         this.refreshToken = refreshToken;
@@ -164,11 +133,24 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.email = email;
     }
 
-    public void changePoint(Integer usedPoint) {
-        this.point = usedPoint;
-    }
-
     public void changeSkinType(SkinTypeEntity skinTypeEntity) {
         this.skinTypeEntity = skinTypeEntity;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(role.toString().split(","))
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password.getEncryptedPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
     }
 }
