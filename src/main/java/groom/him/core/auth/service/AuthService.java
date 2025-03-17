@@ -129,7 +129,6 @@ public class AuthService implements UserDetailsService {
                 .isCancel(false)
                 .role(Role.USER)
                 .nickname(request.nickname())
-                .phoneNumber(request.phoneNumber())
                 .provider(Provider.GROOMHIM)
                 .build();
 

@@ -75,6 +75,9 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(length = 200, name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "ci")
+    private String ci;
+
     @Column(name = "is_cancel")
     private Boolean isCancel;
 
@@ -101,6 +104,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         Provider provider,
         String socialTokenId,
         String refreshToken,
+        String ci,
         Boolean isCancel,
         Role role
     ) {
@@ -116,6 +120,7 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.provider = provider;
         this.socialTokenId = socialTokenId;
         this.refreshToken = refreshToken;
+        this.ci = ci;
         this.isCancel = isCancel;
         this.role = role;
     }
