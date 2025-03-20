@@ -11,15 +11,19 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
+import groom.him.domain.product.exception.ProductErrorCode;
+import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
+import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.QProductEntity;
 import groom.him.domain.product.models.entity.QProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.QProductImgEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
 import groom.him.domain.product.models.enums.ImgType;
+import io.jsonwebtoken.lang.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -126,15 +130,14 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         Integer categoryId, SortType sortType, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
-        QWishEntity wish = QWishEntity.wishEntity;
+        QWishEntity wish = QWishEntity.wishEntity; // 위시 엔티티
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductBriefResponse> productBriefList = jpaQueryFactory
-            .select(getProductBriefResponseConstructor(product))
+        List<ProductWithWishResponse> productBriefList = jpaQueryFactory
+            .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
-            .leftJoin(productExhibitCategoryLink)
-            .on(product.productId.eq(productExhibitCategoryLink.product.productId))
+            .leftJoin(productExhibitCategoryLink).on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.eq(categoryId))
             .groupBy(product.productId)
@@ -143,12 +146,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
-        List<ProductWithWishResponse> content = getProductWithWishResponses(memberId,
-            productBriefList);
+        boolean hasNext = isHasNext(pageable, productBriefList);
 
-        boolean hasNext = isHasNext(pageable, content);
-
-        return new SliceImpl<>(content, pageable, hasNext);
+        return new SliceImpl<>(productBriefList, pageable, hasNext);
     }
 
     @Override
@@ -334,7 +334,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     private List<Integer> getWishProductIdByMemberId(Integer memberId) {
-        QWishEntity wish = QWishEntity.wishEntity;
+        QWishEntity wish = QWishEntity.wishEntity; //wish 엔티티 두번쨰
 
         return jpaQueryFactory
             .select(wish.product.productId)
