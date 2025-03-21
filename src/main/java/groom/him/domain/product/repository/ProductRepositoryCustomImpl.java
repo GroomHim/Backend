@@ -23,6 +23,7 @@ import groom.him.domain.product.models.entity.QProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.QProductImgEntity;
 import groom.him.domain.product.models.entity.QProductSkinTypeLinkEntity;
 import groom.him.domain.product.models.enums.ImgType;
+import groom.him.domain.skinType.models.entity.QSkinTypeEntity;
 import io.jsonwebtoken.lang.Strings;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +131,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         Integer categoryId, SortType sortType, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QProductExhibitCategoryLinkEntity productExhibitCategoryLink = QProductExhibitCategoryLinkEntity.productExhibitCategoryLinkEntity;
-        QWishEntity wish = QWishEntity.wishEntity; // 위시 엔티티
+        QWishEntity wish = QWishEntity.wishEntity;
 
         int limit = pageable.getPageSize() + 1;
 
@@ -175,20 +176,18 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
-        Pageable pageable, Integer skinType, Integer memberId) {
+        Pageable pageable, Integer skinTypeId, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
-        QWishEntity wish = QWishEntity.wishEntity;
 
         int limit = pageable.getPageSize() + 1;
-
+        System.out.println(pageable.getPageSize());
+        System.out.println(pageable.getOffset());
         List<ProductBriefResponse> productBriefList = jpaQueryFactory
             .select(getProductBriefResponseConstructor(product))
             .from(product)
-            .join(productSkinTypeLink)
-            .on(productSkinTypeLink.product.productId.eq(product.productId))
-            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
-            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinType))
+            .leftJoin(productSkinTypeLink).on(productSkinTypeLink.product.productId.eq(product.productId))
+            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
             .limit(limit)
@@ -206,14 +205,12 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     public Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable,
         Integer minPrice, Integer maxPrice, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
-        QWishEntity wish = QWishEntity.wishEntity;
 
         int limit = pageable.getPageSize() + 1;
 
         List<ProductBriefResponse> productBriefList = jpaQueryFactory
             .select(getProductBriefResponseConstructor(product))
             .from(product)
-            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(product.discountedPrice.between(minPrice, maxPrice))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
