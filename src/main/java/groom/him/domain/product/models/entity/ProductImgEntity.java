@@ -44,4 +44,16 @@ public class ProductImgEntity extends AuditingFields {
     @Enumerated(EnumType.STRING)
     @Column(name = "type", length = 10)
     private ImgType type;
+
+    protected ProductImgEntity(ProductEntity product, String imgUrl, String prio, ImgType type) {
+        this.product = product;
+        this.imgUrl = imgUrl;
+        this.prio = prio;
+        this.type = type;
+    }
+
+    public static ProductImgEntity from(ProductEntity product, String imgUrl, String prio,
+        ImgType type) {
+        return new ProductImgEntity(product, imgUrl, prio, type);
+    }
 }
