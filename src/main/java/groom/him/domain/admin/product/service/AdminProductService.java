@@ -39,7 +39,7 @@ public class AdminProductService {
             .orElseThrow(() -> new ExhibitCategoryException(CategoryErrorCode.CATEGORY_NOT_EXIST));
 
         // 1. 상품 기본 정보 저장
-        ProductEntity product = ProductEntity.from(request, brand, category);
+        ProductEntity product = ProductEntity.from(request, brand, category, null);
         ProductEntity savedProduct = productRepository.save(product);
 
         // 2. 메인 사진 업로드 & 상품 Entity 메인 사진 저장

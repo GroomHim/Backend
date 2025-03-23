@@ -47,11 +47,9 @@ public class ProductEntity extends AuditingFields {
     @Column(name = "ingredients", columnDefinition = "TEXT")
     private String ingredients;
 
-    @NotNull
     @Column(name = "img_url", length = 2048)
     private String imgUrl;
 
-    @NotNull
     @Column(name = "delivery_info", length = 50)
     private String deliveryInfo;
 
@@ -74,14 +72,14 @@ public class ProductEntity extends AuditingFields {
     }
 
     public static ProductEntity from(CreateProductRequest request, BrandEntity brand,
-        CategoryEntity category) {
+        CategoryEntity category, String imgUrl) {
         return new ProductEntity(
             request.productName(),
             request.price(),
             request.discountRate(),
             request.discountedPrice(),
             request.ingredients(),
-            null,
+            imgUrl,
             request.deliveryInfo(),
             request.purchaseSiteUrl(),
             brand,
