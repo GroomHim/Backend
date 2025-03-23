@@ -1,7 +1,7 @@
 package groom.him.domain.admin.product.controller;
 
 import groom.him.core.models.dto.Response;
-import groom.him.domain.admin.product.models.dto.response.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.service.AdminProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

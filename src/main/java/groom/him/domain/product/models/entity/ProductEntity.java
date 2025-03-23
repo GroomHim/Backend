@@ -1,7 +1,7 @@
 package groom.him.domain.product.models.entity;
 
 import groom.him.core.models.entity.AuditingFields;
-import groom.him.domain.admin.product.models.dto.response.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.category.models.entity.CategoryEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

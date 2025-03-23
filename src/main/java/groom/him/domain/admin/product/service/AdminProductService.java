@@ -1,6 +1,6 @@
 package groom.him.domain.admin.product.service;
 
-import groom.him.domain.admin.product.models.dto.response.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.category.enums.CategoryErrorCode;
 import groom.him.domain.category.exception.ExhibitCategoryException;
 import groom.him.domain.category.models.entity.CategoryEntity;

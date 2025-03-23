@@ -1,6 +1,7 @@
-package groom.him.domain.admin.product.models.dto.response;
+package groom.him.domain.admin.product.models.dto.request;
 
 import jakarta.annotation.Nullable;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public record CreateProductRequest(
@@ -14,8 +15,8 @@ public record CreateProductRequest(
     String deliveryInfo,
     @Nullable
     String purchaseSiteUrl,
-    Integer[] skinType,
-    MultipartFile[] mainImage,
-    MultipartFile[] contentImage
+    List<Integer> skinType,
+    List<MultipartFile> mainImage,
+    List<MultipartFile> contentImage
 ) {
 }
