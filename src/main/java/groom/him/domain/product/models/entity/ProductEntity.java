@@ -74,14 +74,14 @@ public class ProductEntity extends AuditingFields {
     }
 
     public static ProductEntity from(CreateProductRequest request, BrandEntity brand,
-        CategoryEntity category, String imgUrl) {
+        CategoryEntity category) {
         return new ProductEntity(
             request.productName(),
             request.price(),
             request.discountRate(),
             request.discountedPrice(),
             request.ingredients(),
-            imgUrl,
+            null,
             request.deliveryInfo(),
             request.purchaseSiteUrl(),
             brand,
