@@ -11,6 +11,8 @@ import groom.him.domain.s3.models.enums.S3ErrorCode;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +34,28 @@ public class S3Service {
     @Value("${spring.profiles.active}")
     private String profiles;
 
-    public String saveProductImage(MultipartFile image, Integer productId, ImgType type)
-        throws IOException {
-        if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
-            throw new S3Exception(S3ErrorCode.EMPTY_FILE_EXCEPTION);
+    public List<String> uploadProductImages(List<MultipartFile> multipartFiles, Integer productId,
+        ImgType type) throws IOException {
+        return uploadImages(multipartFiles, productId, type, "product");
+    }
+
+    public List<String> uploadImages(List<MultipartFile> multipartFiles, Integer id, ImgType type,
+        String path) throws IOException {
+        List<String> uploadImageUrls = new ArrayList<>();
+
+        for (MultipartFile image : multipartFiles) {
+            if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
+                throw new S3Exception(S3ErrorCode.EMPTY_FILE_EXCEPTION);
+            }
+
+            String fileName = String.format("%s/%s/%d/%s/%s-%s",
+                profiles, path, id, type, UUID.randomUUID(), image.getOriginalFilename());
+
+            String uploadImageUrl = uploadImageToS3(image, fileName);
+            uploadImageUrls.add(uploadImageUrl);
         }
-        String fileName = String.format("%s/product/%d/%s/%s-%s",
-            profiles, productId, type, UUID.randomUUID(), image.getOriginalFilename());
-        return uploadImageToS3(image, fileName);
+
+        return uploadImageUrls;
     }
 
     private String uploadImageToS3(MultipartFile image, String fileName)
