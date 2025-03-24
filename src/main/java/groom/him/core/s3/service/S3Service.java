@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 public class S3Service {
-
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -34,12 +33,14 @@ public class S3Service {
     @Value("${spring.profiles.active}")
     private String profiles;
 
+    private static final String PRODUCT = "product";
+
     public List<String> uploadProductImages(List<MultipartFile> multipartFiles, Integer productId,
         ImgType type) throws IOException {
-        return uploadImages(multipartFiles, productId, type, "product");
+        return uploadImages(multipartFiles, productId, type, PRODUCT);
     }
 
-    public List<String> uploadImages(List<MultipartFile> multipartFiles, Integer id, ImgType type,
+    private List<String> uploadImages(List<MultipartFile> multipartFiles, Integer id, ImgType type,
         String path) throws IOException {
         List<String> uploadImageUrls = new ArrayList<>();
 
@@ -58,27 +59,27 @@ public class S3Service {
         return uploadImageUrls;
     }
 
-    private String uploadImageToS3(MultipartFile image, String fileName)
-        throws IOException {
-        InputStream is = image.getInputStream();
-        byte[] bytes = IOUtils.toByteArray(is);
+    private String uploadImageToS3(MultipartFile image, String fileName) throws IOException {
+        byte[] bytes;
+
+        try (InputStream is = image.getInputStream()) {
+            bytes = IOUtils.toByteArray(is);
+        }
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(image.getContentType());
         metadata.setContentLength(bytes.length);
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        try {
-            PutObjectRequest putObjectRequest =
-                new PutObjectRequest(bucket, fileName, byteArrayInputStream, metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead);
+        try (
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)
+        ) {
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName,
+                byteArrayInputStream, metadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest);
         } catch (Exception e) {
             log.error(e.toString());
             throw new S3Exception(S3ErrorCode.PUT_OBJECT_EXCEPTION);
-        } finally {
-            byteArrayInputStream.close();
-            is.close();
         }
 
         return amazonS3.getUrl(bucket, fileName).toString();
