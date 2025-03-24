@@ -1,4 +1,4 @@
-package groom.him.domain.s3.models.enums;
+package groom.him.core.s3.models.enums;
 
 import groom.him.core.exception.HttpErrorCode;
 import lombok.Getter;

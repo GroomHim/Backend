@@ -1,4 +1,4 @@
-package groom.him.domain.s3.exception;
+package groom.him.core.s3.exception;
 
 import groom.him.core.exception.BusinessException;
 import groom.him.core.exception.HttpErrorCode;

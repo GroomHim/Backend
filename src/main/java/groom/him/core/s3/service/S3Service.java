@@ -1,4 +1,4 @@
-package groom.him.domain.s3.service;
+package groom.him.core.s3.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -6,8 +6,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
 import groom.him.domain.product.models.enums.ImgType;
-import groom.him.domain.s3.exception.S3Exception;
-import groom.him.domain.s3.models.enums.S3ErrorCode;
+import groom.him.core.s3.exception.S3Exception;
+import groom.him.core.s3.models.enums.S3ErrorCode;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
