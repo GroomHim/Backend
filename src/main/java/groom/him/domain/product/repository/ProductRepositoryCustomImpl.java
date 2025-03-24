@@ -5,6 +5,7 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -181,13 +182,12 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
 
         int limit = pageable.getPageSize() + 1;
-        System.out.println(pageable.getPageSize());
-        System.out.println(pageable.getOffset());
+
         List<ProductBriefResponse> productBriefList = jpaQueryFactory
             .select(getProductBriefResponseConstructor(product))
             .from(product)
             .leftJoin(productSkinTypeLink).on(productSkinTypeLink.product.productId.eq(product.productId))
-            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId))
+            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId))x
             .groupBy(product.productId)
             .offset(pageable.getOffset())
             .limit(limit)
@@ -331,7 +331,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     private List<Integer> getWishProductIdByMemberId(Integer memberId) {
-        QWishEntity wish = QWishEntity.wishEntity; //wish 엔티티 두번쨰
+        QWishEntity wish = QWishEntity.wishEntity;
 
         return jpaQueryFactory
             .select(wish.product.productId)
