@@ -1,5 +1,7 @@
 package groom.him.domain.product.models.entity;
 
+import groom.him.core.common.converters.IsPublicConverter;
+import groom.him.core.common.enums.IsPublic;
 import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.category.models.entity.CategoryEntity;
@@ -55,6 +57,11 @@ public class ProductEntity extends AuditingFields {
 
     @Column(name = "purchase_site_url", length = 2048)
     private String purchaseSiteUrl;
+
+    @Column(name = "is_public", length = 1)
+    @NotNull
+    @Convert(converter = IsPublicConverter.class)
+    private IsPublic isPublic = IsPublic.CLOSE;
 
     protected ProductEntity(String productName, Integer price, Float discountRate,
         Integer discountedPrice, String ingredients, String imgUrl, String deliveryInfo,
