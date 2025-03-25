@@ -7,6 +7,7 @@ import groom.him.domain.product.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +29,14 @@ public class AdminProductController {
 
     @Transactional
     @PatchMapping("/{productId}/status")
-    public Response<Integer> changeProductState(@PathVariable Integer productId) {
+    public Response<Void> changeProductState(@PathVariable Integer productId) {
         adminProductService.changeProductState(productId);
         return new Response<>(HttpStatus.OK.value());
+    }
+
+    @DeleteMapping("/{productId}")
+    public Response<Void> deleteProduct(@PathVariable Integer productId) {
+        adminProductService.deleteProduct(productId);
+        return new Response<>(HttpStatus.NO_CONTENT.value());
     }
 }

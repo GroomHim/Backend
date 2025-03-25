@@ -84,11 +84,19 @@ public class AdminProductService {
         productImageRepository.saveAll(productImgEntityList);
     }
 
+    @Transactional
     public void changeProductState(Integer productId) {
         ProductEntity product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
         product.changeState(
             product.getIsPublic().equals(IsPublic.OPEN) ? IsPublic.CLOSE : IsPublic.OPEN
         );
+    }
+
+    @Transactional
+    public void deleteProduct(Integer productId) {
+        ProductEntity product = productRepository.findByProductIdAndIsDeletedFalse(productId)
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+        product.softDelete();
     }
 }
