@@ -97,4 +97,8 @@ public class ProductEntity extends AuditingFields {
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
+
+    public void changeState(IsPublic isPublic) {
+        this.isPublic = isPublic;
+    }
 }

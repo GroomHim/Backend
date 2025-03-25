@@ -1,5 +1,6 @@
 package groom.him.domain.admin.product.service;
 
+import groom.him.core.common.enums.IsPublic;
 import groom.him.core.s3.service.S3Service;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.category.enums.CategoryErrorCode;
@@ -11,6 +12,8 @@ import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.category.repository.ProductExhibitCategoryLinkRepository;
 import groom.him.domain.product.exception.BrandErrorCode;
 import groom.him.domain.product.exception.BrandException;
+import groom.him.domain.product.exception.ProductErrorCode;
+import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.entity.BrandEntity;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
@@ -79,5 +82,13 @@ public class AdminProductService {
             productImgEntityList.add(productImgEntity);
         });
         productImageRepository.saveAll(productImgEntityList);
+    }
+
+    public void changeProductState(Integer productId) {
+        ProductEntity product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+        product.changeState(
+            product.getIsPublic().equals(IsPublic.OPEN) ? IsPublic.CLOSE : IsPublic.OPEN
+        );
     }
 }
