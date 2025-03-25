@@ -43,6 +43,7 @@ public class AdminProductService {
     public void addProduct(CreateProductRequest request) {
         BrandEntity brand = brandRepository.findById(request.brandId())
             .orElseThrow(() -> new BrandException(BrandErrorCode.BRAND_NOT_EXIST));
+
         CategoryEntity category = categoryRepository.findById(request.categoryId())
             .orElseThrow(() -> new ExhibitCategoryException(CategoryErrorCode.CATEGORY_NOT_EXIST));
 
@@ -86,8 +87,7 @@ public class AdminProductService {
 
     @Transactional
     public void changeProductState(Integer productId) {
-        ProductEntity product = productRepository.findById(productId)
-            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+        ProductEntity product = getAvailableProductEntity(productId);
         product.changeState(
             product.getIsPublic().equals(IsPublic.OPEN) ? IsPublic.CLOSE : IsPublic.OPEN
         );
@@ -95,8 +95,15 @@ public class AdminProductService {
 
     @Transactional
     public void deleteProduct(Integer productId) {
-        ProductEntity product = productRepository.findByProductIdAndIsDeletedFalse(productId)
-            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+        ProductEntity product = getAvailableProductEntity(productId);
+        if (product.getIsPublic().equals(IsPublic.OPEN)) {
+            throw new ProductException(ProductErrorCode.PRODUCT_CANNOT_DELETE);
+        }
         product.softDelete();
+    }
+
+    private ProductEntity getAvailableProductEntity(Integer productId) {
+        return productRepository.findByProductIdAndIsDeletedFalse(productId)
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
     }
 }
