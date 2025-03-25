@@ -4,6 +4,7 @@ import groom.him.core.common.converters.IsPublicConverter;
 import groom.him.core.common.enums.IsPublic;
 import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.category.models.entity.CategoryEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -108,5 +109,18 @@ public class ProductEntity extends AuditingFields {
 
     public void softDelete() {
         this.isDeleted = true;
+    }
+
+    public void modifyProduct(ModifyProductRequest request, CategoryEntity category,
+        BrandEntity brand) {
+        this.productName = request.productName();
+        this.price = request.price();
+        this.discountRate = request.discountRate();
+        this.discountedPrice = request.discountedPrice();
+        this.ingredients = request.ingredients();
+        this.deliveryInfo = request.deliveryInfo();
+        this.purchaseSiteUrl = request.purchaseSiteUrl();
+        this.brand = brand;
+        this.category = category;
     }
 }

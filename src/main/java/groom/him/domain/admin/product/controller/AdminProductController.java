@@ -2,6 +2,7 @@ package groom.him.domain.admin.product.controller;
 
 import groom.him.core.models.dto.Response;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.service.AdminProductService;
 import groom.him.domain.product.service.ProductService;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +29,6 @@ public class AdminProductController {
         return new Response<>(HttpStatus.CREATED.value());
     }
 
-    @Transactional
     @PatchMapping("/{productId}/status")
     public Response<Void> changeProductState(@PathVariable Integer productId) {
         adminProductService.changeProductState(productId);
@@ -39,4 +40,12 @@ public class AdminProductController {
         adminProductService.deleteProduct(productId);
         return new Response<>(HttpStatus.NO_CONTENT.value());
     }
+
+    @PatchMapping("/{productId}")
+    public Response<Void> modifyProduct(@RequestBody ModifyProductRequest request,
+        @PathVariable Integer productId) {
+        adminProductService.modifyProduct(request, productId);
+        return new Response<>(HttpStatus.OK.value());
+    }
+
 }

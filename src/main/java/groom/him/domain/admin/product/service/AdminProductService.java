@@ -3,6 +3,7 @@ package groom.him.domain.admin.product.service;
 import groom.him.core.common.enums.IsPublic;
 import groom.him.core.s3.service.S3Service;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.category.enums.CategoryErrorCode;
 import groom.him.domain.category.exception.ExhibitCategoryException;
 import groom.him.domain.category.models.entity.CategoryEntity;
@@ -100,6 +101,27 @@ public class AdminProductService {
             throw new ProductException(ProductErrorCode.PRODUCT_CANNOT_DELETE);
         }
         product.softDelete();
+    }
+
+    @Transactional
+    public void modifyProduct(ModifyProductRequest request, Integer productId) {
+        ProductEntity product = getAvailableProductEntity(productId);
+        BrandEntity newBrand = product.getBrand();
+        CategoryEntity newCategory = product.getCategory();
+
+        if (request.brandId() != null && !product.getBrand().getBrandId()
+            .equals(request.brandId())) {
+            newBrand = brandRepository.findById(request.brandId())
+                .orElseThrow(() -> new BrandException(BrandErrorCode.BRAND_NOT_EXIST));
+        }
+
+        if (!product.getCategory().getCategoryId().equals(request.categoryId())) {
+            newCategory = categoryRepository.findById(request.categoryId())
+                .orElseThrow(
+                    () -> new ExhibitCategoryException(CategoryErrorCode.CATEGORY_NOT_EXIST));
+        }
+
+        product.modifyProduct(request, newCategory, newBrand);
     }
 
     private ProductEntity getAvailableProductEntity(Integer productId) {
