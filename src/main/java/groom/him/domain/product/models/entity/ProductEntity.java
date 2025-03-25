@@ -93,4 +93,8 @@ public class ProductEntity extends AuditingFields {
             category
         );
     }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 }
