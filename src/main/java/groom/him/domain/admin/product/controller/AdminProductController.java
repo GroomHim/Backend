@@ -2,6 +2,7 @@ package groom.him.domain.admin.product.controller;
 
 import groom.him.core.models.dto.Response;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.service.AdminProductService;
 import groom.him.domain.product.service.ProductService;
@@ -45,6 +46,13 @@ public class AdminProductController {
     public Response<Void> modifyProduct(@RequestBody ModifyProductRequest request,
         @PathVariable Integer productId) {
         adminProductService.modifyProduct(request, productId);
+        return new Response<>(HttpStatus.OK.value());
+    }
+
+    @PatchMapping("/{productId}/image")
+    public Response<Void> modifyProductImage(@ModelAttribute ModifyProductImageRequest request,
+        @PathVariable Integer productId) {
+        adminProductService.modifyProductImage(request, productId);
         return new Response<>(HttpStatus.OK.value());
     }
 

@@ -3,6 +3,7 @@ package groom.him.domain.admin.product.service;
 import groom.him.core.common.enums.IsPublic;
 import groom.him.core.s3.service.S3Service;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
+import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.category.enums.CategoryErrorCode;
 import groom.him.domain.category.exception.ExhibitCategoryException;
@@ -26,6 +27,7 @@ import groom.him.domain.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -78,9 +80,10 @@ public class AdminProductService {
     private void saveProductImages(ProductEntity savedProduct, List<String> mainImageUrlList,
         ImgType imgType) {
         List<ProductImgEntity> productImgEntityList = new ArrayList<>();
+        AtomicInteger priority = new AtomicInteger(1);
         mainImageUrlList.forEach((imgUrl) -> {
-            ProductImgEntity productImgEntity = ProductImgEntity.from(savedProduct, imgUrl, "a",
-                imgType); // TODO: prio 처리
+            ProductImgEntity productImgEntity = ProductImgEntity.from(savedProduct, imgUrl,
+                String.valueOf(priority.getAndIncrement()), imgType); // TODO: prio 처리
             productImgEntityList.add(productImgEntity);
         });
         productImageRepository.saveAll(productImgEntityList);
@@ -122,6 +125,22 @@ public class AdminProductService {
         }
 
         product.modifyProduct(request, newCategory, newBrand);
+    }
+
+    @Transactional
+    public void modifyProductImage(ModifyProductImageRequest request, Integer productId) {
+        ProductEntity product = getAvailableProductEntity(productId);
+
+        productImageRepository.deleteAllByProduct_ProductId(productId);
+
+        List<String> mainImageUrlList = s3Service.uploadProductImages(request.mainImage(),
+            productId, ImgType.MAIN);
+        product.setImgUrl(mainImageUrlList.get(0));
+        saveProductImages(product, mainImageUrlList, ImgType.MAIN);
+
+        List<String> contentImageUrlList = s3Service.uploadProductImages(request.contentImage(),
+            productId, ImgType.CONTENT);
+        saveProductImages(product, contentImageUrlList, ImgType.CONTENT);
     }
 
     private ProductEntity getAvailableProductEntity(Integer productId) {
