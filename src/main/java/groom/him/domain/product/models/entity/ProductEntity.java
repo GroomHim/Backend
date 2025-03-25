@@ -63,6 +63,10 @@ public class ProductEntity extends AuditingFields {
     @Convert(converter = IsPublicConverter.class)
     private IsPublic isPublic = IsPublic.CLOSE;
 
+    @Column(name = "is_deleted")
+    @NotNull
+    private Boolean isDeleted = false;
+
     protected ProductEntity(String productName, Integer price, Float discountRate,
         Integer discountedPrice, String ingredients, String imgUrl, String deliveryInfo,
         String purchaseSiteUrl, BrandEntity brand, CategoryEntity category) {
@@ -100,5 +104,9 @@ public class ProductEntity extends AuditingFields {
 
     public void changeState(IsPublic isPublic) {
         this.isPublic = isPublic;
+    }
+
+    public void softDelete() {
+        this.isDeleted = true;
     }
 }
