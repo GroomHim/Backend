@@ -24,7 +24,7 @@ public class ExhibitCategoryService {
     }
 
     public void checkExhibitCategoryIsLeaf(Integer categoryId) {
-        if (!exhibitCategoryRepository.existsByExhibitCategoryIdAndIsLeafTrue(categoryId)) {
+        if(!exhibitCategoryRepository.findById(categoryId).orElseThrow(() -> new ExhibitCategoryException(CategoryErrorCode.CATEGORY_NOT_EXIST)).getIsLeaf()) {
             throw new ExhibitCategoryException(CategoryErrorCode.CATEGORY_IS_NOT_LEAF);
         }
     }
