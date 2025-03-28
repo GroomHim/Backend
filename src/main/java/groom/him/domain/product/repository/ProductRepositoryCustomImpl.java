@@ -187,7 +187,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .select(getProductBriefResponseConstructor(product))
             .from(product)
             .leftJoin(productSkinTypeLink).on(productSkinTypeLink.product.productId.eq(product.productId))
-            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId))x
+            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
             .limit(limit)
