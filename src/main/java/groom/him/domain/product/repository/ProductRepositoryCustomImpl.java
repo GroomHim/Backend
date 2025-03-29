@@ -136,7 +136,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
         int limit = pageable.getPageSize() + 1;
 
-        List<ProductWithWishResponse> productBriefList = jpaQueryFactory
+        List<ProductWithWishResponse> content = jpaQueryFactory
             .select(getProductWithWishResponseConstructor(product, wish))
             .from(product)
             .leftJoin(productExhibitCategoryLink).on(product.productId.eq(productExhibitCategoryLink.product.productId))
@@ -148,9 +148,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .limit(limit)
             .fetch();
 
-        boolean hasNext = isHasNext(pageable, productBriefList);
+        boolean hasNext = isHasNext(pageable, content);
 
-        return new SliceImpl<>(productBriefList, pageable, hasNext);
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     @Override
