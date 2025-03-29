@@ -85,7 +85,7 @@ public class ProductController {
         @RequestParam(value = "sort", required = false) SortType sortType,
         Pageable pageable
     ) {
-        exhibitCategoryService.checkExhibitCategoryIsLeaf(categoryId);
+        exhibitCategoryService.checkExhibitCategoryIsValid(categoryId);
 
         sortType = sortType == null ? SortType.SALE : sortType;
 
