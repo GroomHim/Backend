@@ -44,10 +44,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     private Password password;
 
     @NotNull
-    @Column(length = 30, name = "name")
-    private String name;
-
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 1, name = "gender")
     private Gender gender;
@@ -69,14 +65,14 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Column(length = 10, name = "provider")
     private Provider provider;
 
-    @Column(name = "social_token_id")
-    private String socialTokenId;
-
     @Column(length = 200, name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "ci")
-    private String ci;
+    @Column(name = "social_token_id")
+    private String socialTokenId;
+
+//    @Column(name = "ci")
+//    private String ci;
 
     @Column(name = "is_cancel")
     private Boolean isCancel;
@@ -84,7 +80,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-
 
     public String getSalt() {
         return this.password.getSalt();
@@ -96,15 +91,13 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         SkinTypeEntity skinType,
         String loginId,
         Password password,
-        String name,
-        Gender gender,
         String nickname,
+        Gender gender,
         String birth,
         String email,
         Provider provider,
         String socialTokenId,
         String refreshToken,
-        String ci,
         Boolean isCancel,
         Role role
     ) {
@@ -112,15 +105,13 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.skinTypeEntity = skinType;
         this.loginId = loginId;
         this.password = password;
-        this.name = name;
-        this.gender = gender;
         this.nickname = nickname;
+        this.gender = gender;
         this.birth = birth;
         this.email = email;
         this.provider = provider;
         this.socialTokenId = socialTokenId;
         this.refreshToken = refreshToken;
-        this.ci = ci;
         this.isCancel = isCancel;
         this.role = role;
     }
@@ -156,6 +147,6 @@ public class MemberEntity extends AuditingFields implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return loginId;
     }
 }
