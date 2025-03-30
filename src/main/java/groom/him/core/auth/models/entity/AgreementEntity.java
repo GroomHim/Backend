@@ -1,4 +1,4 @@
-package groom.him.domain.agreement.models.entity;
+package groom.him.core.auth.models.entity;
 
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
@@ -49,7 +49,7 @@ public class AgreementEntity {
         Boolean personalDataConsent,
         Boolean marketingConsent,
         Boolean locationConsent
-    ){
+    ) {
         this.member = member;
         this.termsOfServiceConsent = termsOfServiceConsent;
         this.personalDataConsent = personalDataConsent;
@@ -57,7 +57,7 @@ public class AgreementEntity {
         this.locationConsent = locationConsent;
     }
 
-    public void modifyMember(MemberEntity member){
+    public void modifyMember(MemberEntity member) {
         this.member = member;
     }
 }
