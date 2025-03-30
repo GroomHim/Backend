@@ -3,6 +3,7 @@ package groom.him.core.auth.service;
 import groom.him.core.auth.dto.request.CreateAgreementRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.request.SocialSignInRequest;
+import groom.him.core.auth.dto.request.SocialSignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.models.entity.AgreementEntity;
 import groom.him.core.auth.repository.AgreementRepository;
@@ -148,10 +149,28 @@ public class AuthService implements UserDetailsService {
             .password(new Password(hashing(request.password(), salt), salt))
             .email(request.email())
             .gender(request.gender())
-            .isCancel(false)
-            .role(Role.USER)
             .nickname(request.nickname())
             .provider(Provider.GROOMHIM)
+            .role(Role.USER)
+            .isCancel(false)
+            .build();
+
+        MemberEntity savedMember = memberRepository.save(member);
+        createAgreement(request.agreement(), savedMember);
+        return savedMember.getMemberId();
+    }
+
+    public Integer socialSignUp(SocialSignUpRequest request) {
+        MemberEntity member = MemberEntity.builder()
+            .loginId(request.loginId())
+            .nickname(request.nickname())
+            .birth(request.birth())
+            .email(request.email())
+            .gender(request.gender())
+            .socialTokenId(request.socialTokenId())
+            .provider(request.provider())
+            .role(Role.USER)
+            .isCancel(false)
             .build();
 
         MemberEntity savedMember = memberRepository.save(member);

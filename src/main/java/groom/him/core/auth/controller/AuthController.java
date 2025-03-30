@@ -3,6 +3,7 @@ package groom.him.core.auth.controller;
 import groom.him.core.auth.dto.request.SignInRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
 import groom.him.core.auth.dto.request.SocialSignInRequest;
+import groom.him.core.auth.dto.request.SocialSignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.models.dto.Response;
@@ -50,6 +51,13 @@ public class AuthController {
     @ResponseBody
     public Response<Integer> signUp(@RequestBody SignUpRequest request) {
         var response = authService.signUp(request);
+        return Response.success(response);
+    }
+
+    @PostMapping("/social/signUp")
+    @ResponseBody
+    public Response<Integer> socialSignUp(@RequestBody SocialSignUpRequest request) {
+        var response = authService.socialSignUp(request);
         return Response.success(response);
     }
 
