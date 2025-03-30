@@ -9,6 +9,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,15 +21,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Component
 public class JwtTokenProvider {
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -40,27 +40,27 @@ public class JwtTokenProvider {
 
     private final String AUTHORITIES_KEY = "role";
 
-    public String createToken(Integer memberId, Authentication authentication, String ci) {
-        return generateToken(memberId, authentication, tokenValidTime, ci);
+    public String createToken(Integer memberId, Authentication authentication) {
+        return generateToken(memberId, authentication, tokenValidTime);
     }
 
-    public String createRefreshToken(Integer memberId, Authentication authentication, String ci) {
-        return generateToken(memberId, authentication, refreshTokenValidTime, ci);
+    public String createRefreshToken(Integer memberId, Authentication authentication) {
+        return generateToken(memberId, authentication, refreshTokenValidTime);
     }
 
-    public String generateToken(Integer memberId, Authentication authentication, long expireTime, String ci) {
+    public String generateToken(Integer memberId, Authentication authentication, long expireTime) {
         String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
 
         Date now = new Date();
 
         return Jwts.builder()
-                .setSubject(memberId.toString())
-                .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(new Date(now.getTime() + expireTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+            .setSubject(memberId.toString())
+            .claim(AUTHORITIES_KEY, authorities)
+            .setExpiration(new Date(now.getTime() + expireTime))
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact();
     }
 
     public String getUserId(String token) {
@@ -73,9 +73,9 @@ public class JwtTokenProvider {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+            Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
         return authorities;
     }
 
@@ -87,7 +87,9 @@ public class JwtTokenProvider {
         if (Pattern.matches("^Bearer .*", authorization)) {
             authorization = authorization.replaceAll("^Bearer( )*", "");
             return authorization;
-        } else throw new RuntimeException("Invalid token");
+        } else {
+            throw new RuntimeException("Invalid token");
+        }
     }
 
     public String resolveRefreshToken(HttpServletRequest request) {
