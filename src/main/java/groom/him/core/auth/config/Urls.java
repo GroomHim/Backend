@@ -14,6 +14,7 @@ public class Urls {
         "/v1/health-check",
         "/v1/auth/signUp",
         "/v1/auth/social/signUp",
+        "/v1/auth/signIn",
         "/v1/auth/social/signIn",
         "/v1/auth/validate/loginId/{loginId}",
         "/v1/auth/validate/nickname/{nickname}"
