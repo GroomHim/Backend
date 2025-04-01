@@ -25,32 +25,32 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @PostMapping()
-    public Response<Void> addProduct(@ModelAttribute CreateProductRequest request) {
+    public Response<Integer> addProduct(@ModelAttribute CreateProductRequest request) {
         adminProductService.addProduct(request);
         return new Response<>(HttpStatus.CREATED.value());
     }
 
     @PatchMapping("/{productId}/status")
-    public Response<Void> changeProductState(@PathVariable Integer productId) {
+    public Response<Integer> changeProductState(@PathVariable Integer productId) {
         adminProductService.changeProductState(productId);
         return new Response<>(HttpStatus.OK.value());
     }
 
     @DeleteMapping("/{productId}")
-    public Response<Void> deleteProduct(@PathVariable Integer productId) {
+    public Response<Integer> deleteProduct(@PathVariable Integer productId) {
         adminProductService.deleteProduct(productId);
         return new Response<>(HttpStatus.NO_CONTENT.value());
     }
 
     @PatchMapping("/{productId}")
-    public Response<Void> modifyProduct(@RequestBody ModifyProductRequest request,
+    public Response<Integer> modifyProduct(@RequestBody ModifyProductRequest request,
         @PathVariable Integer productId) {
         adminProductService.modifyProduct(request, productId);
         return new Response<>(HttpStatus.OK.value());
     }
 
     @PatchMapping("/{productId}/image")
-    public Response<Void> modifyProductImage(@ModelAttribute ModifyProductImageRequest request,
+    public Response<Integer> modifyProductImage(@ModelAttribute ModifyProductImageRequest request,
         @PathVariable Integer productId) {
         adminProductService.modifyProductImage(request, productId);
         return new Response<>(HttpStatus.OK.value());
