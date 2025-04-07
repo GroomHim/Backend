@@ -1,4 +1,4 @@
-package groom.him.domain.category.enums;
+package groom.him.core.s3.models.enums;
 
 import groom.him.core.exception.HttpErrorCode;
 import lombok.Getter;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CategoryErrorCode implements HttpErrorCode {
-    CATEGORY_IS_NOT_LEAF(HttpStatus.BAD_REQUEST, "올바르지 않은 카테고리입니다."),
-    CATEGORY_NOT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 카테고리 입니다.");
+public enum S3ErrorCode implements HttpErrorCode {
+    EMPTY_FILE_EXCEPTION(HttpStatus.NOT_FOUND, "파일이 존재하지 않습니다."),
+    PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3 Object 업로드에 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
