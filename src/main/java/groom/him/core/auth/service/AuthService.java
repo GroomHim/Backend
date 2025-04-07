@@ -71,6 +71,18 @@ public class AuthService implements UserDetailsService {
         if (!pwd.equals(hashing(password, salt))) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_EXIST);
         }
+        return getSignInResponse(member);
+    }
+
+    public SignInResponse socialSignIn(SocialSignInRequest request) {
+        MemberEntity member = memberRepository.findByLoginIdAndSocialTokenIdAndProviderAndIsCancelFalse(
+            request.loginId(), request.socialTokenId(), request.provider()
+        ).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+
+        return getSignInResponse(member);
+    }
+
+    private SignInResponse getSignInResponse(MemberEntity member) {
         String accessToken = jwtTokenProvider.createToken(member.getMemberId(),
             toAuthentication(member.getMemberId(), member.getRole()));
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(),
@@ -78,12 +90,6 @@ public class AuthService implements UserDetailsService {
         member.changeRefreshToken(refreshToken);
 
         return new SignInResponse(accessToken, refreshToken);
-    }
-
-    public Boolean socialSignIn(SocialSignInRequest request) {
-        return memberRepository.existsByLoginIdAndSocialTokenIdAndProviderAndIsCancelFalse(
-            request.loginId(), request.socialTokenId(), request.provider()
-        );
     }
 
     private String getSalt() {

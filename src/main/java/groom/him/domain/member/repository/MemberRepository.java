@@ -15,7 +15,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
 
     Optional<MemberEntity> findByLoginIdAndIsCancelFalse(String loginId);
 
-    boolean existsByLoginIdAndSocialTokenIdAndProviderAndIsCancelFalse(
+    Optional<MemberEntity> findByLoginIdAndSocialTokenIdAndProviderAndIsCancelFalse(
         String loginId, String socialTokenId, Provider provider
     );
 
