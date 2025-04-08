@@ -133,6 +133,7 @@ public class AdminProductService {
 
         productImageRepository.deleteAllByProduct_ProductId(productId);
 
+        // 상품 대표 이미지 설정
         List<String> mainImageUrlList = s3Service.uploadProductImages(request.mainImage(),
             productId, ImgType.MAIN);
         product.setImgUrl(mainImageUrlList.get(0));
