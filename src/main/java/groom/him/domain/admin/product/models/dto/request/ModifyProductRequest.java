@@ -11,9 +11,7 @@ public record ModifyProductRequest(
     Float discountRate,
     Integer discountedPrice,
     String ingredients,
-    @Nullable
     String deliveryInfo,
-    @Nullable
     String purchaseSiteUrl,
     List<Integer> skinType
 ) {
