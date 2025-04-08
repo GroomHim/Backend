@@ -1,6 +1,7 @@
 package groom.him.domain.admin.product.service;
 
 import groom.him.core.common.enums.IsPublic;
+import groom.him.core.models.constant.SkinTypeErrorCode;
 import groom.him.core.s3.service.S3Service;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
@@ -20,10 +21,15 @@ import groom.him.domain.product.models.entity.BrandEntity;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.ProductImgEntity;
+import groom.him.domain.product.models.entity.ProductSkinTypeLinkEntity;
 import groom.him.domain.product.models.enums.ImgType;
 import groom.him.domain.product.repository.BrandRepository;
 import groom.him.domain.product.repository.ProductImageRepository;
 import groom.him.domain.product.repository.ProductRepository;
+import groom.him.domain.product.repository.ProductSkinTypeLinkRepository;
+import groom.him.domain.skinType.exception.SkinTypeException;
+import groom.him.domain.skinType.models.entity.SkinTypeEntity;
+import groom.him.domain.skinType.repository.SkinTypeRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +47,8 @@ public class AdminProductService {
     private final ProductExhibitCategoryLinkRepository productExhibitCategoryLinkRepository;
     private final ProductImageRepository productImageRepository;
     private final S3Service s3Service;
+    private final SkinTypeRepository skinTypeRepository;
+    private final ProductSkinTypeLinkRepository productSkinTypeLinkRepository;
 
     @Transactional
     public void addProduct(CreateProductRequest request) {
@@ -74,6 +82,19 @@ public class AdminProductService {
         ProductExhibitCategoryLinkEntity linkEntity = ProductExhibitCategoryLinkEntity.from(
             exhibitCategory, savedProduct);
         productExhibitCategoryLinkRepository.save(linkEntity);
+
+        // 5. 상품 스킨타입 맵핑
+        saveProductSkinTypeLink(request.skinType(), savedProduct);
+    }
+
+    private void saveProductSkinTypeLink(List<Integer> skinTypeList, ProductEntity savedProduct) {
+        List<ProductSkinTypeLinkEntity> productSkinTypeLinkEntityList = skinTypeList.stream()
+            .map((skinTypeId) -> {
+                SkinTypeEntity skinType = skinTypeRepository.findById(skinTypeId).orElseThrow(
+                    () -> new SkinTypeException(SkinTypeErrorCode.SKIN_TYPE_NOT_EXIST));
+                return ProductSkinTypeLinkEntity.from(skinType, savedProduct);
+            }).toList();
+        productSkinTypeLinkRepository.saveAll(productSkinTypeLinkEntityList);
     }
 
 
@@ -122,6 +143,11 @@ public class AdminProductService {
             newCategory = categoryRepository.findById(request.categoryId())
                 .orElseThrow(
                     () -> new ExhibitCategoryException(CategoryErrorCode.CATEGORY_NOT_EXIST));
+        }
+
+        if (request.skinType() != null) {
+            productSkinTypeLinkRepository.deleteAllById(request.skinType());
+            saveProductSkinTypeLink(request.skinType(), product);
         }
 
         product.modifyProduct(request, newCategory, newBrand);
