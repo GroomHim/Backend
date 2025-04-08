@@ -12,9 +12,7 @@ public record CreateProductRequest(
     Float discountRate,
     Integer discountedPrice,
     String ingredients,
-    @Nullable
     String deliveryInfo,
-    @Nullable
     String purchaseSiteUrl,
     List<Integer> skinType,
     List<MultipartFile> mainImage,
