@@ -1,17 +1,22 @@
 package groom.him.core.auth.service;
 
-import groom.him.core.models.constant.Role;
+import groom.him.core.auth.dto.request.CreateAgreementRequest;
 import groom.him.core.auth.dto.request.SignUpRequest;
+import groom.him.core.auth.dto.request.SocialSignInRequest;
+import groom.him.core.auth.dto.request.SocialSignUpRequest;
 import groom.him.core.auth.dto.response.SignInResponse;
+import groom.him.core.auth.models.entity.AgreementEntity;
+import groom.him.core.auth.repository.AgreementRepository;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.exception.CommonErrorCode;
 import groom.him.core.exception.CommonException;
+import groom.him.core.models.constant.Role;
 import groom.him.domain.member.exception.MemberErrorCode;
 import groom.him.domain.member.exception.MemberException;
-import groom.him.domain.member.repository.MemberRepository;
 import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
+import groom.him.domain.member.repository.MemberRepository;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -40,33 +45,54 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final AgreementRepository agreementRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final int SALT_SIZE = 16;
 
     private Authentication toAuthentication(Integer memberId, Role role) {
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(role.toString().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        UserDetails principal = new org.springframework.security.core.userdetails.User(memberId.toString(), "groomhim", authorities);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(principal, "groomhim", authorities);
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(
+                role.toString().split(",")).map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+        UserDetails principal = new org.springframework.security.core.userdetails.User(
+            memberId.toString(), "groomhim", authorities);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+            principal, "groomhim", authorities);
         return authenticationToken;
     }
 
     public SignInResponse signIn(final String loginId, final String password) throws Exception {
-        MemberEntity member = memberRepository.findByLoginIdAndIsCancelFalse(loginId).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+        MemberEntity member = memberRepository.findByLoginIdAndIsCancelFalse(loginId)
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
         String pwd = member.getPassword();
         String salt = member.getSalt();
 
-        if (!pwd.equals(hashing(password, salt)))
+        if (!pwd.equals(hashing(password, salt))) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_EXIST);
-        String accessToken = jwtTokenProvider.createToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(), toAuthentication(member.getMemberId(), member.getRole()), member.getCi());
+        }
+        return getSignInResponse(member);
+    }
+
+    public SignInResponse socialSignIn(SocialSignInRequest request) {
+        MemberEntity member = memberRepository.findByLoginIdAndSocialTokenIdAndProviderAndIsCancelFalse(
+            request.loginId(), request.socialTokenId(), request.provider()
+        ).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
+
+        return getSignInResponse(member);
+    }
+
+    private SignInResponse getSignInResponse(MemberEntity member) {
+        String accessToken = jwtTokenProvider.createToken(member.getMemberId(),
+            toAuthentication(member.getMemberId(), member.getRole()));
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId(),
+            toAuthentication(member.getMemberId(), member.getRole()));
         member.changeRefreshToken(refreshToken);
 
         return new SignInResponse(accessToken, refreshToken);
     }
 
-    public String getSalt() {
+    private String getSalt() {
         SecureRandom rnd = new SecureRandom();
         byte[] temp = new byte[SALT_SIZE];
         rnd.nextBytes(temp);
@@ -107,62 +133,90 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
-        return memberRepository.findByMemberIdAndIsCancelFalse(Integer.parseInt(memberId)).orElseThrow(() -> new UsernameNotFoundException(memberId));
+        return memberRepository.findByMemberIdAndIsCancelFalse(Integer.parseInt(memberId))
+            .orElseThrow(() -> new UsernameNotFoundException(memberId));
     }
 
     public Boolean existsRefreshToken(Integer userId, String refreshToken) {
-        Optional<MemberEntity> optionalMember = memberRepository.findByMemberIdAndRefreshToken(userId, refreshToken);
-        return !optionalMember.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).getRefreshToken().isEmpty();
+        Optional<MemberEntity> optionalMember = memberRepository.findByMemberIdAndRefreshToken(
+            userId, refreshToken);
+        return !optionalMember.orElseThrow(
+                () -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).getRefreshToken()
+            .isEmpty();
     }
 
-    public MemberEntity signUp(SignUpRequest request) throws Exception {
+    public Integer signUp(SignUpRequest request) {
+        // TODO : ci 도입 시 추가
+//        if (isCiExist(request.ci())) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         String salt = getSalt();
-        if (isCiExist(request.ci())) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
         MemberEntity member = MemberEntity.builder()
-                .loginId(request.loginId())
-                .ci(request.ci())
-                .birth(request.birth())
-                .password(new Password(hashing(request.password(), salt), salt))
-                .name(request.name())
-                .email(request.email())
-                .gender(request.gender())
-                .isCancel(false)
-                .role(Role.USER)
-                .nickname(request.nickname())
-                .provider(Provider.GROOMHIM)
-                .build();
+            .loginId(request.loginId())
+            .birth(request.birth())
+            .password(new Password(hashing(request.password(), salt), salt))
+            .email(request.email())
+            .gender(request.gender())
+            .nickname(request.nickname())
+            .provider(Provider.GROOMHIM)
+            .role(Role.USER)
+            .isCancel(false)
+            .build();
 
-        memberRepository.save(member);
-        return member;
+        MemberEntity savedMember = memberRepository.save(member);
+        createAgreement(request.agreement(), savedMember);
+        return savedMember.getMemberId();
+    }
+
+    public Integer socialSignUp(SocialSignUpRequest request) {
+        MemberEntity member = MemberEntity.builder()
+            .loginId(request.loginId())
+            .nickname(request.nickname())
+            .birth(request.birth())
+            .email(request.email())
+            .gender(request.gender())
+            .socialTokenId(request.socialTokenId())
+            .provider(request.provider())
+            .role(Role.USER)
+            .isCancel(false)
+            .build();
+
+        MemberEntity savedMember = memberRepository.save(member);
+        createAgreement(request.agreement(), savedMember);
+        return savedMember.getMemberId();
     }
 
     public void signOut(MemberEntity member) {
         Optional<MemberEntity> optionalMember = memberRepository.findById(member.getMemberId());
-        optionalMember.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST)).changeRefreshToken(null);
+        optionalMember.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST))
+            .changeRefreshToken(null);
     }
 
-    private Boolean isCiExist(String ci){
-        Optional<MemberEntity> optionalMember = memberRepository.findByCiAndIsCancelFalse(ci);
-        return optionalMember.isPresent();
-    }
+//    Todo : ci 도입 시 사용
+//    private Boolean isCiExist(String ci) {
+//        Optional<MemberEntity> optionalMember = memberRepository.findByCiAndIsCancelFalse(ci);
+//        return optionalMember.isPresent();
+//    }
 
-    public boolean validateLoginId(String loginId){
+    public boolean validateLoginId(String loginId) {
         Optional<MemberEntity> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
+        if (member.isPresent()) {
+            throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
+        }
         String regex = "[/\\[\\]{}?.,;:|\\)*~`!^\\-_+<>@#$%&\\=('\"]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(loginId);
         return !matcher.find();
     }
 
-    public boolean validateNickname(String nickname){
+    public boolean validateNickname(String nickname) {
         Optional<MemberEntity> member = memberRepository.findByNickname(nickname);
-        if (member.isPresent()) throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
+        if (member.isPresent()) {
+            throw new MemberException(MemberErrorCode.MEMBER_DUPLICATED);
+        }
         return true;
     }
 
-    public String findLoginIdByCi(String ci) {
-        MemberEntity member = memberRepository.findByCi(ci).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
-        return member.getLoginId();
+    private void createAgreement(CreateAgreementRequest request, MemberEntity member) {
+        AgreementEntity agreement = CreateAgreementRequest.from(request, member);
+        agreementRepository.save(agreement);
     }
 }
