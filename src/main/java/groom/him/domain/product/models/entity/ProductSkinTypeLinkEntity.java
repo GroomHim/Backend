@@ -32,4 +32,13 @@ public class ProductSkinTypeLinkEntity extends RegisterDateFields {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skin_type_id", nullable = false)
     private SkinTypeEntity skinType;
+
+    protected ProductSkinTypeLinkEntity(SkinTypeEntity skinType, ProductEntity product) {
+        this.product = product;
+        this.skinType = skinType;
+    }
+
+    public static ProductSkinTypeLinkEntity from(SkinTypeEntity skinType, ProductEntity product) {
+        return new ProductSkinTypeLinkEntity(skinType, product);
+    }
 }

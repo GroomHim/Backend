@@ -36,12 +36,12 @@ public class S3Service {
     private static final String PRODUCT = "product";
 
     public List<String> uploadProductImages(List<MultipartFile> multipartFiles, Integer productId,
-        ImgType type) throws IOException {
+        ImgType type) {
         return uploadImages(multipartFiles, productId, type, PRODUCT);
     }
 
     private List<String> uploadImages(List<MultipartFile> multipartFiles, Integer id, ImgType type,
-        String path) throws IOException {
+        String path) {
         List<String> uploadImageUrls = new ArrayList<>();
 
         for (MultipartFile image : multipartFiles) {
@@ -59,25 +59,26 @@ public class S3Service {
         return uploadImageUrls;
     }
 
-    private String uploadImageToS3(MultipartFile image, String fileName) throws IOException {
+    private String uploadImageToS3(MultipartFile image, String fileName) {
         byte[] bytes;
 
         try (InputStream is = image.getInputStream()) {
             bytes = IOUtils.toByteArray(is);
+        } catch (IOException e) {
+            log.error(e.toString());
+            throw new S3Exception(S3ErrorCode.PUT_OBJECT_EXCEPTION);
         }
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(image.getContentType());
         metadata.setContentLength(bytes.length);
 
-        try (
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)
-        ) {
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)) {
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName,
                 byteArrayInputStream, metadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(putObjectRequest);
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e.toString());
             throw new S3Exception(S3ErrorCode.PUT_OBJECT_EXCEPTION);
         }
