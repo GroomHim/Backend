@@ -5,8 +5,6 @@ import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.service.AdminProductService;
-import groom.him.domain.product.service.ProductService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/admin/v1/products")
 public class AdminProductController {
+
     private final AdminProductService adminProductService;
 
     @PostMapping()

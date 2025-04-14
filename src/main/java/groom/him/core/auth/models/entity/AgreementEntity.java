@@ -1,5 +1,6 @@
 package groom.him.core.auth.models.entity;
 
+import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.member.models.entity.MemberEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.NonNull;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class AgreementEntity {
+public class AgreementEntity extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer agreementId;
@@ -55,9 +56,5 @@ public class AgreementEntity {
         this.personalDataConsent = personalDataConsent;
         this.marketingConsent = marketingConsent;
         this.locationConsent = locationConsent;
-    }
-
-    public void modifyMember(MemberEntity member) {
-        this.member = member;
     }
 }
