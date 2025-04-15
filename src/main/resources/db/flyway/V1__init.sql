@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS  PRODUCT (
     img_url varchar(2048) not null,
     purchase_site_url varchar(2048),
     ingredients TEXT,
+    is_public bit,
+    is_deleted bit,
     reg_dt datetime(6),
     udt_dt datetime(6),
     primary key (product_id)
