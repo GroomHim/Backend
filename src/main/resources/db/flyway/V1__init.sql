@@ -1,70 +1,67 @@
 -- MEMBER
 CREATE TABLE IF NOT EXISTS  MEMBER (
-    is_cancel bit,
     member_id integer not null auto_increment,
     skin_type_id integer,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
-    birth varchar(10) not null,
-    login_id varchar(15) not null,
-    nickname varchar(20) not null,
-    name varchar(30) not null,
-    salt varchar(32),
-    email varchar(50) not null,
-    password varchar(64),
+    login_id varchar(255),
+    password varchar(255),
+    salt varchar(255),
+    gender varchar(255),
+    nickname varchar(20),
+    birth varchar(10),
+    email varchar(255),
+    provider varchar(255),
     refresh_token varchar(200),
-    ci varchar(255),
     social_token_id varchar(255),
-    gender enum ('M','W') not null,
-    provider enum ('APPLE','GOOGLE','GROOMHIM','KAKAO','NAVER') not null,
-    role enum ('ADMIN','USER'),
+    is_cancel bit,
+    role varchar(255),
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (member_id)
 );
 
 -- PRODUCT
 CREATE TABLE IF NOT EXISTS  PRODUCT (
-    brand_id integer not null,
-    category_id integer,
-    discount_rate float(23) not null,
-    discounted_price integer not null,
-    price integer not null,
     product_id integer not null auto_increment,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
-    delivery_info varchar(50) not null,
-    product_name varchar(50) not null,
+    brand_id integer,
+    category_id integer,
+    discount_rate float,
+    discounted_price integer,
+    price integer,
+    product_name varchar(255) not null,
     img_url varchar(2048) not null,
     purchase_site_url varchar(2048),
     ingredients TEXT,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (product_id)
 );
 
 CREATE TABLE IF NOT EXISTS  PRODUCT_IMG (
     product_img_id integer not null auto_increment,
     product_id integer,
-    prio varchar(20) not null,
-    img_url varchar(2048) not null,
-    type enum ('CONTENT','MAIN') not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    prio varchar(255),
+    img_url varchar(2048),
+    type varchar(255) ,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (product_img_id)
 );
 
 CREATE TABLE IF NOT EXISTS  BRAND (
     brand_id integer not null auto_increment,
-    brand_name varchar(255) not null,
-    en_brand_name varchar(255) not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    brand_name varchar(255),
+    en_brand_name varchar(255),
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (brand_id)
 );
 
 -- WISH
 CREATE TABLE IF NOT EXISTS  WISH (
     wish_id integer not null auto_increment,
-    member_id integer not null,
-    product_id integer not null,
-    reg_dt datetime(6) not null,
+    member_id integer,
+    product_id integer,
+    reg_dt datetime(6),
     primary key (wish_id)
 );
 
@@ -76,6 +73,8 @@ CREATE TABLE IF NOT EXISTS  AGREEMENT (
     marketing_consent bit,
     personal_data_consent bit,
     terms_of_service_consent bit,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (agreementId)
 );
 
@@ -83,8 +82,8 @@ CREATE TABLE IF NOT EXISTS  AGREEMENT (
 CREATE TABLE IF NOT EXISTS  SEARCH (
     search_id bigint not null auto_increment,
     member_id integer,
-    reg_dt datetime(6) not null,
     search_word varchar(255),
+    reg_dt datetime(6),
     primary key (search_id)
 );
 
@@ -92,48 +91,48 @@ CREATE TABLE IF NOT EXISTS  SEARCH (
 CREATE TABLE IF NOT EXISTS  CATEGORY (
     category_id integer not null auto_increment,
     parent_category_id integer,
-    category_name varchar(15) not null,
-    depth integer not null,
-    is_leaf bit not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    category_name varchar(255),
+    depth integer,
+    is_leaf bit,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (category_id)
 );
 
 CREATE TABLE IF NOT EXISTS  EXHIBIT_CATEGORY (
     exhibit_category_id integer not null auto_increment,
-    exhibit_category_name varchar(15) not null,
+    exhibit_category_name varchar(255),
     parent_exhibit_category_id integer,
-    is_leaf bit not null,
-    depth integer not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    is_leaf bit,
+    depth integer,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (exhibit_category_id)
 );
 
 CREATE TABLE IF NOT EXISTS  PRODUCT_EXHIBIT_CATEGORY_LINK (
     product_exhibit_category_id integer not null auto_increment,
-    exhibit_category_id integer not null,
-    product_id integer not null,
-    reg_dt datetime(6) not null,
+    exhibit_category_id integer,
+    product_id integer,
+    reg_dt datetime(6),
     primary key (product_exhibit_category_id)
 );
 
 -- SKIN-TYPE
 CREATE TABLE IF NOT EXISTS  SKIN_TYPE (
     skin_type_id integer not null auto_increment,
-    skin_type_name varchar(10) not null,
-    description varchar(255) not null,
-    rate decimal(38,2) not null,
-    reg_dt datetime(6) not null,
+    skin_type_name varchar(255),
+    description varchar(255),
+    rate float,
+    reg_dt datetime(6),
     primary key (skin_type_id)
 );
 
 CREATE TABLE IF NOT EXISTS  PRODUCT_SKIN_TYPE_LINK (
     product_skin_type_id integer not null auto_increment,
-    product_id integer not null,
-    skin_type_id integer not null,
-    reg_dt datetime(6) not null,
+    product_id integer,
+    skin_type_id integer,
+    reg_dt datetime(6),
     primary key (product_skin_type_id)
 );
 
@@ -142,11 +141,11 @@ CREATE TABLE IF NOT EXISTS QA (
     qa_id integer not null auto_increment,
     member_id integer,
     qa_category_id integer,
-    title varchar(50) not null,
-    content varchar(255) not null,
-    status varchar(10) not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    title varchar(50),
+    content varchar(255),
+    status varchar(255),
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (qa_id)
 );
 
@@ -154,30 +153,30 @@ CREATE TABLE IF NOT EXISTS  QA_ANSWER (
     qa_answer_id integer not null auto_increment,
     member_id integer,
     qa_id integer,
-    answer varchar(255) not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    answer varchar(255),
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (qa_answer_id)
 );
 
 CREATE TABLE IF NOT EXISTS  QA_CATEGORY (
     qa_category_id integer not null auto_increment,
     parent_qa_category_id integer,
-    qa_category_name varchar(15) not null,
-    is_leaf bit not null,
-    reg_dt datetime(6) not null,
+    qa_category_name varchar(255),
+    is_leaf bit,
+    reg_dt datetime(6),
     primary key (qa_category_id)
 );
 
 CREATE TABLE IF NOT EXISTS  FAQ (
     faq_id integer not null auto_increment,
     faq_category_id integer,
-    prio varchar(20) not null,
-    question varchar(50) not null,
-    answer varchar(255) not null,
-    is_public bit not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    prio varchar(255),
+    question varchar(255),
+    answer varchar(255),
+    is_public bit,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (faq_id)
 );
 
@@ -192,10 +191,10 @@ CREATE TABLE IF NOT EXISTS  FAQ_CATEGORY (
 CREATE TABLE IF NOT EXISTS  NOTICE (
     notice_id integer not null auto_increment,
     member_id integer,
-    title varchar(20) not null,
-    content varchar(255) not null,
-    is_public bit not null,
-    reg_dt datetime(6) not null,
-    udt_dt datetime(6) not null,
+    title varchar(255),
+    content varchar(255),
+    is_public bit,
+    reg_dt datetime(6),
+    udt_dt datetime(6),
     primary key (notice_id)
 );

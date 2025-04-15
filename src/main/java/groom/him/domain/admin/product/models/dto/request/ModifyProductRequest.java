@@ -11,7 +11,6 @@ public record ModifyProductRequest(
     Float discountRate,
     Integer discountedPrice,
     String ingredients,
-    String deliveryInfo,
     String purchaseSiteUrl,
     List<Integer> skinType
 ) {

@@ -6,7 +6,16 @@ import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.category.models.entity.CategoryEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,6 +26,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "PRODUCT")
 @Entity
 public class ProductEntity extends AuditingFields {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
@@ -53,9 +63,6 @@ public class ProductEntity extends AuditingFields {
     @Column(name = "img_url", length = 2048)
     private String imgUrl;
 
-    @Column(name = "delivery_info", length = 50)
-    private String deliveryInfo;
-
     @Column(name = "purchase_site_url", length = 2048)
     private String purchaseSiteUrl;
 
@@ -69,7 +76,7 @@ public class ProductEntity extends AuditingFields {
     private Boolean isDeleted = false;
 
     protected ProductEntity(String productName, Integer price, Float discountRate,
-        Integer discountedPrice, String ingredients, String imgUrl, String deliveryInfo,
+        Integer discountedPrice, String ingredients, String imgUrl,
         String purchaseSiteUrl, BrandEntity brand, CategoryEntity category) {
         this.productName = productName;
         this.price = price;
@@ -77,7 +84,6 @@ public class ProductEntity extends AuditingFields {
         this.discountedPrice = discountedPrice;
         this.ingredients = ingredients;
         this.imgUrl = imgUrl;
-        this.deliveryInfo = deliveryInfo;
         this.purchaseSiteUrl = purchaseSiteUrl;
         this.brand = brand;
         this.category = category;
@@ -92,7 +98,6 @@ public class ProductEntity extends AuditingFields {
             request.discountedPrice(),
             request.ingredients(),
             imgUrl,
-            request.deliveryInfo(),
             request.purchaseSiteUrl(),
             brand,
             category
@@ -118,7 +123,6 @@ public class ProductEntity extends AuditingFields {
         this.discountRate = request.discountRate();
         this.discountedPrice = request.discountedPrice();
         this.ingredients = request.ingredients();
-        this.deliveryInfo = request.deliveryInfo();
         this.purchaseSiteUrl = request.purchaseSiteUrl();
         this.brand = brand;
         this.category = category;

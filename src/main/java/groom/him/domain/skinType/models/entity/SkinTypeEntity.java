@@ -29,7 +29,7 @@ public class SkinTypeEntity extends RegisterDateFields {
 
     @NotNull
     @Column(name = "rate")
-    private BigDecimal rate;
+    private Float rate;
 
     @NotNull
     @Column(name = "description")

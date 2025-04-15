@@ -79,3 +79,14 @@ VALUES
     (3, '앱 기능 문의', NOW(), NOW()),
     (4, '주문/결제', NOW(), NOW()),
     (5, '취소/반품/교환', NOW(), NOW());
+
+-- BRAND
+INSERT INTO BRAND(brand_id, brand_name, en_brand_name, reg_dt, udt_dt)
+VALUES
+    (1, '스콧해미쉬', 'Scott Hamish', NOW(), NOW()),
+    (2, '루드', 'Rood', NOW(), NOW()),
+    (3, '써니콘', 'Sunnicorn', NOW(), NOW()),
+    (4, '스킨스탠다드', 'SkinStandard', NOW(), NOW()),
+    (5, 'DA99', 'DA99', NOW(), NOW()),
+    (6, '포라뽀', 'POUR LA PEAU', NOW(), NOW()),
+    (7, '담소울', 'DAMSOUL', NOW(), NOW());
