@@ -29,25 +29,25 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/sign-in")
+    @PostMapping("/signIn")
     public Response<SignInResponse> signin(@RequestBody SignInRequest request) throws Exception {
         SignInResponse response = authService.signIn(request.loginId(), request.password());
         return Response.success(response);
     }
 
-    @PostMapping("/social/sign-in")
+    @PostMapping("/social/signIn")
     public Response<SignInResponse> socialSignIn(@RequestBody SocialSignInRequest request) {
         SignInResponse response = authService.socialSignIn(request);
         return Response.success(response);
     }
 
-    @PostMapping("/sign-out")
+    @PostMapping("/signOut")
     public Response<Integer> signOut(@AuthenticationPrincipal MemberEntity member) {
         authService.signOut(member);
         return Response.success();
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/signUp")
     @ResponseBody
     public Response<Integer> signUp(@RequestBody SignUpRequest request) {
         var response = authService.signUp(request);
