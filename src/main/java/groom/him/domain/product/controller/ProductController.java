@@ -7,7 +7,7 @@ import groom.him.domain.category.service.ExhibitCategoryService;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
-import groom.him.domain.product.service.BrandService;
+import groom.him.domain.brand.service.BrandService;
 import groom.him.domain.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package groom.him.domain.product.models.entity;
+package groom.him.domain.brand.models.entity;
 
 import groom.him.core.models.entity.AuditingFields;
 import jakarta.persistence.*;
