@@ -54,14 +54,14 @@ public class AuthController {
         return Response.success(response);
     }
 
-    @PostMapping("/social/signUp")
+    @PostMapping("/social/sign-up")
     @ResponseBody
     public Response<Integer> socialSignUp(@RequestBody SocialSignUpRequest request) {
         var response = authService.socialSignUp(request);
         return Response.success(response);
     }
 
-    @GetMapping("/validate/loginId/{loginId}")
+    @GetMapping("/validate/login-id/{loginId}")
     @ResponseBody
     public Response<Integer> validateLoginId(@PathVariable String loginId) {
         if (authService.validateLoginId(loginId)) {

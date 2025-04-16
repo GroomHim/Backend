@@ -12,11 +12,11 @@ public class Urls {
         "/v3/api-docs/**",
         "/swagger/**",
         "/v1/health-check",
-        "/v1/auth/signUp",
-        "/v1/auth/social/signUp",
-        "/v1/auth/signIn",
-        "/v1/auth/social/signIn",
-        "/v1/auth/validate/loginId/{loginId}",
+        "/v1/auth/sign-up",
+        "/v1/auth/social/sign-up",
+        "/v1/auth/sign-in",
+        "/v1/auth/social/sign-in",
+        "/v1/auth/validate/login-id/{loginId}",
         "/v1/auth/validate/nickname/{nickname}"
     };
 }
