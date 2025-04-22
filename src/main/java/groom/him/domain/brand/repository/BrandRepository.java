@@ -1,6 +1,6 @@
-package groom.him.domain.product.repository;
+package groom.him.domain.brand.repository;
 
-import groom.him.domain.product.models.entity.BrandEntity;
+import groom.him.domain.brand.models.entity.BrandEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

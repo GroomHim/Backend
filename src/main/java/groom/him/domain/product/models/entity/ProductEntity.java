@@ -5,6 +5,7 @@ import groom.him.core.common.enums.IsPublic;
 import groom.him.core.models.entity.AuditingFields;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
+import groom.him.domain.brand.models.entity.BrandEntity;
 import groom.him.domain.category.models.entity.CategoryEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

@@ -1,4 +1,4 @@
-package groom.him.domain.product.exception;
+package groom.him.domain.brand.exception;
 
 import groom.him.core.exception.HttpErrorCode;
 import lombok.Getter;
