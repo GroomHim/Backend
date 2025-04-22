@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 public interface ProductRepositoryCustom {
-    Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(Pageable pageable,
+    Slice<ProductWithWishResponse> findProductListBySkinType(Pageable pageable,
         Integer skinType, Integer memberId);
 
     Slice<ProductWithWishResponse> findProductListByPriceRange(Pageable pageable, Integer minPrice,
