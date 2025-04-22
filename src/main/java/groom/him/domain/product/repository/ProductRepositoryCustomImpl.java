@@ -5,9 +5,11 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import groom.him.core.common.enums.IsPublic;
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.member.models.entity.QMemberEntity;
 import groom.him.domain.member.models.entity.QWishEntity;
@@ -62,6 +64,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(wish)
             .leftJoin(wish.product, product)
             .where(builder)
+            .where(defaultProductCondition(product))
             .orderBy(wish.regDt.asc())
             .offset(pageable.getOffset())
             .limit(limit)
@@ -91,6 +94,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.in(subCategoryList))
+            .where(defaultProductCondition(product))
             .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
             .offset(pageable.getOffset())
             .limit(limit)
@@ -112,6 +116,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .select(getProductResponseConstructor(product))
             .from(product)
             .where(product.productId.eq(productId))
+            .where(defaultProductCondition(product))
             .fetchOne();
 
         Boolean isWish = IsWishByMemberIdAndProductId(memberId, productId);
@@ -137,6 +142,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.eq(categoryId))
+            .where(defaultProductCondition(product))
             .groupBy(product.productId)
             .orderBy(orderBySortType(sortType, product, wish))
             .offset(pageable.getOffset())
@@ -161,6 +167,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(product.brand.enBrandName.eq(brandName))
+            .where(defaultProductCondition(product))
             .offset(pageable.getOffset())
             .limit(limit)
             .fetch();
@@ -171,7 +178,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Slice<ProductWithWishResponse> findProductListBySkinTypeOrderByQuantity(
+    public Slice<ProductWithWishResponse> findProductListBySkinType(
         Pageable pageable, Integer skinTypeId, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
         QProductSkinTypeLinkEntity productSkinTypeLink = QProductSkinTypeLinkEntity.productSkinTypeLinkEntity;
@@ -184,6 +191,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(productSkinTypeLink)
             .on(productSkinTypeLink.product.productId.eq(product.productId))
             .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId))
+            .where(defaultProductCondition(product))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
             .limit(limit)
@@ -207,6 +215,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         List<ProductBriefResponse> productBriefList = jpaQueryFactory
             .select(getProductBriefResponseConstructor(product))
             .from(product)
+            .where(defaultProductCondition(product))
             .where(product.discountedPrice.between(minPrice, maxPrice))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
@@ -255,34 +264,14 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         );
     }
 
-    private OrderSpecifier<Float> orderByDiscountedRate(QProductEntity product) {
-        return product.discountRate.desc();
-    }
-
-    private OrderSpecifier<Integer> orderByHighPrice(QProductEntity product) {
-        return product.discountedPrice.desc();
-    }
-
-    private OrderSpecifier<Integer> orderByLowPrice(QProductEntity product) {
-        return product.discountedPrice.asc();
-    }
-
-    private OrderSpecifier<Float> orderByDiscountRate(QProductEntity product) {
-        return product.discountRate.desc();
-    }
-
-    private OrderSpecifier<Long> orderByWish(QWishEntity wish) {
-        return wish.count().desc();
-    }
-
     private OrderSpecifier<?> orderBySortType(SortType sortType, QProductEntity product,
         QWishEntity wish) {
         return switch (sortType) {
-            case SALE -> orderByDiscountedRate(product);
-            case WISH -> orderByWish(wish);
-            case HIGH_PRICE -> orderByHighPrice(product);
-            case LOW_PRICE -> orderByLowPrice(product);
-            case DISCOUNT_RATE -> orderByDiscountRate(product);
+            case SALE -> product.discountRate.desc(); // FIXME
+            case WISH -> wish.count().desc();
+            case HIGH_PRICE -> product.discountedPrice.desc();
+            case LOW_PRICE -> product.discountedPrice.asc();
+            case DISCOUNT_RATE -> product.discountRate.desc();
         };
     }
 
@@ -334,5 +323,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(wish)
             .where(wish.member.memberId.eq(memberId))
             .fetch();
+    }
+
+    private BooleanExpression defaultProductCondition(QProductEntity product) {
+        return product.isDeleted.eq(false).and(product.isPublic.eq(IsPublic.OPEN));
     }
 }

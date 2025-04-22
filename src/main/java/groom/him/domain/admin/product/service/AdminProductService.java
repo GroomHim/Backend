@@ -17,6 +17,7 @@ import groom.him.domain.product.exception.BrandErrorCode;
 import groom.him.domain.product.exception.BrandException;
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
+import groom.him.domain.product.models.dto.response.ProductResponse;
 import groom.him.domain.product.models.entity.BrandEntity;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
@@ -35,11 +36,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AdminProductService {
+
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
@@ -173,5 +177,10 @@ public class AdminProductService {
     private ProductEntity getAvailableProductEntity(Integer productId) {
         return productRepository.findByProductIdAndIsDeletedFalse(productId)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
+    }
+
+    public Slice<ProductResponse> getProducts(IsPublic isPublic, Pageable pageable) {
+        return productRepository.findByIsPublicAndIsDeletedFalseOrderByRegDt(isPublic, pageable)
+            .map(ProductResponse::of);
     }
 }

@@ -52,7 +52,7 @@ public class ProductService {
 
     public Slice<ProductWithWishResponse> findRecommendProductBriefBySkinType(Pageable pageable,
         Integer skinTypeId, Integer memberId) {
-        return productRepository.findProductListBySkinTypeOrderByQuantity(pageable, skinTypeId,
+        return productRepository.findProductListBySkinType(pageable, skinTypeId,
             memberId);
     }
 
