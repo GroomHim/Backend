@@ -1,8 +1,8 @@
-package groom.him.domain.product.service;
+package groom.him.domain.brand.service;
 
-import groom.him.domain.product.exception.BrandErrorCode;
-import groom.him.domain.product.exception.BrandException;
-import groom.him.domain.product.repository.BrandRepository;
+import groom.him.domain.brand.exception.BrandErrorCode;
+import groom.him.domain.brand.exception.BrandException;
+import groom.him.domain.brand.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
