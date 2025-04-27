@@ -6,7 +6,7 @@ import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.service.AdminProductService;
-import groom.him.domain.product.models.dto.response.ProductResponse;
+import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -30,9 +30,9 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @GetMapping()
-    public Response<Slice<ProductResponse>> getProducts(@RequestParam IsPublic isPublic,
+    public Response<Slice<ProductBriefResponse>> getProducts(@RequestParam IsPublic isPublic,
         Pageable pageable) {
-        Slice<ProductResponse> products = adminProductService.getProducts(isPublic, pageable);
+        Slice<ProductBriefResponse> products = adminProductService.getProducts(isPublic, pageable);
         return Response.success(products);
     }
 

@@ -6,6 +6,10 @@ import groom.him.core.s3.service.S3Service;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
+import groom.him.domain.brand.exception.BrandErrorCode;
+import groom.him.domain.brand.exception.BrandException;
+import groom.him.domain.brand.models.entity.BrandEntity;
+import groom.him.domain.brand.repository.BrandRepository;
 import groom.him.domain.category.enums.CategoryErrorCode;
 import groom.him.domain.category.exception.ExhibitCategoryException;
 import groom.him.domain.category.models.entity.CategoryEntity;
@@ -13,18 +17,14 @@ import groom.him.domain.category.models.entity.ExhibitCategoryEntity;
 import groom.him.domain.category.repository.CategoryRepository;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
 import groom.him.domain.category.repository.ProductExhibitCategoryLinkRepository;
-import groom.him.domain.brand.exception.BrandErrorCode;
-import groom.him.domain.brand.exception.BrandException;
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
-import groom.him.domain.brand.models.entity.BrandEntity;
-import groom.him.domain.product.models.dto.response.ProductResponse;
+import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.ProductImgEntity;
 import groom.him.domain.product.models.entity.ProductSkinTypeLinkEntity;
 import groom.him.domain.product.models.enums.ImgType;
-import groom.him.domain.brand.repository.BrandRepository;
 import groom.him.domain.product.repository.ProductImageRepository;
 import groom.him.domain.product.repository.ProductRepository;
 import groom.him.domain.product.repository.ProductSkinTypeLinkRepository;
@@ -179,8 +179,8 @@ public class AdminProductService {
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_EXIST));
     }
 
-    public Slice<ProductResponse> getProducts(IsPublic isPublic, Pageable pageable) {
+    public Slice<ProductBriefResponse> getProducts(IsPublic isPublic, Pageable pageable) {
         return productRepository.findByIsPublicAndIsDeletedFalseOrderByRegDt(isPublic, pageable)
-            .map(ProductResponse::of);
+            .map(ProductBriefResponse::of);
     }
 }
