@@ -4,6 +4,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import groom.him.core.models.constant.Gender;
+import groom.him.domain.member.models.constant.Provider;
 import groom.him.domain.member.models.entity.MemberEntity;
 
 @JsonInclude(NON_EMPTY)
@@ -14,7 +15,8 @@ public record MemberResponse(
     Gender gender,
     String nickname,
     String birth,
-    String email
+    String email,
+    Provider provider
 ) {
 
     public static MemberResponse of(MemberEntity member) {
@@ -25,7 +27,8 @@ public record MemberResponse(
             member.getGender(),
             member.getNickname(),
             member.getBirth(),
-            member.getEmail()
+            member.getEmail(),
+            member.getProvider()
         );
     }
 }
