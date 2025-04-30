@@ -37,7 +37,7 @@ public class MemberService {
         authService.validateNickname(request.nickname());
 
         MemberEntity member = findById(memberId);
-        member.changeNicknameAndEmail(request.nickname(), request.email());
+        member.changeNicknameAndEmailAndBirth(request.nickname(), request.email(), request.birth());
         return MemberResponse.of(member);
     }
 
@@ -68,7 +68,7 @@ public class MemberService {
             throw new MemberException(MemberErrorCode.MEMBER_INVALID_PASSWORD);
         }
     }
-    
+
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
         LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,
