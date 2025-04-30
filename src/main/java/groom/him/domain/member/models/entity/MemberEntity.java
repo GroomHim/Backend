@@ -134,6 +134,10 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.skinTypeEntity = skinTypeEntity;
     }
 
+    public void softDelete() {
+        this.isCancel = true;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(role.toString().split(","))

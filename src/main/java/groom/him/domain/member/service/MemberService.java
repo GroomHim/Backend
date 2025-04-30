@@ -1,5 +1,8 @@
 package groom.him.domain.member.service;
 
+import groom.him.domain.member.models.dto.request.CancelMemberRequest;
+import groom.him.domain.member.models.entity.MemberCancelLogEntity;
+import groom.him.domain.member.repository.MemberCancelLogRepository;
 import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import groom.him.core.auth.service.AuthService;
 import groom.him.domain.member.exception.MemberErrorCode;
@@ -25,6 +28,7 @@ public class MemberService {
     private final AuthService authService;
     private final MemberRepository memberRepository;
     private final QaRepository qaRepository;
+    private final MemberCancelLogRepository memberCancelLogRepository;
 
     @Transactional
     public MemberResponse findMyInfo(Integer memberId) {
@@ -39,6 +43,14 @@ public class MemberService {
         MemberEntity member = findById(memberId);
         member.changeNicknameAndEmailAndBirth(request.nickname(), request.email(), request.birth());
         return MemberResponse.of(member);
+    }
+
+    @Transactional
+    public void softDelete(Integer memberId, CancelMemberRequest request) {
+        MemberEntity member = findById(memberId);
+        MemberCancelLogEntity memberCancelLog = MemberCancelLogEntity.of(member, request.reason());
+        memberCancelLogRepository.save(memberCancelLog);
+        member.softDelete();
     }
 
     @Transactional
