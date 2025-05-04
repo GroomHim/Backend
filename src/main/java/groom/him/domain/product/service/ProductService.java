@@ -2,18 +2,12 @@ package groom.him.domain.product.service;
 
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
-import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
-import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
-import groom.him.domain.search.models.entity.SearchEntity;
-import groom.him.domain.search.repository.SearchRepository;
-import groom.him.domain.wish.repository.WishRepository;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
 
@@ -76,5 +71,10 @@ public class ProductService {
     public Slice<ProductWithWishResponse> findProductListByBrand(Pageable pageable,
         String brandName, Integer memberId) {
         return productRepository.findProductListByBrand(pageable, brandName, memberId);
+    }
+
+    public List<ProductWithWishResponse> findProductListByWord(Integer memberId,
+        String word) {
+        return productRepository.findProductListBySearchWord(word, memberId);
     }
 }

@@ -178,6 +178,21 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public List<ProductWithWishResponse> findProductListBySearchWord(String word,
+        Integer memberId) {
+        QProductEntity product = QProductEntity.productEntity;
+        QWishEntity wish = QWishEntity.wishEntity;
+
+        return jpaQueryFactory
+            .select(getProductWithWishResponseConstructor(product, wish))
+            .from(product)
+            .leftJoin(wish).on(wish.product.productId.eq(product.productId))
+            .where(product.productName.contains(word)) // %{word}%
+            .where(defaultProductCondition(product))
+            .fetch();
+    }
+
+    @Override
     public Slice<ProductWithWishResponse> findProductListBySkinType(
         Pageable pageable, Integer skinTypeId, Integer memberId) {
         QProductEntity product = QProductEntity.productEntity;
@@ -279,7 +294,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         QProductEntity product) {
         return Projections.constructor(
             ProductBriefResponse.class,
-            product.productId, product.productName, product.brand.brandName, product.price,
+            product.productId, product.category.categoryName, product.productName,
+            product.brand.brandName, product.price,
             product.discountRate, product.discountedPrice, product.imgUrl
         );
     }
