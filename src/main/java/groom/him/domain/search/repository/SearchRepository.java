@@ -9,7 +9,5 @@ import java.util.List;
 
 @Repository
 public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
-    Integer countByMember_MemberId(Integer memberId);
     List<SearchEntity> findTop5ByMember_MemberIdOrderByRegDtDesc(Integer memberId);
-    Optional<SearchEntity> findById(Long searchId);
 }

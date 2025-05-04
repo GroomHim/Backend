@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "SEARCH")
 public class SearchEntity extends RegisterDateFields {
+
     @Id
     @Column(name = "search_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,7 @@ public class SearchEntity extends RegisterDateFields {
     @Column(name = "search_word")
     private String searchWord;
 
-    @Builder
-    public SearchEntity(MemberEntity member, String searchWord){
+    public SearchEntity(MemberEntity member, String searchWord) {
         this.member = member;
         this.searchWord = searchWord;
     }
