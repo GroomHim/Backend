@@ -10,19 +10,23 @@ import groom.him.domain.member.service.MemberService;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 import groom.him.domain.search.service.SearchService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/members")
 public class MemberController {
     private final MemberService memberService;
-    private final SearchService searchService;
 
     @GetMapping("/info")
     public Response<MemberResponse> findMyInfo(@AuthenticationPrincipal MemberEntity member) {
@@ -59,10 +63,5 @@ public class MemberController {
         @RequestParam(value = "endDate", required = false) LocalDate endDate) {
         return Response.success(
             memberService.findMemberQaList(member.getMemberId(), qaStatus, startDate, endDate));
-    }
-
-    @GetMapping("/search")
-    public Response<List<String>> findSearchList(@AuthenticationPrincipal MemberEntity member) {
-        return Response.success(searchService.findSearchList(member));
     }
 }

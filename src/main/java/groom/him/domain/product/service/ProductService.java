@@ -23,13 +23,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
-    private static final int RECENT_WORD_CNT = 5;
-
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
-    private final SearchRepository searchRepository;
-    private final WishRepository wishRepository;
 
     public void checkProductExist(Integer productId) {
         if (!productRepository.existsById(productId)) {
@@ -60,28 +55,6 @@ public class ProductService {
         Integer minPrice, Integer maxPrice, Integer memberId) {
         return productRepository.findProductListByPriceRange(pageable, minPrice, maxPrice,
             memberId);
-    }
-
-    public List<ProductWithWishResponse> findSearchProductIndex(String word, MemberEntity member) {
-        if (searchRepository.countByMember_MemberId(member.getMemberId()) < RECENT_WORD_CNT) {
-            SearchEntity search = SearchEntity.builder()
-                .member(member)
-                .searchWord(word)
-                .build();
-            searchRepository.save(search);
-        }
-        List<ProductWithWishResponse> list = new ArrayList<>();
-        List<ProductEntity> productList = productRepository.findSearchProductIndex(word);
-
-        for (ProductEntity product : productList) {
-            boolean isWished = wishRepository.existsByMember_MemberIdAndProduct_ProductId(
-                member.getMemberId(), product.getProductId());
-            ProductWithWishResponse productWithWishResponse = new ProductWithWishResponse(
-                ProductBriefResponse.of(product), isWished);
-            list.add(productWithWishResponse);
-        }
-
-        return list;
     }
 
     public ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId) {
