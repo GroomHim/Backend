@@ -124,13 +124,18 @@ public class MemberEntity extends AuditingFields implements UserDetails {
         this.password = password;
     }
 
-    public void changeNicknameAndEmail(String nickname, String email) {
+    public void changeNicknameAndEmailAndBirth(String nickname, String email, String birth) {
         this.nickname = nickname;
         this.email = email;
+        this.birth = birth;
     }
 
     public void changeSkinType(SkinTypeEntity skinTypeEntity) {
         this.skinTypeEntity = skinTypeEntity;
+    }
+
+    public void softDelete() {
+        this.isCancel = true;
     }
 
     @Override

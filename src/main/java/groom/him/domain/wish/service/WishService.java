@@ -37,7 +37,7 @@ public class WishService {
 
     @Transactional
     public void addWish(Integer memberId, Integer productId) {
-        MemberEntity member = memberService.findById(memberId);
+        MemberEntity member = memberService.findByMemberIdAndIsCancelFalse(memberId);
         ProductEntity product = productService.findById(productId);
 
         boolean isExisted = wishRepository.existsByMember_MemberIdAndProduct_ProductId(memberId,
