@@ -34,7 +34,7 @@ public class SearchController {
         return Response.success(data);
     }
 
-    @GetMapping
+    @GetMapping("/recent")
     public Response<List<String>> findMemberSearchWords(
         @AuthenticationPrincipal MemberEntity member) {
         List<String> data = searchService.findMemberSearchWordTop5(member.getMemberId());
