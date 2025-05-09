@@ -4,6 +4,7 @@ import groom.him.core.models.dto.Response;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
+import groom.him.domain.search.models.dto.SearchResponse;
 import groom.him.domain.search.service.SearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,9 @@ public class SearchController {
     }
 
     @GetMapping("/recent")
-    public Response<List<String>> findMemberSearchWords(
+    public Response<List<SearchResponse>> findMemberSearchWords(
         @AuthenticationPrincipal MemberEntity member) {
-        List<String> data = searchService.findMemberSearchWordTop5(member.getMemberId());
+        List<SearchResponse> data = searchService.findMemberSearchWordTop5(member.getMemberId());
         return Response.success(data);
     }
 

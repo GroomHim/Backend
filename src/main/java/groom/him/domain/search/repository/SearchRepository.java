@@ -9,5 +9,9 @@ import java.util.List;
 
 @Repository
 public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
-    List<SearchEntity> findTop5ByMember_MemberIdOrderByRegDtDesc(Integer memberId);
+
+    List<SearchEntity> findTop5ByMember_MemberIdOrderBySearchedAtDesc(Integer memberId);
+
+    Optional<SearchEntity> findByMember_MemberIdAndSearchWord(Integer memberId,
+        String searchWord);
 }
