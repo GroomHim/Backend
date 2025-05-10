@@ -1,5 +1,8 @@
 package groom.him.domain.member.service;
 
+import groom.him.domain.member.models.dto.request.CancelMemberRequest;
+import groom.him.domain.member.models.entity.MemberCancelLogEntity;
+import groom.him.domain.member.repository.MemberCancelLogRepository;
 import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import groom.him.core.auth.service.AuthService;
 import groom.him.domain.member.exception.MemberErrorCode;
@@ -25,10 +28,11 @@ public class MemberService {
     private final AuthService authService;
     private final MemberRepository memberRepository;
     private final QaRepository qaRepository;
+    private final MemberCancelLogRepository memberCancelLogRepository;
 
     @Transactional
     public MemberResponse findMyInfo(Integer memberId) {
-        MemberEntity member = findById(memberId);
+        MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
         return MemberResponse.of(member);
     }
 
@@ -36,39 +40,47 @@ public class MemberService {
     public MemberResponse modifyMyInfo(Integer memberId, ModifyMyInfoRequest request) {
         authService.validateNickname(request.nickname());
 
-        MemberEntity member = findById(memberId);
-        member.changeNicknameAndEmail(request.nickname(), request.email());
+        MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
+        member.changeNicknameAndEmailAndBirth(request.nickname(), request.email(), request.birth());
         return MemberResponse.of(member);
     }
 
     @Transactional
+    public void softDelete(Integer memberId, CancelMemberRequest request) {
+        MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
+        MemberCancelLogEntity memberCancelLog = MemberCancelLogEntity.of(member, request.reason());
+        memberCancelLogRepository.save(memberCancelLog);
+        member.softDelete();
+    }
+
+    @Transactional
     public void modifyPassword(Integer memberId, String newPassword) {
-        MemberEntity member = findById(memberId);
+        MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
         Password password = authService.encryptPassword(newPassword);
         member.changePassword(password);
     }
 
     @Transactional
     public MemberResponse modifySkinType(Integer memberId, SkinTypeEntity skinType) {
-        MemberEntity member = findById(memberId);
+        MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
         member.changeSkinType(skinType);
         return MemberResponse.of(member);
     }
 
-    public MemberEntity findById(Integer memberId) {
-        return memberRepository.findById(memberId)
+    public MemberEntity findByMemberIdAndIsCancelFalse(Integer memberId) {
+        return memberRepository.findByMemberIdAndIsCancelFalse(memberId)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_EXIST));
     }
 
     public void validatePassword(Integer memberId, String password) {
-        MemberEntity member = findById(memberId);
+        MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
         String encryptPassword = authService.hashing(password, member.getSalt());
 
         if (!member.getPassword().equals(encryptPassword)) {
             throw new MemberException(MemberErrorCode.MEMBER_INVALID_PASSWORD);
         }
     }
-    
+
     public List<QaResponse> findMemberQaList(Integer memberId, QaStatus qaStatus,
         LocalDate startDate, LocalDate endDate) {
         return qaRepository.findQaByMemberIdAndStatusAndRegDt(memberId, qaStatus, startDate,

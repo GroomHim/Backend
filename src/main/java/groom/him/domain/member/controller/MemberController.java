@@ -1,6 +1,7 @@
 package groom.him.domain.member.controller;
 
 import groom.him.core.models.dto.Response;
+import groom.him.domain.member.models.dto.request.CancelMemberRequest;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.request.ModifyPasswordRequest;
 import groom.him.domain.member.models.dto.request.ValidatePasswordRequest;
@@ -9,11 +10,12 @@ import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.service.MemberService;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
-import groom.him.domain.search.service.SearchService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +41,13 @@ public class MemberController {
         @RequestBody ModifyMyInfoRequest request) {
         var response = memberService.modifyMyInfo(member.getMemberId(), request);
         return Response.success(response);
+    }
+
+    @DeleteMapping
+    public Response<Integer> cancelMember(@AuthenticationPrincipal MemberEntity member,
+        @RequestBody CancelMemberRequest request) {
+        memberService.softDelete(member.getMemberId(), request);
+        return new Response<>(HttpStatus.NO_CONTENT.value());
     }
 
     @PatchMapping("/pwd")

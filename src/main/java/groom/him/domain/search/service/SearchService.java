@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class SearchService {
-
     private final SearchRepository searchRepository;
     private final MemberService memberService;
 
@@ -27,7 +26,7 @@ public class SearchService {
                     searchRepository.save(entity);
                 },
                 () -> {
-                    MemberEntity member = memberService.findById(memberId);
+                    MemberEntity member = memberService.findByMemberIdAndIsCancelFalse(memberId);
                     SearchEntity entity = new SearchEntity(member, word);
                     searchRepository.save(entity);
                 });
