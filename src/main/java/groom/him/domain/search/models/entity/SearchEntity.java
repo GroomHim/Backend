@@ -11,8 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,10 +21,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "SEARCH")
 public class SearchEntity extends RegisterDateFields {
+
     @Id
     @Column(name = "search_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long searchId;
+    private Integer searchId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -33,9 +34,15 @@ public class SearchEntity extends RegisterDateFields {
     @Column(name = "search_word")
     private String searchWord;
 
-    @Builder
-    public SearchEntity(MemberEntity member, String searchWord){
+    @Column(name = "search_at")
+    private LocalDateTime searchedAt = LocalDateTime.now();
+
+    public SearchEntity(MemberEntity member, String searchWord) {
         this.member = member;
         this.searchWord = searchWord;
+    }
+
+    public void updateSearchAt() {
+        this.searchedAt = LocalDateTime.now();
     }
 }

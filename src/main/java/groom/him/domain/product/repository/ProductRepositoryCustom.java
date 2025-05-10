@@ -1,13 +1,14 @@
 package groom.him.domain.product.repository;
 
-import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.category.enums.SortType;
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 public interface ProductRepositoryCustom {
+
     Slice<ProductWithWishResponse> findProductListBySkinType(Pageable pageable,
         Integer skinType, Integer memberId);
 
@@ -26,5 +27,8 @@ public interface ProductRepositoryCustom {
         Integer categoryId, SortType sortType, Integer memberId);
 
     Slice<ProductWithWishResponse> findProductListByBrand(Pageable pageable, String brandName,
+        Integer memberId);
+
+    List<ProductWithWishResponse> findProductListBySearchWord(String word,
         Integer memberId);
 }

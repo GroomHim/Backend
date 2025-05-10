@@ -63,12 +63,6 @@ public class ProductController {
                 member.getMemberId()));
     }
 
-    @PostMapping("/search")
-    public Response<List<ProductWithWishResponse>> findSearchProductIndex(
-        @AuthenticationPrincipal MemberEntity member, @RequestParam String word) {
-        return Response.success(productService.findSearchProductIndex(word, member));
-    }
-
     @GetMapping("/{productId}/detail")
     public Response<ProductDetailResponse> findProductDetail(
         @AuthenticationPrincipal MemberEntity member,

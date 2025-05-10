@@ -38,7 +38,7 @@ public class ProductEntity extends AuditingFields {
     @NotNull
     private BrandEntity brand;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 

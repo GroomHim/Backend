@@ -2,18 +2,12 @@ package groom.him.domain.product.service;
 
 import groom.him.domain.category.enums.SortType;
 import groom.him.domain.category.repository.ExhibitCategoryRepository;
-import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
-import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.repository.ProductRepository;
-import groom.him.domain.search.models.entity.SearchEntity;
-import groom.him.domain.search.repository.SearchRepository;
-import groom.him.domain.wish.repository.WishRepository;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +18,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private static final int RECENT_WORD_CNT = 5;
-
     private final ProductRepository productRepository;
     private final ExhibitCategoryRepository exhibitCategoryRepository;
-    private final SearchRepository searchRepository;
-    private final WishRepository wishRepository;
 
     public void checkProductExist(Integer productId) {
         if (!productRepository.existsById(productId)) {
@@ -62,28 +52,6 @@ public class ProductService {
             memberId);
     }
 
-    public List<ProductWithWishResponse> findSearchProductIndex(String word, MemberEntity member) {
-        if (searchRepository.countByMember_MemberId(member.getMemberId()) < RECENT_WORD_CNT) {
-            SearchEntity search = SearchEntity.builder()
-                .member(member)
-                .searchWord(word)
-                .build();
-            searchRepository.save(search);
-        }
-        List<ProductWithWishResponse> list = new ArrayList<>();
-        List<ProductEntity> productList = productRepository.findSearchProductIndex(word);
-
-        for (ProductEntity product : productList) {
-            boolean isWished = wishRepository.existsByMember_MemberIdAndProduct_ProductId(
-                member.getMemberId(), product.getProductId());
-            ProductWithWishResponse productWithWishResponse = new ProductWithWishResponse(
-                ProductBriefResponse.of(product), isWished);
-            list.add(productWithWishResponse);
-        }
-
-        return list;
-    }
-
     public ProductDetailResponse findProductDetailByProductId(Integer memberId, Integer productId) {
         return productRepository.findProductDetailByProductId(memberId, productId);
     }
@@ -103,5 +71,10 @@ public class ProductService {
     public Slice<ProductWithWishResponse> findProductListByBrand(Pageable pageable,
         String brandName, Integer memberId) {
         return productRepository.findProductListByBrand(pageable, brandName, memberId);
+    }
+
+    public List<ProductWithWishResponse> findProductListByWord(Integer memberId,
+        String word) {
+        return productRepository.findProductListBySearchWord(word, memberId);
     }
 }
