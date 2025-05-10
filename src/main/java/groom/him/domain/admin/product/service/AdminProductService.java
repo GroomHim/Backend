@@ -20,6 +20,8 @@ import groom.him.domain.category.repository.ProductExhibitCategoryLinkRepository
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
+import groom.him.domain.product.models.dto.response.ProductResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
 import groom.him.domain.product.models.entity.ProductImgEntity;
@@ -182,5 +184,22 @@ public class AdminProductService {
     public Slice<ProductBriefResponse> getProducts(IsPublic isPublic, Pageable pageable) {
         return productRepository.findByIsPublicAndIsDeletedFalseOrderByRegDt(isPublic, pageable)
             .map(ProductBriefResponse::of);
+    }
+
+    public ProductDetailResponse getDetailProduct(Integer productId) {
+        ProductEntity product = getAvailableProductEntity(productId);
+        ProductResponse productResponse = ProductResponse.of(product);
+
+        List<String> mainImage = getImgsByProductIdAndType(productId, ImgType.MAIN);
+        List<String> contentImage = getImgsByProductIdAndType(productId, ImgType.CONTENT);
+
+        return new ProductDetailResponse(productResponse, false, mainImage, contentImage);
+    }
+
+    private List<String> getImgsByProductIdAndType(Integer productId, ImgType type) {
+        return productImageRepository.findByProduct_ProductIdAndType(
+                productId, type)
+            .stream().map(ProductImgEntity::getImgUrl)
+            .toList();
     }
 }
