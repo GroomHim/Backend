@@ -5,14 +5,14 @@ import static groom.him.core.auth.config.Urls.PERMIT_URLS;
 import groom.him.core.auth.service.AuthService;
 import groom.him.core.auth.util.JwtTokenProvider;
 import groom.him.core.auth.util.filter.JwtAuthenticationFilter;
-import groom.him.core.auth.util.handler.AuthAccessDeniedHandler;
+import groom.him.core.auth.util.handler.CustomAccessDeniedHandler;
+import groom.him.core.auth.util.handler.CustomAuthenticationEntryPoint;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -20,41 +20,39 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Collections;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final JwtTokenProvider jwtTokenProvider;
-
     private final AuthService authService;
-
-    private final String ORIGIN = "http://localhost:3000";
-
-    private final AuthAccessDeniedHandler accessDeniedCustomHandler = AuthAccessDeniedHandler.getInstance();
+    private final String ORIGIN = "*";
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterC2hain(HttpSecurity http) throws Exception {
         http
-                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((authz) -> authz
-                        .anyRequest()
-                        .permitAll()
-                        // TODO : 운영 서버에서는 authenticated()로 변경 요함
-                )
-                .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).accessDeniedHandler(accessDeniedCustomHandler));
-
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService), UsernamePasswordAuthenticationFilter.class);
+            .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(
+                (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests((authz) -> authz
+                .anyRequest()
+                .authenticated()
+            )
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, authService),
+                BasicAuthenticationFilter.class)
+            .exceptionHandling(ehc -> ehc
+                .authenticationEntryPoint(customAuthenticationEntryPoint())
+                .accessDeniedHandler(customAccessDeniedHandler())
+            );
 
         return http.build();
     }
@@ -62,7 +60,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers(PERMIT_URLS);
+            .requestMatchers(PERMIT_URLS);
     }
 
     public CorsConfigurationSource corsConfigurationSource() {
@@ -82,7 +80,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler customAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 }
