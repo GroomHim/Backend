@@ -15,8 +15,8 @@ public record ProductBriefResponse(
 
     public static ProductBriefResponse of(ProductEntity product) {
         return new ProductBriefResponse(
-            product.getProductId(), product.getProductName(), product.getBrand().getBrandName(),
-            product.getCategory().getCategoryName(),
+            product.getProductId(), product.getCategory().getCategoryName(),
+            product.getProductName(), product.getBrand().getBrandName(),
             product.getPrice(), product.getDiscountRate(), product.getDiscountedPrice(),
             product.getImgUrl()
         );
