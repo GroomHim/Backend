@@ -37,7 +37,7 @@ public class SecurityConfig {
     private final String ORIGIN = "*";
 
     @Bean
-    public SecurityFilterChain securityFilterC2hain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
