@@ -7,6 +7,7 @@ import groom.him.domain.admin.product.models.dto.request.ModifyProductImageReque
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.service.AdminProductService;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -34,6 +35,12 @@ public class AdminProductController {
         Pageable pageable) {
         Slice<ProductBriefResponse> products = adminProductService.getProducts(isPublic, pageable);
         return Response.success(products);
+    }
+
+    @GetMapping("/{productId}/detail")
+    public Response<ProductDetailResponse> getDetailProducts(@PathVariable Integer productId) {
+        ProductDetailResponse response = adminProductService.getDetailProduct(productId);
+        return Response.success(response);
     }
 
     @PostMapping()
