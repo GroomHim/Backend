@@ -6,6 +6,7 @@ import groom.him.core.s3.service.S3Service;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
+import groom.him.domain.admin.product.models.dto.response.AdminProductDetailResponse;
 import groom.him.domain.brand.exception.BrandErrorCode;
 import groom.him.domain.brand.exception.BrandException;
 import groom.him.domain.brand.models.entity.BrandEntity;
@@ -186,14 +187,16 @@ public class AdminProductService {
             .map(ProductBriefResponse::of);
     }
 
-    public ProductDetailResponse getDetailProduct(Integer productId) {
+    public AdminProductDetailResponse getDetailProduct(Integer productId) {
         ProductEntity product = getAvailableProductEntity(productId);
         ProductResponse productResponse = ProductResponse.of(product);
 
         List<String> mainImage = getImagesByProductIdAndType(productId, ImgType.MAIN);
         List<String> contentImage = getImagesByProductIdAndType(productId, ImgType.CONTENT);
+        List<Integer> skinType = productSkinTypeLinkRepository.findSkinTypeIdsByProductId(
+            productId);
 
-        return new ProductDetailResponse(productResponse, false, mainImage, contentImage);
+        return new AdminProductDetailResponse(productResponse, skinType, mainImage, contentImage);
     }
 
     private List<String> getImagesByProductIdAndType(Integer productId, ImgType type) {

@@ -5,6 +5,7 @@ import groom.him.core.models.dto.Response;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
+import groom.him.domain.admin.product.models.dto.response.AdminProductDetailResponse;
 import groom.him.domain.admin.product.service.AdminProductService;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
 import groom.him.domain.product.models.dto.response.ProductDetailResponse;
@@ -38,8 +39,8 @@ public class AdminProductController {
     }
 
     @GetMapping("/{productId}/detail")
-    public Response<ProductDetailResponse> getDetailProducts(@PathVariable Integer productId) {
-        ProductDetailResponse response = adminProductService.getDetailProduct(productId);
+    public Response<AdminProductDetailResponse> getProductDetail(@PathVariable Integer productId) {
+        AdminProductDetailResponse response = adminProductService.getDetailProduct(productId);
         return Response.success(response);
     }
 
