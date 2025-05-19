@@ -63,7 +63,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .select(getProductBriefResponseConstructor(product))
             .from(wish)
             .leftJoin(wish.product, product)
-            .where(builder,defaultProductCondition(product) )
+            .where(builder, defaultProductCondition(product))
             .orderBy(wish.regDt.asc())
             .offset(pageable.getOffset())
             .limit(limit)
@@ -92,7 +92,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
-            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.in(subCategoryList), defaultProductCondition(product))
+            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.in(subCategoryList),
+                defaultProductCondition(product))
             .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
             .offset(pageable.getOffset())
             .limit(limit)
@@ -138,7 +139,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .leftJoin(productExhibitCategoryLink)
             .on(product.productId.eq(productExhibitCategoryLink.product.productId))
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
-            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.eq(categoryId), defaultProductCondition(product))
+            .where(productExhibitCategoryLink.exhibitCategory.exhibitCategoryId.eq(categoryId),
+                defaultProductCondition(product))
             .groupBy(product.productId)
             .orderBy(orderBySortType(sortType, product, wish))
             .offset(pageable.getOffset())
@@ -174,7 +176,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     @Override
     public List<ProductWithWishResponse> findProductListBySearchWord(String word,
-        Integer memberId) {
+        Integer memberId, SortType sortType) {
         QProductEntity product = QProductEntity.productEntity;
         QWishEntity wish = QWishEntity.wishEntity;
 
@@ -183,6 +185,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(product.productName.contains(word), defaultProductCondition(product)) // %{word}%
+            .orderBy(orderBySortType(sortType, product, wish))
             .fetch();
     }
 
@@ -199,7 +202,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .leftJoin(productSkinTypeLink)
             .on(productSkinTypeLink.product.productId.eq(product.productId))
-            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId), defaultProductCondition(product))
+            .where(productSkinTypeLink.skinType.skinTypeId.eq(skinTypeId),
+                defaultProductCondition(product))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
             .limit(limit)
@@ -223,7 +227,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         List<ProductBriefResponse> productBriefList = jpaQueryFactory
             .select(getProductBriefResponseConstructor(product))
             .from(product)
-            .where(product.discountedPrice.between(minPrice, maxPrice), defaultProductCondition(product))
+            .where(product.discountedPrice.between(minPrice, maxPrice),
+                defaultProductCondition(product))
             .groupBy(product.productId)
             .offset(pageable.getOffset())
             .limit(limit)
