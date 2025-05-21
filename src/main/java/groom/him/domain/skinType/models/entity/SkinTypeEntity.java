@@ -28,10 +28,6 @@ public class SkinTypeEntity extends RegisterDateFields {
     private String skinTypeName;
 
     @NotNull
-    @Column(name = "rate")
-    private Float rate;
-
-    @NotNull
     @Column(name = "description")
     private String description;
 }
