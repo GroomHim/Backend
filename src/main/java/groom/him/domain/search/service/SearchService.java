@@ -38,10 +38,16 @@ public class SearchService {
             .toList();
     }
 
+    @Transactional
     public void deleteSearch(Long searchId) {
         if (searchRepository.findById(searchId).isEmpty()) {
             throw new SearchException(SearchErrorCode.SEARCH_ID_NOT_EXIST);
         }
         searchRepository.deleteById(searchId);
+    }
+
+    @Transactional
+    public void deleteAll(Integer memberId) {
+        searchRepository.deleteByMember_MemberId(memberId);
     }
 }

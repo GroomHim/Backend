@@ -14,4 +14,6 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
 
     Optional<SearchEntity> findByMember_MemberIdAndSearchWord(Integer memberId,
         String searchWord);
+
+    void deleteByMember_MemberId(Integer memberId);
 }
