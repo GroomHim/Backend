@@ -193,10 +193,10 @@ public class AdminProductService {
 
         List<String> mainImage = getImagesByProductIdAndType(productId, ImgType.MAIN);
         List<String> contentImage = getImagesByProductIdAndType(productId, ImgType.CONTENT);
-        List<Integer> skinType = productSkinTypeLinkRepository.findSkinTypeIdsByProductId(
+        List<Integer> skinTypes = productSkinTypeLinkRepository.findSkinTypeIdsByProductId(
             productId);
 
-        return new AdminProductDetailResponse(productResponse, skinType, mainImage, contentImage);
+        return new AdminProductDetailResponse(productResponse, skinTypes, mainImage, contentImage);
     }
 
     private List<String> getImagesByProductIdAndType(Integer productId, ImgType type) {
