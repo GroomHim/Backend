@@ -7,6 +7,7 @@ import groom.him.domain.product.models.entity.ProductEntity;
 public record ProductResponse(
     Integer productId,
     String productName,
+    Integer categoryId,
     Integer price,
     Float discountRate,
     Integer discountedPrice,
@@ -18,8 +19,8 @@ public record ProductResponse(
 
     public static ProductResponse of(ProductEntity product) {
         return new ProductResponse(product.getProductId(), product.getProductName(),
-            product.getPrice(), product.getDiscountRate(), product.getDiscountedPrice(),
-            product.getBrand().getBrandName(), product.getIngredients(),
-            product.getPurchaseSiteUrl());
+            product.getCategory().getCategoryId(), product.getPrice(), product.getDiscountRate(),
+            product.getDiscountedPrice(), product.getBrand().getBrandName(),
+            product.getIngredients(), product.getPurchaseSiteUrl());
     }
 }
