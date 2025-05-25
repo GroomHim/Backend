@@ -30,5 +30,5 @@ public interface ProductRepositoryCustom {
         Integer memberId);
 
     List<ProductWithWishResponse> findProductListBySearchWord(String word,
-        Integer memberId);
+        Integer memberId, SortType sortType);
 }

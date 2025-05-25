@@ -74,7 +74,7 @@ public class ProductService {
     }
 
     public List<ProductWithWishResponse> findProductListByWord(Integer memberId,
-        String word) {
-        return productRepository.findProductListBySearchWord(word, memberId);
+        String word, SortType sortType) {
+        return productRepository.findProductListBySearchWord(word, memberId, sortType);
     }
 }

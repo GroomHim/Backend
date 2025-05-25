@@ -1,6 +1,7 @@
 package groom.him.domain.search.controller;
 
 import groom.him.core.models.dto.Response;
+import groom.him.domain.category.enums.SortType;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.product.models.dto.response.ProductWithWishResponse;
 import groom.him.domain.product.service.ProductService;
@@ -27,11 +28,12 @@ public class SearchController {
     @GetMapping("/products")
     public Response<List<ProductWithWishResponse>> searchProductsByWordAndSaveWord(
         @AuthenticationPrincipal MemberEntity member,
+        @RequestParam(value = "sort", required = false) SortType sortType,
         @RequestParam String word) {
         searchService.saveSearch(member.getMemberId(), word);
 
         List<ProductWithWishResponse> data = productService.findProductListByWord(
-            member.getMemberId(), word);
+            member.getMemberId(), word, sortType);
         return Response.success(data);
     }
 
