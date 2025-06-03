@@ -185,6 +185,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .from(product)
             .leftJoin(wish).on(wish.product.productId.eq(product.productId))
             .where(product.productName.contains(word), defaultProductCondition(product)) // %{word}%
+            .groupBy(product.productId)
             .orderBy(orderBySortType(sortType, product, wish))
             .fetch();
     }
