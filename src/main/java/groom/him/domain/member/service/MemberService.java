@@ -1,30 +1,30 @@
 package groom.him.domain.member.service;
 
-import groom.him.domain.member.models.dto.request.CancelMemberRequest;
-import groom.him.domain.member.models.entity.MemberCancelLogEntity;
-import groom.him.domain.member.repository.MemberCancelLogRepository;
-import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import groom.him.core.auth.service.AuthService;
 import groom.him.domain.member.exception.MemberErrorCode;
 import groom.him.domain.member.exception.MemberException;
-import groom.him.domain.member.repository.MemberRepository;
+import groom.him.domain.member.models.dto.request.CancelMemberRequest;
 import groom.him.domain.member.models.dto.request.ModifyMyInfoRequest;
 import groom.him.domain.member.models.dto.response.MemberResponse;
+import groom.him.domain.member.models.entity.MemberCancelLogEntity;
 import groom.him.domain.member.models.entity.MemberEntity;
 import groom.him.domain.member.models.entity.data.Password;
+import groom.him.domain.member.repository.MemberCancelLogRepository;
+import groom.him.domain.member.repository.MemberRepository;
 import groom.him.domain.qa.models.dto.response.QaResponse;
 import groom.him.domain.qa.models.enums.QaStatus;
 import groom.him.domain.qa.repository.QaRepository;
+import groom.him.domain.skinType.models.entity.SkinTypeEntity;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+
     private final AuthService authService;
     private final MemberRepository memberRepository;
     private final QaRepository qaRepository;
@@ -61,10 +61,9 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse modifySkinType(Integer memberId, SkinTypeEntity skinType) {
+    public void modifySkinType(Integer memberId, SkinTypeEntity skinType) {
         MemberEntity member = findByMemberIdAndIsCancelFalse(memberId);
         member.changeSkinType(skinType);
-        return MemberResponse.of(member);
     }
 
     public MemberEntity findByMemberIdAndIsCancelFalse(Integer memberId) {

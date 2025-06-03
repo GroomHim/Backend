@@ -49,4 +49,12 @@ public class SearchController {
         searchService.deleteSearch(searchId);
         return Response.success(HttpStatus.NO_CONTENT.value());
     }
+
+    @DeleteMapping("/all")
+    public Response<Integer> deleteAllSearch(
+        @AuthenticationPrincipal MemberEntity member
+    ) {
+        searchService.deleteAll(member.getMemberId());
+        return Response.success(HttpStatus.NO_CONTENT.value());
+    }
 }

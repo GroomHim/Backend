@@ -26,8 +26,8 @@ public class SkinTypeService {
         return result;
     }
 
-    public SkinTypeEntity findById(Integer skinTypeId) {
-        return skinTypeRepository.findById(skinTypeId)
+    public SkinTypeEntity findByName(String skinTypeName) {
+        return skinTypeRepository.findBySkinTypeName(skinTypeName)
             .orElseThrow(() -> new SkinTypeException(SkinTypeErrorCode.SKIN_TYPE_NOT_EXIST));
     }
 }
