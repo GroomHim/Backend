@@ -302,9 +302,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         QProductEntity product) {
         return Projections.constructor(
             ProductResponse.class,
-            product.productId, product.productName, product.price, product.discountRate,
-            product.discountedPrice, product.brand.brandName, product.ingredients,
-            product.purchaseSiteUrl
+            product.productId, product.productName, product.category.categoryId, product.price,
+            product.discountRate, product.discountedPrice, product.brand.brandName,
+            product.ingredients, product.purchaseSiteUrl
         );
     }
 
