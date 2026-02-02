@@ -4,6 +4,7 @@ import groom.him.core.common.enums.IsPublic;
 import groom.him.core.models.dto.Response;
 import groom.him.core.s3.models.dto.request.PresignedUrlRequest;
 import groom.him.core.s3.models.dto.request.PresignedUrlsRequest;
+import groom.him.core.s3.models.dto.request.UploadCompleteRequest;
 import groom.him.core.s3.models.dto.response.PresignedUrlResponse;
 import groom.him.core.s3.models.dto.response.PresignedUrlsResponse;
 import groom.him.core.s3.service.S3PresignedUrlService;
@@ -13,6 +14,7 @@ import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.models.dto.response.AdminProductDetailResponse;
 import groom.him.domain.admin.product.service.AdminProductService;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
+import groom.him.domain.product.service.ProductImgService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -35,6 +37,7 @@ public class AdminProductController {
 
     private final AdminProductService adminProductService;
     private final S3PresignedUrlService presignedUrlService;
+    private final ProductImgService productImgService;
 
     @GetMapping()
     public Response<Slice<ProductBriefResponse>> getProducts(@RequestParam IsPublic isPublic,
@@ -95,5 +98,13 @@ public class AdminProductController {
         PresignedUrlsResponse result = presignedUrlService.generateUploadUrls(productId,
             request.images());
         return Response.success(result);
+    }
+
+
+    @PostMapping("/{productId}/images/upload-complete")
+    public Response<Integer> completeUpload(@PathVariable Integer productId,
+        @RequestBody UploadCompleteRequest request) {
+        productImgService.addUploadedProductImages(productId, request.images());
+        return new Response<>(HttpStatus.CREATED.value());
     }
 }

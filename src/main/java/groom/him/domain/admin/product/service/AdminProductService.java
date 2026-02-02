@@ -21,7 +21,6 @@ import groom.him.domain.category.repository.ProductExhibitCategoryLinkRepository
 import groom.him.domain.product.exception.ProductErrorCode;
 import groom.him.domain.product.exception.ProductException;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
-import groom.him.domain.product.models.dto.response.ProductDetailResponse;
 import groom.him.domain.product.models.dto.response.ProductResponse;
 import groom.him.domain.product.models.entity.ProductEntity;
 import groom.him.domain.product.models.entity.ProductExhibitCategoryLinkEntity;
