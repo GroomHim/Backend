@@ -2,6 +2,9 @@ package groom.him.domain.admin.product.controller;
 
 import groom.him.core.common.enums.IsPublic;
 import groom.him.core.models.dto.Response;
+import groom.him.core.s3.models.dto.request.PresignedUrlRequest;
+import groom.him.core.s3.models.dto.response.PresignedUrlResponse;
+import groom.him.core.s3.service.S3PresignedUrlService;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminProductController {
 
     private final AdminProductService adminProductService;
+    private final S3PresignedUrlService presignedUrlService;
 
     @GetMapping()
     public Response<Slice<ProductBriefResponse>> getProducts(@RequestParam IsPublic isPublic,
@@ -74,5 +78,14 @@ public class AdminProductController {
         @PathVariable Integer productId) {
         adminProductService.modifyProductImage(request, productId);
         return new Response<>(HttpStatus.OK.value());
+    }
+
+    @PostMapping("/{productId}/images/presigned-url")
+    public Response<PresignedUrlResponse> issueProductPresignedUrl(@PathVariable Integer productId,
+        @RequestBody PresignedUrlRequest request
+    ) {
+        PresignedUrlResponse result = presignedUrlService.generateUploadUrl(
+            productId, request.fileName(), request.contentType());
+        return Response.success(result);
     }
 }
