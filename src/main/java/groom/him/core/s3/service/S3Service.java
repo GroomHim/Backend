@@ -1,88 +1,105 @@
 package groom.him.core.s3.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.util.IOUtils;
 import groom.him.domain.product.models.enums.ImgType;
 import groom.him.core.s3.exception.S3Exception;
 import groom.him.core.s3.models.enums.S3ErrorCode;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@RequiredArgsConstructor
-@Slf4j
 public class S3Service {
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    private final String bucket;
+
+    private final Executor uploadExecutor;
 
     @Value("${spring.profiles.active}")
     private String profiles;
 
     private static final String PRODUCT = "product";
 
-    public List<String> uploadProductImages(List<MultipartFile> multipartFiles, Integer productId,
-        ImgType type) {
-        return uploadImages(multipartFiles, productId, type, PRODUCT);
+
+    public S3Service(AmazonS3 amazonS3, @Qualifier("uploadExecutor") Executor uploadExecutor,
+        String bucket) {
+        this.amazonS3 = amazonS3;
+        this.uploadExecutor = uploadExecutor;
+        this.bucket = bucket;
     }
 
-    private List<String> uploadImages(List<MultipartFile> multipartFiles, Integer id, ImgType type,
-        String path) {
+    public List<String> uploadProductImages(List<MultipartFile> multipartFiles, Integer productId,
+        ImgType type) {
+        return uploadImagesSequential(multipartFiles, productId, type, PRODUCT);
+    }
+
+    // 직렬, 병렬 테스트용 메소드
+    public List<String> uploadImagesWithMode(List<MultipartFile> multipartFiles, Integer productId,
+        ImgType type, String mode) {
+        if (mode.equals("PARALLEL")) {
+            return uploadImagesParallel(multipartFiles, productId, type, PRODUCT);
+        }
+        return uploadImagesSequential(multipartFiles, productId, type, PRODUCT);
+    }
+
+    // 직렬 업로드
+    public List<String> uploadImagesSequential(List<MultipartFile> multipartFiles, Integer id,
+        ImgType type, String path) {
         List<String> uploadImageUrls = new ArrayList<>();
 
         for (MultipartFile image : multipartFiles) {
-            if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
-                throw new S3Exception(S3ErrorCode.EMPTY_FILE_EXCEPTION);
-            }
-
-            String fileName = String.format("%s/%s/%d/%s/%s-%s",
-                profiles, path, id, type, UUID.randomUUID(), image.getOriginalFilename());
-
-            String uploadImageUrl = uploadImageToS3(image, fileName);
+            String uploadImageUrl = uploadSingleImage(image, id, type, path);
             uploadImageUrls.add(uploadImageUrl);
         }
 
         return uploadImageUrls;
     }
 
-    private String uploadImageToS3(MultipartFile image, String fileName) {
-        byte[] bytes;
+    // 병렬 업로드
+    public List<String> uploadImagesParallel(List<MultipartFile> multipartFiles, Integer id,
+        ImgType type, String path) {
+        List<CompletableFuture<String>> futures = multipartFiles.stream()
+            .map(image ->
+                CompletableFuture.supplyAsync(
+                    () -> uploadSingleImage(image, id, type, path), uploadExecutor
+                )
+            ).toList();
 
-        try (InputStream is = image.getInputStream()) {
-            bytes = IOUtils.toByteArray(is);
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        return futures.stream()
+            .map(CompletableFuture::join)
+            .toList();
+    }
+
+    private String uploadSingleImage(MultipartFile image, Integer id, ImgType type, String path) {
+        if (image.isEmpty()) {
+            throw new S3Exception(S3ErrorCode.EMPTY_FILE_EXCEPTION);
+        }
+        try (InputStream inputStream = image.getInputStream()) {
+            String fileName = String.format("%s/%s/%d/%s/%s-%s",
+                profiles, path, id, type, UUID.randomUUID(), image.getOriginalFilename());
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(image.getContentType());
+            metadata.setContentLength(image.getSize());
+
+            PutObjectRequest request = new PutObjectRequest(bucket, fileName, inputStream,
+                metadata);
+            amazonS3.putObject(request);
+
+            return amazonS3.getUrl(bucket, fileName).toString();
         } catch (IOException e) {
-            log.error(e.toString());
             throw new S3Exception(S3ErrorCode.PUT_OBJECT_EXCEPTION);
         }
-
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType(image.getContentType());
-        metadata.setContentLength(bytes.length);
-
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes)) {
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName,
-                byteArrayInputStream, metadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead);
-            amazonS3.putObject(putObjectRequest);
-        } catch (IOException e) {
-            log.error(e.toString());
-            throw new S3Exception(S3ErrorCode.PUT_OBJECT_EXCEPTION);
-        }
-
-        return amazonS3.getUrl(bucket, fileName).toString();
     }
 }

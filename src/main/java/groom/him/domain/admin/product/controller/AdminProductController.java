@@ -2,13 +2,19 @@ package groom.him.domain.admin.product.controller;
 
 import groom.him.core.common.enums.IsPublic;
 import groom.him.core.models.dto.Response;
+import groom.him.core.s3.models.dto.request.PresignedUrlRequest;
+import groom.him.core.s3.models.dto.request.PresignedUrlsRequest;
+import groom.him.core.s3.models.dto.request.UploadCompleteRequest;
+import groom.him.core.s3.models.dto.response.PresignedUrlResponse;
+import groom.him.core.s3.models.dto.response.PresignedUrlsResponse;
+import groom.him.core.s3.service.S3PresignedUrlService;
 import groom.him.domain.admin.product.models.dto.request.CreateProductRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductImageRequest;
 import groom.him.domain.admin.product.models.dto.request.ModifyProductRequest;
 import groom.him.domain.admin.product.models.dto.response.AdminProductDetailResponse;
 import groom.him.domain.admin.product.service.AdminProductService;
 import groom.him.domain.product.models.dto.response.ProductBriefResponse;
-import groom.him.domain.product.models.dto.response.ProductDetailResponse;
+import groom.him.domain.product.service.ProductImgService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -30,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminProductController {
 
     private final AdminProductService adminProductService;
+    private final S3PresignedUrlService presignedUrlService;
+    private final ProductImgService productImgService;
 
     @GetMapping()
     public Response<Slice<ProductBriefResponse>> getProducts(@RequestParam IsPublic isPublic,
@@ -74,5 +82,29 @@ public class AdminProductController {
         @PathVariable Integer productId) {
         adminProductService.modifyProductImage(request, productId);
         return new Response<>(HttpStatus.OK.value());
+    }
+
+    @PostMapping("/{productId}/images/presigned-url")
+    public Response<PresignedUrlResponse> issueProductPresignedUrl(@PathVariable Integer productId,
+        @RequestBody PresignedUrlRequest request) {
+        PresignedUrlResponse result = presignedUrlService.generateUploadUrl(
+            productId, request.fileName(), request.contentType());
+        return Response.success(result);
+    }
+
+    @PostMapping("/{productId}/images/presigned-urls")
+    public Response<PresignedUrlsResponse> issuePresignedUrls(@PathVariable Integer productId,
+        @RequestBody PresignedUrlsRequest request) {
+        PresignedUrlsResponse result = presignedUrlService.generateUploadUrls(productId,
+            request.images());
+        return Response.success(result);
+    }
+
+
+    @PostMapping("/{productId}/images/upload-complete")
+    public Response<Integer> completeUpload(@PathVariable Integer productId,
+        @RequestBody UploadCompleteRequest request) {
+        productImgService.addUploadedProductImages(productId, request.images());
+        return new Response<>(HttpStatus.CREATED.value());
     }
 }
