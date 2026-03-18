@@ -4,6 +4,27 @@ services:
     container_name: groomhim
     ports:
       - "8080:8080"
-    environment: # 환경 변수
-      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_PROFILES_ACTIVE: prod
+    env_file:
+      - .env
     restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: groomhim-v1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${RDB_ROOT_PASSWORD}
+      MYSQL_DATABASE: groomhim
+      MYSQL_USER: ${RDB_USERNAME}
+      MYSQL_PASSWORD: ${RDB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
