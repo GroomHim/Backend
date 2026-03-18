@@ -1,12 +1,13 @@
-package groom.him.service.s3;
+package groom.him.performance.service.s3;
 
-import groom.him.config.S3TestConfig;
+import groom.him.performance.config.S3TestConfig;
 import groom.him.core.s3.service.S3Service;
 import groom.him.domain.product.models.enums.ImgType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+
+@Tag("performance")
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = S3TestConfig.class)

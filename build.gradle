@@ -75,6 +75,12 @@ tasks.withType(JavaCompile).configureEach {
     options.getGeneratedSourceOutputDirectory().set(file(queryDslSrcDir))
 }
 
+tasks.withType(Test) {
+    useJUnitPlatform {
+        excludeTags 'performance'
+    }
+}
+
 clean {
     delete file(queryDslSrcDir)
 }
