@@ -80,6 +80,7 @@ tasks.withType(Test) {
     useJUnitPlatform {
         excludeTags 'performance'
     }
+    systemProperty "spring.profiles.active", "test"
 }
 
 clean {
