@@ -23,6 +23,11 @@ jobs:
 
       - name: Build & Test
         run: ./gradlew clean build  # 프로젝트 빌드 및 테스트
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
 
       # Docker buildx 활성화 (캐시 및 멀티 플랫폼 빌드 지원)
       - name: Set up Docker Buildx
